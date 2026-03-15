@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParkNow — Parking Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   BRAND TOKENS
+   Primary:   #FCD271 (Gold)
+   Secondary: #F78D3F (Orange)
+   White:     #FFFFFF
+   Accent:    #2BBBD8 (Teal/Cyan)
+   Dark:      #102E37 (Deep Teal)
+============================================================ */
+:root {
+  --gold:        #FCD271;
+  --gold-deep:   #e8b93a;
+  --gold-light:  #fef8e6;
+  --orange:      #F78D3F;
+  --orange-deep: #d96e20;
+  --orange-light:#fff0e5;
+  --white:       #FFFFFF;
+  --teal:        #2BBBD8;
+  --teal-deep:   #1a9ab5;
+  --teal-light:  #e6f8fc;
+  --dark:        #102E37;
+  --dark-mid:    #1a4250;
+  --dark-soft:   #255060;
+
+  --surface:     #F7F9FA;
+  --surface-card:#FFFFFF;
+  --surface-alt: #EEF2F4;
+  --ink:         #0D1F25;
+  --ink-soft:    #2E4A55;
+  --ink-muted:   #6B8A95;
+  --border:      #D8E5E9;
+  --border-mid:  #B8CFD6;
+
+  --success:      #16a94e;
+  --success-light:#e6f7ee;
+  --danger:       #e03c3c;
+  --danger-light: #fdeaea;
+  --warning:      #d4820a;
+  --warning-light:#fdf3e3;
+
+  --shadow-sm: 0 1px 3px rgba(16,46,55,0.07), 0 1px 2px rgba(16,46,55,0.05);
+  --shadow-md: 0 4px 20px rgba(16,46,55,0.10), 0 2px 8px rgba(16,46,55,0.06);
+  --shadow-lg: 0 12px 48px rgba(16,46,55,0.14), 0 4px 16px rgba(16,46,55,0.08);
+  --shadow-glow-gold: 0 4px 24px rgba(252,210,113,0.4);
+  --shadow-glow-teal: 0 4px 24px rgba(43,187,216,0.35);
+
+  --radius-sm:  8px;
+  --radius:     14px;
+  --radius-lg:  22px;
+  --radius-xl:  32px;
+
+  --font-display: 'Familjen Grotesk', sans-serif;
+  --font-body:    'Plus Jakarta Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--surface);
+  color: var(--ink);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===================== PAGE SYSTEM ===================== */
+.page { display: none; min-height: 100vh; flex-direction: column; }
+.page.active { display: flex; animation: pageIn 0.4s cubic-bezier(0.22,1,0.36,1); }
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===================== BUTTONS ===================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--font-body); font-weight: 600; font-size: 0.88rem;
+  padding: 10px 22px; border-radius: var(--radius-sm); border: none;
+  cursor: pointer; transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
+  text-decoration: none; white-space: nowrap; letter-spacing: 0.01em; line-height: 1;
+}
+.btn-gold {
+  background: var(--gold); color: var(--dark);
+}
+.btn-gold:hover {
+  background: var(--gold-deep); transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-gold);
+}
+.btn-orange {
+  background: var(--orange); color: #fff;
+}
+.btn-orange:hover {
+  background: var(--orange-deep); transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(247,141,63,0.4);
+}
+.btn-dark {
+  background: var(--dark); color: #fff;
+}
+.btn-dark:hover {
+  background: var(--dark-mid); transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(16,46,55,0.3);
+}
+.btn-teal {
+  background: var(--teal); color: #fff;
+}
+.btn-teal:hover {
+  background: var(--teal-deep); transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-teal);
+}
+.btn-outline {
+  background: transparent; color: var(--ink-soft);
+  border: 1.5px solid var(--border-mid);
+}
+.btn-outline:hover {
+  border-color: var(--teal); color: var(--teal);
+  background: var(--teal-light);
+}
+.btn-outline-white {
+  background: transparent; color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.35);
+}
+.btn-outline-white:hover {
+  background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.7);
+}
+.btn-ghost {
+  background: transparent; color: var(--ink-muted); border: none; padding: 8px 14px;
+}
+.btn-ghost:hover { background: var(--surface-alt); color: var(--ink); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #c02b2b; }
+
+.btn-sm  { padding: 7px 16px; font-size: 0.8rem; border-radius: 7px; }
+.btn-lg  { padding: 14px 34px; font-size: 1rem; font-weight: 700; border-radius: var(--radius-sm); }
+.btn-xl  { padding: 17px 44px; font-size: 1.05rem; font-weight: 700; border-radius: var(--radius); }
+
+/* ===================== FORM ===================== */
+.form-group { display: flex; flex-direction: column; gap: 7px; }
+.form-label {
+  font-size: 0.75rem; font-weight: 700; color: var(--ink-soft);
+  letter-spacing: 0.07em; text-transform: uppercase;
+}
+.form-input {
+  font-family: var(--font-body); font-size: 0.92rem; color: var(--ink);
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); padding: 11px 15px;
+  transition: all 0.2s; outline: none; width: 100%;
+}
+.form-input:focus {
+  border-color: var(--teal); background: #fff;
+  box-shadow: 0 0 0 3px rgba(43,187,216,0.15);
+}
+.form-input::placeholder { color: var(--ink-muted); font-weight: 400; }
+select.form-input { cursor: pointer; }
+textarea.form-input { resize: vertical; }
+
+/* ===================== CARDS ===================== */
+.card {
+  background: var(--surface-card); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 24px;
+}
+
+/* ===================== BADGE ===================== */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: 99px; font-size: 0.72rem;
+  font-weight: 700; letter-spacing: 0.03em;
+}
+.badge::before { content: '●'; font-size: 0.45rem; }
+.badge-success { background: var(--success-light); color: var(--success); }
+.badge-danger  { background: var(--danger-light);  color: var(--danger); }
+.badge-warning { background: var(--warning-light); color: var(--warning); }
+.badge-teal    { background: var(--teal-light);    color: var(--teal-deep); }
+.badge-gold    { background: var(--gold-light);    color: #8a6200; }
+.badge-orange  { background: var(--orange-light);  color: var(--orange-deep); }
+.badge-dark    { background: var(--dark); color: #fff; font-size: 0.7rem; }
+
+/* ===================== TABLE ===================== */
+.table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+thead { background: var(--dark); }
+thead th {
+  padding: 13px 18px; text-align: left; font-size: 0.7rem; font-weight: 700;
+  color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.08em;
+  border-bottom: none;
+}
+thead th:first-child { border-radius: var(--radius) 0 0 0; }
+thead th:last-child  { border-radius: 0 var(--radius) 0 0; }
+tbody td { padding: 14px 18px; border-bottom: 1px solid var(--border); color: var(--ink-soft); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: #f4fbfd; }
+.td-actions { display: flex; gap: 6px; }
+
+/* ===================== LAYOUT ===================== */
+.app-shell { display: flex; flex: 1; overflow: hidden; }
+
+/* Sidebar */
+.sidebar {
+  width: 256px; background: var(--dark); color: #fff;
+  display: flex; flex-direction: column; padding: 0;
+  flex-shrink: 0; min-height: calc(100vh - 64px);
+}
+.sidebar-logo-area {
+  padding: 20px 20px 0;
+}
+.sidebar-user {
+  margin: 16px 12px; padding: 14px 14px;
+  background: rgba(255,255,255,0.07); border-radius: var(--radius-sm);
+  display: flex; align-items: center; gap: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.9rem; font-family: var(--font-display);
+}
+.sidebar-uname { font-size: 0.88rem; font-weight: 600; color: #fff; }
+.sidebar-role  { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 1px; }
+.sidebar-nav   { flex: 1; padding: 8px 12px; display: flex; flex-direction: column; gap: 2px; }
+.sidebar-section {
+  font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.3);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  padding: 14px 10px 6px;
+}
+.sidebar-item {
+  display: flex; align-items: center; gap: 11px; padding: 10px 12px;
+  border-radius: var(--radius-sm); font-size: 0.86rem; font-weight: 500;
+  color: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.15s;
+  background: none; border: none; font-family: var(--font-body);
+  text-align: left; width: 100%;
+}
+.sidebar-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.sidebar-item.active { background: var(--gold); color: var(--dark); font-weight: 700; }
+.sidebar-item .s-icon { font-size: 1rem; width: 22px; text-align: center; flex-shrink: 0; }
+.sidebar-item .s-badge {
+  margin-left: auto; background: var(--orange); color: #fff;
+  font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 99px;
+}
+.sidebar-bottom { padding: 12px; border-top: 1px solid rgba(255,255,255,0.08); }
+
+/* Topbar */
+.topbar {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  height: 64px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 28px;
+  position: sticky; top: 0; z-index: 200; box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+.topbar-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-size: 1.35rem; font-weight: 700;
+  color: var(--dark); text-decoration: none; cursor: pointer;
+}
+.logo-mark {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1.1rem; color: var(--dark);
+  font-family: var(--font-display);
+}
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+
+/* Main content */
+.main-content { flex: 1; padding: 36px 40px; overflow-y: auto; background: var(--surface); }
+.page-header { margin-bottom: 30px; }
+.page-header h1 { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+.page-header p  { font-size: 0.9rem; color: var(--ink-muted); margin-top: 5px; }
+.ph-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+
+/* ===================== GRIDS ===================== */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+.g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+.g5 { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; }
+.gap-16 { display: flex; flex-direction: column; gap: 16px; }
+.mb-28 { margin-bottom: 28px; }
+.mb-20 { margin-bottom: 20px; }
+
+/* ===================== STAT CARD ===================== */
+.stat-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 22px 24px;
+  box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.stat-card .accent-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.stat-card.c-gold .accent-bar  { background: var(--gold); }
+.stat-card.c-orange .accent-bar { background: var(--orange); }
+.stat-card.c-teal .accent-bar  { background: var(--teal); }
+.stat-card.c-green .accent-bar { background: var(--success); }
+.stat-card.c-danger .accent-bar{ background: var(--danger); }
+.stat-card.c-dark .accent-bar  { background: var(--dark); }
+.stat-icon { font-size: 1.5rem; margin-bottom: 12px; }
+.stat-label { font-size: 0.72rem; font-weight: 700; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.stat-value { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; color: var(--ink); line-height: 1; }
+.stat-sub   { font-size: 0.78rem; color: var(--ink-muted); margin-top: 6px; }
+
+/* ===================== SECTION TITLE ===================== */
+.section-title {
+  font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+  color: var(--ink); margin-bottom: 14px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+/* =============================================================
+   PAGE: HOME
+============================================================= */
+/* Home Navbar */
+.home-nav {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  height: 68px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 56px;
+  position: sticky; top: 0; z-index: 200; box-shadow: var(--shadow-sm);
+}
+.home-nav-links { display: flex; align-items: center; gap: 2px; }
+.home-nav-link {
+  font-size: 0.88rem; font-weight: 500; color: var(--ink-soft);
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  cursor: pointer; transition: all 0.15s;
+  background: none; border: none; font-family: var(--font-body);
+}
+.home-nav-link:hover { color: var(--dark); background: var(--surface); }
+.home-nav-actions { display: flex; gap: 10px; align-items: center; }
+
+/* Hero */
+.hero {
+  background: var(--dark);
+  position: relative; overflow: hidden;
+  padding: 100px 56px 80px;
+  display: flex; align-items: center; min-height: calc(100vh - 68px);
+}
+
+/* Decorative background elements */
+.hero-bg-circle {
+  position: absolute; border-radius: 50%; pointer-events: none;
+}
+.hero-bg-c1 {
+  width: 600px; height: 600px; background: radial-gradient(circle, rgba(43,187,216,0.12) 0%, transparent 70%);
+  top: -150px; right: -100px;
+}
+.hero-bg-c2 {
+  width: 400px; height: 400px; background: radial-gradient(circle, rgba(252,210,113,0.1) 0%, transparent 70%);
+  bottom: -100px; left: 40%;
+}
+.hero-grid-overlay {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(43,187,216,0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(43,187,216,0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+.hero-diagonal {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 44%;
+  background: linear-gradient(135deg, transparent 0%, rgba(43,187,216,0.06) 50%, rgba(252,210,113,0.04) 100%);
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+  pointer-events: none;
+}
+
+.hero-content { max-width: 640px; position: relative; z-index: 2; }
+
+.hero-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(43,187,216,0.12); border: 1px solid rgba(43,187,216,0.25);
+  color: var(--teal); padding: 7px 16px; border-radius: 99px;
+  font-size: 0.78rem; font-weight: 600; margin-bottom: 32px;
+  letter-spacing: 0.03em;
+  animation: fadeUp 0.6s ease both;
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--teal); animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.4); }
+}
+
+.hero h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(2.8rem, 5vw, 4.4rem); line-height: 1.06;
+  color: #fff; letter-spacing: -0.03em; margin-bottom: 24px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.hero h1 .h-gold   { color: var(--gold); }
+.hero h1 .h-teal   { color: var(--teal); }
+.hero h1 .h-orange { color: var(--orange); }
+
+.hero-desc {
+  font-size: 1.05rem; color: rgba(255,255,255,0.6);
+  line-height: 1.75; margin-bottom: 40px; max-width: 520px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-btns {
+  display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 72px;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stats panel */
+.hero-stats-panel {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-lg); overflow: hidden; backdrop-filter: blur(10px);
+  animation: fadeUp 0.6s 0.4s ease both;
+}
+.hero-stats-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+}
+.hero-stat {
+  padding: 22px 28px; border-right: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+}
+.hero-stat:last-child { border-right: none; }
+.hero-stat-label { font-size: 0.7rem; color: rgba(255,255,255,0.4); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.hero-stat-val   { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: #fff; line-height: 1; }
+.hero-stat-val.v-gold   { color: var(--gold); }
+.hero-stat-val.v-teal   { color: var(--teal); }
+.hero-stat-val.v-orange { color: var(--orange); }
+.hero-stat-sub   { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 4px; }
+
+.hero-stats-row2 {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.1);
+}
+.hero-stat2 {
+  padding: 16px 28px; border-right: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-stat2:last-child { border-right: none; }
+.hero-stat2-icon { font-size: 1.2rem; }
+.hero-stat2-val  { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: #fff; }
+.hero-stat2-label { font-size: 0.7rem; color: rgba(255,255,255,0.4); }
+
+/* Floating visual on right */
+.hero-visual {
+  position: absolute; right: 56px; top: 50%; transform: translateY(-50%);
+  z-index: 2; animation: fadeUp 0.8s 0.5s ease both; pointer-events: none;
+}
+.hero-card-float {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-lg); padding: 24px; backdrop-filter: blur(16px);
+  width: 280px;
+}
+.hcf-title { font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; }
+.hcf-slots { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; }
+.hcf-slot {
+  aspect-ratio: 1; border-radius: 6px; display: flex; align-items: center;
+  justify-content: center; font-size: 0.55rem; font-weight: 700;
+}
+.hcf-slot.av { background: rgba(43,187,216,0.2); color: var(--teal); border: 1px solid rgba(43,187,216,0.3); }
+.hcf-slot.oc { background: rgba(247,141,63,0.2); color: var(--orange); border: 1px solid rgba(247,141,63,0.2); }
+.hcf-slot.sl { background: rgba(252,210,113,0.25); color: var(--gold-deep); border: 1px solid rgba(252,210,113,0.4); }
+.hcf-legend { display: flex; gap: 14px; margin-top: 16px; }
+.hcf-l { font-size: 0.67rem; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 5px; }
+.hcf-l-dot { width: 8px; height: 8px; border-radius: 3px; }
+.hcf-status {
+  margin-top: 16px; padding: 10px 14px;
+  background: rgba(43,187,216,0.12); border: 1px solid rgba(43,187,216,0.2);
+  border-radius: var(--radius-sm); display: flex; align-items: center; gap: 8px;
+  font-size: 0.75rem; color: var(--teal); font-weight: 600;
+}
+
+/* Footer */
+.footer {
+  background: var(--dark); color: rgba(255,255,255,0.4);
+  padding: 28px 56px; font-size: 0.82rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+.footer strong { color: rgba(255,255,255,0.8); }
+
+/* =============================================================
+   PAGE: AUTH (LOGIN + REGISTER)
+============================================================= */
+.auth-page {
+  flex: 1; display: flex; min-height: 100vh;
+}
+.auth-left {
+  width: 45%; background: var(--dark); position: relative;
+  overflow: hidden; display: flex; flex-direction: column;
+  justify-content: center; padding: 60px 56px;
+}
+.auth-left-bg1 {
+  position: absolute; width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(43,187,216,0.15) 0%, transparent 70%);
+  top: -100px; right: -150px; pointer-events: none;
+}
+.auth-left-bg2 {
+  position: absolute; width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(252,210,113,0.12) 0%, transparent 70%);
+  bottom: -50px; left: 40px; pointer-events: none;
+}
+.auth-left-content { position: relative; z-index: 1; }
+.auth-brand {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 60px;
+  font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #fff;
+}
+.auth-tagline {
+  font-family: var(--font-display); font-size: 2.4rem; font-weight: 700;
+  color: #fff; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 20px;
+}
+.auth-tagline .ht-gold   { color: var(--gold); }
+.auth-tagline .ht-teal   { color: var(--teal); }
+.auth-sub-text { font-size: 0.95rem; color: rgba(255,255,255,0.5); line-height: 1.7; margin-bottom: 48px; }
+
+.auth-features { display: flex; flex-direction: column; gap: 16px; }
+.auth-feat {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-sm); padding: 14px 16px;
+}
+.auth-feat-icon { font-size: 1.2rem; flex-shrink: 0; }
+.auth-feat-text { font-size: 0.85rem; color: rgba(255,255,255,0.65); font-weight: 500; }
+
+.auth-right {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 60px 56px; background: var(--surface);
+}
+.auth-box {
+  width: 100%; max-width: 440px;
+}
+.auth-box-title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; color: var(--ink); margin-bottom: 6px; letter-spacing: -0.02em; }
+.auth-box-sub   { font-size: 0.9rem; color: var(--ink-muted); margin-bottom: 36px; }
+.auth-form      { display: flex; flex-direction: column; gap: 18px; }
+.auth-switch { text-align: center; font-size: 0.88rem; color: var(--ink-muted); padding-top: 4px; }
+.auth-switch a  { color: var(--teal); font-weight: 600; cursor: pointer; }
+.auth-switch a:hover { text-decoration: underline; }
+.auth-divider { display: flex; align-items: center; gap: 14px; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.auth-divider span { font-size: 0.75rem; color: var(--ink-muted); font-weight: 500; }
+.auth-demo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* =============================================================
+   PAGE: DRIVER DASHBOARD
+============================================================= */
+.welcome-band {
+  background: linear-gradient(135deg, var(--dark) 0%, var(--dark-mid) 100%);
+  border-radius: var(--radius-lg); padding: 30px 36px; margin-bottom: 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: relative; overflow: hidden; box-shadow: var(--shadow-md);
+}
+.wb-bg {
+  position: absolute; right: -20px; top: -30px; font-size: 9rem;
+  opacity: 0.06; pointer-events: none; line-height: 1;
+}
+.wb-title { font-family: var(--font-display); font-size: 1.45rem; font-weight: 700; color: #fff; margin-bottom: 5px; }
+.wb-sub   { color: rgba(255,255,255,0.5); font-size: 0.88rem; }
+.wb-tag   {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(43,187,216,0.18); border: 1px solid rgba(43,187,216,0.3);
+  color: var(--teal); padding: 5px 12px; border-radius: 99px;
+  font-size: 0.75rem; font-weight: 600; margin-top: 10px;
+}
+
+.quick-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px;
+}
+.quick-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 22px 18px; text-align: center;
+  cursor: pointer; transition: all 0.2s; text-decoration: none;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.quick-card:hover {
+  border-color: var(--teal); box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+.qc-icon { font-size: 1.8rem; }
+.qc-label { font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); }
+
+/* =============================================================
+   PAGE: ADMIN DASHBOARD
+============================================================= */
+.admin-welcome {
+  background: linear-gradient(135deg, var(--dark) 0%, var(--dark-mid) 50%, rgba(43,187,216,0.15) 100%);
+  border-radius: var(--radius-lg); padding: 30px 36px; margin-bottom: 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: relative; overflow: hidden; box-shadow: var(--shadow-md);
+}
+.aw-bg {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 200px;
+  background: linear-gradient(90deg, transparent, rgba(43,187,216,0.08));
+  pointer-events: none;
+}
+.aw-title { font-family: var(--font-display); font-size: 1.45rem; font-weight: 700; color: #fff; margin-bottom: 5px; }
+.aw-sub   { color: rgba(255,255,255,0.5); font-size: 0.88rem; }
+
+.mgmt-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+.mgmt-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; cursor: pointer;
+  transition: all 0.2s; display: flex; flex-direction: column; gap: 12px;
+  position: relative; overflow: hidden;
+}
+.mgmt-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.mgmt-card.mc-gold::before   { background: var(--gold); }
+.mgmt-card.mc-orange::before { background: var(--orange); }
+.mgmt-card.mc-teal::before   { background: var(--teal); }
+.mgmt-card.mc-dark::before   { background: var(--dark); }
+.mgmt-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.mc-icon  { font-size: 1.7rem; }
+.mc-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--ink); }
+.mc-desc  { font-size: 0.8rem; color: var(--ink-muted); line-height: 1.5; }
+.mc-count { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<!-- =============================================
+     PAGE 1: HOME
+============================================= -->
+<div class="page active" id="pg-home">
+  <!-- Navbar -->
+  <nav class="home-nav">
+    <div class="topbar-logo" onclick="showPage('pg-home')" style="font-family:var(--font-display);font-size:1.35rem;font-weight:700;color:var(--dark);display:flex;align-items:center;gap:10px;cursor:pointer;">
+      <div class="logo-mark">P</div>
+      ParkNow
+    </div>
+    <div class="home-nav-links">
+      <button class="home-nav-link" onclick="showPage('pg-home')">Home</button>
+      <button class="home-nav-link">Live Map</button>
+      <button class="home-nav-link">Pricing</button>
+      <button class="home-nav-link">About</button>
+      <button class="home-nav-link">Contact</button>
+    </div>
+    <div class="home-nav-actions">
+      <button class="btn btn-outline" onclick="showPage('pg-login')">Log In</button>
+      <button class="btn btn-dark" onclick="showPage('pg-register')">Get Started →</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg-circle hero-bg-c1"></div>
+    <div class="hero-bg-circle hero-bg-c2"></div>
+    <div class="hero-grid-overlay"></div>
+    <div class="hero-diagonal"></div>
+
+    <div class="hero-content">
+      <div class="hero-pill">
+        <span class="live-dot"></span>
+        153 slots available right now
+      </div>
+
+      <h1>
+        Smart <span class="h-gold">Parking</span><br>
+        for the <span class="h-teal">Modern</span><br>
+        <span class="h-orange">Driver.</span>
+      </h1>
+
+      <p class="hero-desc">
+        Reserve your parking slot in seconds. Real-time availability, instant booking, and seamless payments — all from one place.
+      </p>
+
+      <div class="hero-btns">
+        <button class="btn btn-gold btn-xl" onclick="showPage('pg-register')">🚗 Reserve a Slot</button>
+        <button class="btn btn-outline-white btn-xl" onclick="showPage('pg-login')">Sign In</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="hero-stats-panel">
+        <div class="hero-stats-row">
+          <div class="hero-stat">
+            <div class="hero-stat-label">Total Capacity</div>
+            <div class="hero-stat-val">240</div>
+            <div class="hero-stat-sub">Slots available</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-label">Occupied</div>
+            <div class="hero-stat-val v-orange">87</div>
+            <div class="hero-stat-sub">36.3% utilization</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-label">Available</div>
+            <div class="hero-stat-val v-teal">153</div>
+            <div class="hero-stat-sub">63.7% free</div>
+          </div>
+        </div>
+        <div class="hero-stats-row2">
+          <div class="hero-stat2">
+            <div class="hero-stat2-icon">👤</div>
+            <div>
+              <div class="hero-stat2-val">4,821</div>
+              <div class="hero-stat2-label">Happy Clients</div>
+            </div>
+          </div>
+          <div class="hero-stat2">
+            <div class="hero-stat2-icon">📅</div>
+            <div>
+              <div class="hero-stat2-val">38.6K</div>
+              <div class="hero-stat2-label">Total Reservations</div>
+            </div>
+          </div>
+          <div class="hero-stat2">
+            <div class="hero-stat2-icon">⭐</div>
+            <div>
+              <div class="hero-stat2-val" style="color:var(--gold);">4.8 / 5</div>
+              <div class="hero-stat2-label">Avg. Rating</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating visual card -->
+    <div class="hero-visual">
+      <div class="hero-card-float">
+        <div class="hcf-title">🅿️ Live Slot View — Section A</div>
+        <div class="hcf-slots" id="heroSlots"></div>
+        <div class="hcf-legend">
+          <div class="hcf-l"><div class="hcf-l-dot" style="background:rgba(43,187,216,0.5);"></div>Available</div>
+          <div class="hcf-l"><div class="hcf-l-dot" style="background:rgba(247,141,63,0.5);"></div>Occupied</div>
+          <div class="hcf-l"><div class="hcf-l-dot" style="background:rgba(252,210,113,0.5);"></div>Selected</div>
+        </div>
+        <div class="hcf-status">
+          <span class="live-dot"></span>
+          Updating in real-time
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div><strong>ParkNow</strong> &copy; 2025 · Vehicle Parking Management System</div>
+    <div style="display:flex;gap:24px;">
+      <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Support</a>
+    </div>
+  </footer>
+</div>
+
+<!-- =============================================
+     PAGE 2: REGISTER
+============================================= -->
+<div class="page" id="pg-register">
+  <div class="auth-page">
+    <!-- Left panel -->
+    <div class="auth-left">
+      <div class="auth-left-bg1"></div>
+      <div class="auth-left-bg2"></div>
+      <div class="auth-left-content">
+        <div class="auth-brand">
+          <div class="logo-mark">P</div>
+          ParkNow
+        </div>
+        <div class="auth-tagline">
+          Join <span class="ht-gold">thousands</span><br>
+          of smart<br>
+          <span class="ht-teal">drivers.</span>
+        </div>
+        <p class="auth-sub-text">Create your free account and start reserving parking slots instantly. No queues, no hassle.</p>
+        <div class="auth-features">
+          <div class="auth-feat"><div class="auth-feat-icon">🗺️</div><div class="auth-feat-text">Live parking map with real-time availability</div></div>
+          <div class="auth-feat"><div class="auth-feat-icon">⚡</div><div class="auth-feat-text">Book a slot in under 30 seconds</div></div>
+          <div class="auth-feat"><div class="auth-feat-icon">💳</div><div class="auth-feat-text">Secure online or cash payment options</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="auth-right">
+      <div class="auth-box">
+        <div class="auth-box-title">Create Account</div>
+        <div class="auth-box-sub">Start your journey with ParkNow — it's free.</div>
+
+        <form class="auth-form" onsubmit="return false;">
+          <div class="g2">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input class="form-input" type="text" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <input class="form-input" type="text" placeholder="johndoe">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input class="form-input" type="email" placeholder="john@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input class="form-input" type="tel" placeholder="+94 77 123 4567">
+          </div>
+          <div class="g2">
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input class="form-input" type="password" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm Password</label>
+              <input class="form-input" type="password" placeholder="••••••••">
+            </div>
+          </div>
+
+          <button class="btn btn-dark" style="width:100%;padding:14px;font-size:0.95rem;" onclick="showPage('pg-driver-dash')">
+            Create Account →
+          </button>
+          <div class="auth-divider"><span>or</span></div>
+          <div class="auth-switch">Already have an account? <a onclick="showPage('pg-login')">Sign in here</a></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     PAGE 3: LOGIN
+============================================= -->
+<div class="page" id="pg-login">
+  <div class="auth-page">
+    <!-- Left panel -->
+    <div class="auth-left">
+      <div class="auth-left-bg1"></div>
+      <div class="auth-left-bg2"></div>
+      <div class="auth-left-content">
+        <div class="auth-brand">
+          <div class="logo-mark">P</div>
+          ParkNow
+        </div>
+        <div class="auth-tagline">
+          Your slot<br>
+          is <span class="ht-gold">waiting</span><br>
+          for <span class="ht-teal">you.</span>
+        </div>
+        <p class="auth-sub-text">Sign in to manage your bookings, track sessions, and access the live parking map.</p>
+        <div class="auth-features">
+          <div class="auth-feat"><div class="auth-feat-icon">📊</div><div class="auth-feat-text">View your complete booking history</div></div>
+          <div class="auth-feat"><div class="auth-feat-icon">🔔</div><div class="auth-feat-text">Get notified when your session ends</div></div>
+          <div class="auth-feat"><div class="auth-feat-icon">🚗</div><div class="auth-feat-text">Manage all your registered vehicles</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="auth-right">
+      <div class="auth-box">
+        <div class="auth-box-title">Welcome Back</div>
+        <div class="auth-box-sub">Enter your credentials to access your account.</div>
+
+        <form class="auth-form" onsubmit="return false;">
+          <div class="form-group">
+            <label class="form-label">Username or Email</label>
+            <input class="form-input" type="text" placeholder="johndoe or john@example.com" id="login-user">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" type="password" placeholder="••••••••" id="login-pass">
+          </div>
+
+          <button class="btn btn-dark" style="width:100%;padding:14px;font-size:0.95rem;" onclick="handleLogin()">
+            Sign In →
+          </button>
+
+          <div class="auth-divider"><span>quick demo access</span></div>
+          <div class="auth-demo-row">
+            <button class="btn btn-outline" style="gap:8px;" onclick="goTo('pg-driver-dash')">
+              🚗 Driver Demo
+            </button>
+            <button class="btn btn-outline" style="gap:8px;" onclick="goTo('pg-admin-dash')">
+              🛡️ Admin Demo
+            </button>
+          </div>
+          <div class="auth-divider"><span>or</span></div>
+          <div class="auth-switch">Don't have an account? <a onclick="showPage('pg-register')">Register here</a></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     PAGE 4: DRIVER DASHBOARD
+============================================= -->
+<div class="page" id="pg-driver-dash">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-logo" onclick="showPage('pg-home')">
+      <div class="logo-mark">P</div>ParkNow
+    </div>
+    <div class="topbar-right">
+      <span style="font-size:0.8rem;color:var(--ink-muted);">Driver Portal</span>
+      <button class="btn btn-outline btn-sm" onclick="showPage('pg-login')">Logout</button>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div>
+          <div>
+            <div class="sidebar-uname">John Doe</div>
+            <div class="sidebar-role">Driver Account</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item active" onclick="showPage('pg-driver-dash')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item" onclick="showPage('pg-home')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item"><span class="s-icon">👤</span> My Profile</button>
+        <button class="sidebar-item"><span class="s-icon">💬</span> Give Feedback</button>
+        <button class="sidebar-item"><span class="s-icon">🧾</span> Billing</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="sidebar-item" onclick="showPage('pg-login')"><span class="s-icon">🚪</span> Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+      <!-- Welcome band -->
+      <div class="welcome-band">
+        <div class="wb-bg">🚗</div>
+        <div style="position:relative;z-index:1;">
+          <div class="wb-title">Good morning, John! 👋</div>
+          <div class="wb-sub">You have 1 active parking session today.</div>
+          <div class="wb-tag">
+            <span class="live-dot"></span>
+            Slot A-07 · Active since 09:30 AM
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;position:relative;z-index:1;">
+          <button class="btn btn-gold btn-lg">+ Book a Slot</button>
+          <button class="btn btn-outline-white">View Map</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="g4 mb-28">
+        <div class="stat-card c-gold">
+          <div class="accent-bar"></div>
+          <div class="stat-icon">📅</div>
+          <div class="stat-label">Total Bookings</div>
+          <div class="stat-value">24</div>
+          <div class="stat-sub">All time</div>
+        </div>
+        <div class="stat-card c-orange">
+          <div class="accent-bar"></div>
+          <div class="stat-icon">💰</div>
+          <div class="stat-label">Pending Bill</div>
+          <div class="stat-value" style="font-size:1.4rem;">LKR 450</div>
+          <div class="stat-sub" style="margin-top:8px;"><button class="btn btn-orange btn-sm" style="width:100%;justify-content:center;">Pay Now</button></div>
+        </div>
+        <div class="stat-card c-teal">
+          <div class="accent-bar"></div>
+          <div class="stat-icon">🟢</div>
+          <div class="stat-label">Active Sessions</div>
+          <div class="stat-value">1</div>
+          <div class="stat-sub">Slot A-07 · 2h 14m</div>
+        </div>
+        <div class="stat-card c-dark">
+          <div class="accent-bar"></div>
+          <div class="stat-icon">🚗</div>
+          <div class="stat-label">Registered Vehicles</div>
+          <div class="stat-value">2</div>
+          <div class="stat-sub" style="margin-top:8px;"><button class="btn btn-outline btn-sm" style="width:100%;justify-content:center;">Manage</button></div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="section-title">Quick Actions</div>
+      <div class="quick-grid mb-28">
+        <div class="quick-card"><div class="qc-icon">📅</div><div class="qc-label">Book a Slot</div></div>
+        <div class="quick-card"><div class="qc-icon">🚗</div><div class="qc-label">Register Vehicle</div></div>
+        <div class="quick-card"><div class="qc-icon">🗺️</div><div class="qc-label">Live Map</div></div>
+        <div class="quick-card"><div class="qc-icon">⭐</div><div class="qc-label">Give Feedback</div></div>
+      </div>
+
+      <!-- Sessions Table -->
+      <div class="section-title">
+        Sessions History
+        <button class="btn btn-outline btn-sm">View All</button>
+      </div>
+      <div class="table-wrap mb-28">
+        <table>
+          <thead>
+            <tr>
+              <th>Booking ID</th><th>Slot</th><th>Vehicle</th>
+              <th>Start</th><th>End</th><th>Duration</th><th>Fee</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span style="font-weight:700;color:var(--teal);">#BK-1024</span></td>
+              <td><span class="badge badge-teal">A-07</span></td>
+              <td>CAR-ABC-1234</td>
+              <td>09:30 AM</td><td>Active</td><td>—</td><td>—</td>
+              <td><span class="badge badge-success">Active</span></td>
+            </tr>
+            <tr>
+              <td><span style="font-weight:700;color:var(--ink-muted);">#BK-1021</span></td>
+              <td><span class="badge badge-dark">B-12</span></td>
+              <td>CAR-ABC-1234</td>
+              <td>Nov 10, 2:00 PM</td><td>5:00 PM</td><td>3h</td><td>LKR 450</td>
+              <td><span class="badge badge-teal">Paid</span></td>
+            </tr>
+            <tr>
+              <td><span style="font-weight:700;color:var(--ink-muted);">#BK-1018</span></td>
+              <td><span class="badge badge-dark">C-03</span></td>
+              <td>VAN-XYZ-5678</td>
+              <td>Nov 8, 10:00 AM</td><td>12:00 PM</td><td>2h</td><td>LKR 300</td>
+              <td><span class="badge badge-teal">Paid</span></td>
+            </tr>
+            <tr>
+              <td><span style="font-weight:700;color:var(--ink-muted);">#BK-1015</span></td>
+              <td><span class="badge badge-dark">A-15</span></td>
+              <td>CAR-ABC-1234</td>
+              <td>Nov 5, 8:00 AM</td><td>6:00 PM</td><td>10h</td><td>LKR 1,500</td>
+              <td><span class="badge badge-teal">Paid</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Vehicles Table -->
+      <div class="section-title">
+        Registered Vehicles
+        <button class="btn btn-teal btn-sm">+ Add Vehicle</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Plate Number</th><th>Type</th><th>Color</th><th>Registered</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span style="font-weight:700;font-family:var(--font-display);">CAR-ABC-1234</span></td>
+              <td>Sedan</td><td>⬛ Black</td><td>Jan 15, 2025</td>
+              <td><span class="badge badge-success">Active</span></td>
+            </tr>
+            <tr>
+              <td><span style="font-weight:700;font-family:var(--font-display);">VAN-XYZ-5678</span></td>
+              <td>Van</td><td>⬜ White</td><td>Mar 22, 2025</td>
+              <td><span class="badge badge-success">Active</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- =============================================
+     PAGE 5: ADMIN DASHBOARD
+============================================= -->
+<div class="page" id="pg-admin-dash">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-logo" onclick="showPage('pg-home')">
+      <div class="logo-mark">P</div>ParkNow
+    </div>
+    <div class="topbar-right">
+      <span class="badge badge-gold">Administrator</span>
+      <button class="btn btn-outline btn-sm">Export Report</button>
+      <button class="btn btn-outline btn-sm" onclick="showPage('pg-login')">Logout</button>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <!-- Admin Sidebar -->
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark-mid));color:#fff;">SA</div>
+          <div>
+            <div class="sidebar-uname">Super Admin</div>
+            <div class="sidebar-role">System Administrator</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Overview</div>
+        <button class="sidebar-item active" onclick="showPage('pg-admin-dash')"><span class="s-icon">📊</span> Dashboard</button>
+        <button class="sidebar-item"><span class="s-icon">🗺️</span> Parking Map</button>
+        <div class="sidebar-section">Management</div>
+        <button class="sidebar-item"><span class="s-icon">👥</span> Driver Management</button>
+        <button class="sidebar-item"><span class="s-icon">🚗</span> Vehicle Management</button>
+        <button class="sidebar-item"><span class="s-icon">🅿️</span> Slot Management</button>
+        <button class="sidebar-item"><span class="s-icon">🛡️</span> Admin Management</button>
+        <div class="sidebar-section">Operations</div>
+        <button class="sidebar-item"><span class="s-icon">📋</span> Reservations</button>
+        <button class="sidebar-item"><span class="s-icon">💬</span> Feedback <span class="s-badge">3</span></button>
+        <button class="sidebar-item"><span class="s-icon">💰</span> Revenue</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="sidebar-item" onclick="showPage('pg-login')"><span class="s-icon">🚪</span> Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+      <!-- Welcome -->
+      <div class="admin-welcome">
+        <div class="aw-bg"></div>
+        <div style="position:relative;z-index:1;">
+          <div class="aw-title">Admin Control Panel 🛡️</div>
+          <div class="aw-sub">Wednesday, March 11, 2026 · System status: <span style="color:var(--teal);">● All systems operational</span></div>
+        </div>
+        <div style="display:flex;gap:10px;position:relative;z-index:1;">
+          <button class="btn btn-teal btn-lg">+ Register Vehicle</button>
+          <button class="btn btn-outline-white">System Logs</button>
+        </div>
+      </div>
+
+      <!-- Admin Stats -->
+      <div class="g5 mb-28">
+        <div class="stat-card c-teal">
+          <div class="accent-bar"></div>
+          <div class="stat-icon">👥</div>
+          <div class="stat-label">Total Users</div>
+          <div class="stat-value">1,284</div>
+          <div class="stat-sub">↑ 12 this week</div>
+        </div>
+        <div class="stat-card c-gold">
+          <div class="accent-bar"></div>
+          <div class="stat-icon">🚗</div>
+          <div class="stat-label">Total Vehicles</div>
+          <div class="stat-value">2,051</div>
+          <div class="stat-sub">↑ 8 today</div>
+        </div>
+        <div class="stat-card c-orange">
+          <div class="accent-bar"></div>
+          <div class="stat-icon">🔴</div>
+          <div class="stat-label">Occupied Slots</div>
+          <div class="stat-value">87</div>
+          <div class="stat-sub">of 240 total</div>
+        </div>
+        <div class="stat-card c-green">
+          <div class="accent-bar"></div>
+          <div class="stat-icon">🟢</div>
+          <div class="stat-label">Available Slots</div>
+          <div class="stat-value">153</div>
+          <div class="stat-sub">63.7% free</div>
+        </div>
+        <div class="stat-card c-dark">
+          <div class="accent-bar"></div>
+          <div class="stat-icon">💰</div>
+          <div class="stat-label">Revenue</div>
+          <div class="stat-value" style="font-size:1.4rem;">482K</div>
+          <div class="stat-sub">LKR · this month</div>
+        </div>
+      </div>
+
+      <!-- Management Modules -->
+      <div class="section-title">Management Modules</div>
+      <div class="mgmt-cards mb-28">
+        <div class="mgmt-card mc-teal">
+          <div class="mc-icon">👥</div>
+          <div>
+            <div class="mc-title">Driver Management</div>
+            <div class="mc-desc">View, edit, and remove registered driver accounts from the system.</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="mc-count">1,284</div>
+            <button class="btn btn-teal btn-sm">Open →</button>
+          </div>
+        </div>
+        <div class="mgmt-card mc-gold">
+          <div class="mc-icon">🚗</div>
+          <div>
+            <div class="mc-title">Vehicle Management</div>
+            <div class="mc-desc">Manage all registered vehicles and their driver associations.</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="mc-count">2,051</div>
+            <button class="btn btn-gold btn-sm" style="color:var(--dark);">Open →</button>
+          </div>
+        </div>
+        <div class="mgmt-card mc-orange">
+          <div class="mc-icon">🅿️</div>
+          <div>
+            <div class="mc-title">Slot Management</div>
+            <div class="mc-desc">Edit parking slot configurations, rates, and maintenance status.</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="mc-count">240</div>
+            <button class="btn btn-orange btn-sm">Open →</button>
+          </div>
+        </div>
+        <div class="mgmt-card mc-dark">
+          <div class="mc-icon">🛡️</div>
+          <div>
+            <div class="mc-title">Admin Management</div>
+            <div class="mc-desc">Add and manage system administrator accounts and roles.</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="mc-count">3</div>
+            <button class="btn btn-dark btn-sm">Open →</button>
+          </div>
+        </div>
+        <div class="mgmt-card mc-teal">
+          <div class="mc-icon">📋</div>
+          <div>
+            <div class="mc-title">Reservation Management</div>
+            <div class="mc-desc">Monitor active bookings, sessions history, and revenue tracking.</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="mc-count">38.6K</div>
+            <button class="btn btn-teal btn-sm">Open →</button>
+          </div>
+        </div>
+        <div class="mgmt-card mc-gold">
+          <div class="mc-icon">💬</div>
+          <div>
+            <div class="mc-title">Feedback Management</div>
+            <div class="mc-desc">Review driver ratings and feedback. 3 new submissions pending.</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="mc-count" style="display:flex;align-items:center;gap:8px;">324 <span class="badge badge-orange">3 new</span></div>
+            <button class="btn btn-gold btn-sm" style="color:var(--dark);">Open →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Reservations -->
+      <div class="section-title">
+        Recent Reservations
+        <button class="btn btn-outline btn-sm">View All</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Booking ID</th><th>Driver</th><th>Vehicle</th><th>Slot</th><th>Check-In</th><th>Status</th><th>Fee</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span style="font-weight:700;color:var(--teal);">#BK-1024</span></td>
+              <td>John Doe</td><td>CAR-ABC-1234</td>
+              <td><span class="badge badge-teal">A-07</span></td>
+              <td>09:30 AM today</td>
+              <td><span class="badge badge-success">Active</span></td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><span style="font-weight:700;color:var(--teal);">#BK-1023</span></td>
+              <td>Sarah Kim</td><td>SUV-DEF-9012</td>
+              <td><span class="badge badge-teal">B-03</span></td>
+              <td>08:45 AM today</td>
+              <td><span class="badge badge-success">Active</span></td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><span style="font-weight:700;color:var(--ink-muted);">#BK-1022</span></td>
+              <td>Ahmed Ali</td><td>CAR-GHI-3456</td>
+              <td><span class="badge badge-dark">C-11</span></td>
+              <td>07:00 AM today</td>
+              <td><span class="badge badge-teal">Completed</span></td>
+              <td style="font-weight:700;">LKR 600</td>
+            </tr>
+            <tr>
+              <td><span style="font-weight:700;color:var(--ink-muted);">#BK-1021</span></td>
+              <td>John Doe</td><td>CAR-ABC-1234</td>
+              <td><span class="badge badge-dark">B-12</span></td>
+              <td>Nov 10, 2025</td>
+              <td><span class="badge badge-teal">Completed</span></td>
+              <td style="font-weight:700;">LKR 450</td>
+            </tr>
+            <tr>
+              <td><span style="font-weight:700;color:var(--ink-muted);">#BK-1020</span></td>
+              <td>Priya Nair</td><td>SUV-PQR-7890</td>
+              <td><span class="badge badge-dark">A-18</span></td>
+              <td>Nov 10, 2025</td>
+              <td><span class="badge badge-warning">Unpaid</span></td>
+              <td style="font-weight:700;color:var(--warning);">LKR 750</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+// ========== NAVIGATION ==========
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const t = document.getElementById(id);
+  if (t) { t.classList.add('active'); window.scrollTo(0,0); }
+}
+function goTo(id) { showPage(id); }
+
+function handleLogin() {
+  const u = (document.getElementById('login-user').value || '').toLowerCase();
+  showPage(u.includes('admin') || u === 'a' ? 'pg-admin-dash' : 'pg-driver-dash');
+}
+
+// ========== HERO MINI SLOT MAP ==========
+function buildHeroSlots() {
+  const container = document.getElementById('heroSlots');
+  if (!container) return;
+  const occ = [2, 5, 8, 12, 16, 17];
+  const sel = [10];
+  container.innerHTML = '';
+  for (let i = 1; i <= 20; i++) {
+    const d = document.createElement('div');
+    const isOcc = occ.includes(i);
+    const isSel = sel.includes(i);
+    d.className = 'hcf-slot ' + (isSel ? 'sl' : isOcc ? 'oc' : 'av');
+    d.textContent = 'A' + String(i).padStart(2,'0');
+    container.appendChild(d);
+  }
+}
+
+window.addEventListener('load', () => {
+  buildHeroSlots();
+});
+</script>
+</body>
+</html>

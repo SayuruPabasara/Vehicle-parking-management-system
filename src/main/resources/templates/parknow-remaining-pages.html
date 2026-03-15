@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParkNow — Extended Pages</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   BRAND TOKENS — matches parknow-core-ui.html exactly
+============================================================ */
+:root {
+  --gold:#FCD271; --gold-deep:#e8b93a; --gold-light:#fef8e6;
+  --orange:#F78D3F; --orange-deep:#d96e20; --orange-light:#fff0e5;
+  --white:#FFFFFF;
+  --teal:#2BBBD8; --teal-deep:#1a9ab5; --teal-light:#e6f8fc;
+  --dark:#102E37; --dark-mid:#1a4250; --dark-soft:#255060;
+  --surface:#F7F9FA; --surface-card:#FFFFFF; --surface-alt:#EEF2F4;
+  --ink:#0D1F25; --ink-soft:#2E4A55; --ink-muted:#6B8A95;
+  --border:#D8E5E9; --border-mid:#B8CFD6;
+  --success:#16a94e; --success-light:#e6f7ee;
+  --danger:#e03c3c; --danger-light:#fdeaea;
+  --warning:#d4820a; --warning-light:#fdf3e3;
+  --shadow-sm:0 1px 3px rgba(16,46,55,0.07),0 1px 2px rgba(16,46,55,0.05);
+  --shadow-md:0 4px 20px rgba(16,46,55,0.10),0 2px 8px rgba(16,46,55,0.06);
+  --shadow-lg:0 12px 48px rgba(16,46,55,0.14),0 4px 16px rgba(16,46,55,0.08);
+  --shadow-glow-gold:0 4px 24px rgba(252,210,113,0.4);
+  --shadow-glow-teal:0 4px 24px rgba(43,187,216,0.35);
+  --radius-sm:8px; --radius:14px; --radius-lg:22px; --radius-xl:32px;
+  --font-display:'Familjen Grotesk',sans-serif;
+  --font-body:'Plus Jakarta Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-body);background:var(--surface);color:var(--ink);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* PAGE SYSTEM */
+.page{display:none;min-height:100vh;flex-direction:column;}
+.page.active{display:flex;animation:pageIn 0.38s cubic-bezier(0.22,1,0.36,1);}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-body);font-weight:600;font-size:0.88rem;padding:10px 22px;border-radius:var(--radius-sm);border:none;cursor:pointer;transition:all 0.2s cubic-bezier(0.22,1,0.36,1);text-decoration:none;white-space:nowrap;letter-spacing:0.01em;line-height:1;}
+.btn-gold{background:var(--gold);color:var(--dark);}
+.btn-gold:hover{background:var(--gold-deep);transform:translateY(-2px);box-shadow:var(--shadow-glow-gold);}
+.btn-orange{background:var(--orange);color:#fff;}
+.btn-orange:hover{background:var(--orange-deep);transform:translateY(-2px);}
+.btn-dark{background:var(--dark);color:#fff;}
+.btn-dark:hover{background:var(--dark-mid);transform:translateY(-2px);}
+.btn-teal{background:var(--teal);color:#fff;}
+.btn-teal:hover{background:var(--teal-deep);transform:translateY(-2px);box-shadow:var(--shadow-glow-teal);}
+.btn-outline{background:transparent;color:var(--ink-soft);border:1.5px solid var(--border-mid);}
+.btn-outline:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-light);}
+.btn-outline-white{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,0.35);}
+.btn-outline-white:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.7);}
+.btn-ghost{background:transparent;color:var(--ink-muted);border:none;padding:8px 14px;}
+.btn-ghost:hover{background:var(--surface-alt);color:var(--ink);}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-danger:hover{background:#c02b2b;}
+.btn-success{background:var(--success);color:#fff;}
+.btn-success:hover{background:#118a3e;}
+.btn-sm{padding:7px 16px;font-size:0.8rem;border-radius:7px;}
+.btn-lg{padding:14px 34px;font-size:1rem;font-weight:700;}
+.btn-icon{width:36px;height:36px;padding:0;border-radius:var(--radius-sm);}
+
+/* FORM */
+.form-group{display:flex;flex-direction:column;gap:7px;}
+.form-label{font-size:0.75rem;font-weight:700;color:var(--ink-soft);letter-spacing:0.07em;text-transform:uppercase;}
+.form-input{font-family:var(--font-body);font-size:0.92rem;color:var(--ink);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 15px;transition:all 0.2s;outline:none;width:100%;}
+.form-input:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(43,187,216,0.15);}
+.form-input::placeholder{color:var(--ink-muted);font-weight:400;}
+select.form-input{cursor:pointer;}
+textarea.form-input{resize:vertical;}
+.form-hint{font-size:0.75rem;color:var(--ink-muted);}
+
+/* CARD */
+.card{background:var(--surface-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:24px;}
+.card-lg{padding:32px;border-radius:var(--radius-lg);}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:99px;font-size:0.72rem;font-weight:700;letter-spacing:0.03em;}
+.badge::before{content:'●';font-size:0.45rem;}
+.badge-success{background:var(--success-light);color:var(--success);}
+.badge-danger{background:var(--danger-light);color:var(--danger);}
+.badge-warning{background:var(--warning-light);color:var(--warning);}
+.badge-teal{background:var(--teal-light);color:var(--teal-deep);}
+.badge-gold{background:var(--gold-light);color:#8a6200;}
+.badge-orange{background:var(--orange-light);color:var(--orange-deep);}
+.badge-dark{background:var(--dark);color:#fff;font-size:0.7rem;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+thead{background:var(--dark);}
+thead th{padding:13px 18px;text-align:left;font-size:0.7rem;font-weight:700;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.08em;}
+tbody td{padding:13px 18px;border-bottom:1px solid var(--border);color:var(--ink-soft);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:#f4fbfd;}
+.td-actions{display:flex;gap:6px;}
+
+/* LAYOUT */
+.app-shell{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:256px;background:var(--dark);color:#fff;display:flex;flex-direction:column;flex-shrink:0;min-height:calc(100vh - 64px);}
+.sidebar-user{margin:16px 12px;padding:14px;background:rgba(255,255,255,0.07);border-radius:var(--radius-sm);display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,0.08);}
+.sidebar-avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;font-family:var(--font-display);}
+.sidebar-uname{font-size:0.88rem;font-weight:600;color:#fff;}
+.sidebar-role{font-size:0.7rem;color:rgba(255,255,255,0.4);margin-top:1px;}
+.sidebar-nav{flex:1;padding:8px 12px;display:flex;flex-direction:column;gap:2px;}
+.sidebar-section{font-size:0.65rem;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.12em;padding:14px 10px 6px;}
+.sidebar-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-sm);font-size:0.86rem;font-weight:500;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;background:none;border:none;font-family:var(--font-body);text-align:left;width:100%;}
+.sidebar-item:hover{background:rgba(255,255,255,0.08);color:#fff;}
+.sidebar-item.active{background:var(--gold);color:var(--dark);font-weight:700;}
+.sidebar-item .s-icon{font-size:1rem;width:22px;text-align:center;flex-shrink:0;}
+.sidebar-item .s-badge{margin-left:auto;background:var(--orange);color:#fff;font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:99px;}
+.sidebar-bottom{padding:12px;border-top:1px solid rgba(255,255,255,0.08);}
+
+/* TOPBAR */
+.topbar{background:var(--white);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;box-shadow:var(--shadow-sm);flex-shrink:0;}
+.topbar-logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:1.35rem;font-weight:700;color:var(--dark);text-decoration:none;cursor:pointer;}
+.logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--gold) 0%,var(--orange) 100%);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:var(--dark);font-family:var(--font-display);}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+
+/* MAIN */
+.main-content{flex:1;padding:36px 40px;overflow-y:auto;background:var(--surface);}
+.page-header{margin-bottom:30px;}
+.page-header h1{font-family:var(--font-display);font-size:1.7rem;font-weight:700;color:var(--ink);letter-spacing:-0.02em;}
+.page-header p{font-size:0.9rem;color:var(--ink-muted);margin-top:5px;}
+.ph-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.gap-16{display:flex;flex-direction:column;gap:16px;}
+.gap-20{display:flex;flex-direction:column;gap:20px;}
+.mb-28{margin-bottom:28px;}
+.mb-20{margin-bottom:20px;}
+.mb-14{margin-bottom:14px;}
+
+/* STAT CARD */
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.stat-card .accent-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0;}
+.stat-card.c-gold .accent-bar{background:var(--gold);}
+.stat-card.c-orange .accent-bar{background:var(--orange);}
+.stat-card.c-teal .accent-bar{background:var(--teal);}
+.stat-card.c-green .accent-bar{background:var(--success);}
+.stat-card.c-danger .accent-bar{background:var(--danger);}
+.stat-card.c-dark .accent-bar{background:var(--dark);}
+.stat-icon{font-size:1.5rem;margin-bottom:12px;}
+.stat-label{font-size:0.72rem;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+.stat-value{font-family:var(--font-display);font-size:1.9rem;font-weight:700;color:var(--ink);line-height:1;}
+.stat-sub{font-size:0.78rem;color:var(--ink-muted);margin-top:6px;}
+
+/* SECTION TITLE */
+.section-title{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.divider{height:1px;background:var(--border);margin:24px 0;}
+
+/* LIVE DOT */
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pulse 1.5s infinite;display:inline-block;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.4);}}
+
+/* SEARCH BAR */
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 14px;transition:all 0.2s;}
+.search-bar:focus-within{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(43,187,216,0.12);}
+.search-bar input{border:none;background:transparent;outline:none;font-family:var(--font-body);font-size:0.9rem;color:var(--ink);width:100%;}
+.search-bar input::placeholder{color:var(--ink-muted);}
+
+/* DRIVER SIDEBAR SHORTCUT */
+.driver-sidebar-items{display:contents;}
+.admin-sidebar-items{display:contents;}
+
+/* ================================================================
+   PAGE 6 — DRIVER PROFILE
+================================================================ */
+.profile-hero{background:linear-gradient(135deg,var(--dark) 0%,var(--dark-mid) 60%,rgba(43,187,216,0.2) 100%);border-radius:var(--radius-lg);padding:36px;margin-bottom:24px;display:flex;align-items:center;gap:28px;position:relative;overflow:hidden;}
+.profile-hero::after{content:'👤';position:absolute;right:40px;font-size:7rem;opacity:0.05;pointer-events:none;}
+.profile-avatar-xl{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--orange));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:var(--dark);flex-shrink:0;border:3px solid rgba(255,255,255,0.2);box-shadow:0 0 0 6px rgba(252,210,113,0.15);}
+.profile-hero-name{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:4px;}
+.profile-hero-meta{font-size:0.85rem;color:rgba(255,255,255,0.5);}
+.profile-hero-badges{display:flex;gap:8px;margin-top:10px;}
+.profile-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-size:0.72rem;font-weight:600;}
+.profile-pill.pp-teal{background:rgba(43,187,216,0.15);border:1px solid rgba(43,187,216,0.25);color:var(--teal);}
+.profile-pill.pp-gold{background:rgba(252,210,113,0.15);border:1px solid rgba(252,210,113,0.25);color:var(--gold);}
+
+/* ================================================================
+   PAGE 7 — VEHICLE REGISTRATION
+================================================================ */
+.vtype-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.vtype-card{border:2px solid var(--border);border-radius:var(--radius);padding:14px 10px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--surface);}
+.vtype-card:hover{border-color:var(--teal);background:var(--teal-light);}
+.vtype-card.selected{border-color:var(--teal);background:var(--teal-light);box-shadow:var(--shadow-glow-teal);}
+.vtype-icon{font-size:1.8rem;margin-bottom:6px;}
+.vtype-label{font-size:0.75rem;font-weight:700;color:var(--ink-soft);}
+
+.color-swatches{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.cswatch{width:34px;height:34px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.15s;box-shadow:var(--shadow-sm);}
+.cswatch:hover{transform:scale(1.15);}
+.cswatch.selected{border-color:var(--teal);box-shadow:0 0 0 3px rgba(43,187,216,0.3);}
+
+/* ================================================================
+   PAGE 8 — PARKING MAP
+================================================================ */
+.map-toolbar{display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:20px;flex-wrap:wrap;}
+.map-legend{display:flex;gap:20px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:0.8rem;color:var(--ink-soft);font-weight:500;}
+.legend-dot{width:12px;height:12px;border-radius:4px;flex-shrink:0;}
+.ld-available{background:rgba(43,187,216,0.25);border:2px solid var(--teal);}
+.ld-occupied{background:rgba(224,60,60,0.15);border:2px solid var(--danger);}
+.ld-selected{background:rgba(252,210,113,0.35);border:2px solid var(--gold-deep);}
+.ld-disabled{background:var(--surface-alt);border:2px solid var(--border-mid);}
+
+.map-canvas{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-sm);}
+.map-section-label{font-size:0.7rem;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.map-section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.map-lane{background:var(--surface-alt);border:1px dashed var(--border-mid);border-radius:8px;height:28px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:var(--ink-muted);letter-spacing:0.15em;text-transform:uppercase;margin:14px 0;}
+
+.slot-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;}
+.slot{aspect-ratio:1;border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;cursor:pointer;transition:all 0.15s;border:2px solid transparent;position:relative;}
+.slot-id{font-size:0.58rem;font-weight:700;line-height:1;}
+.slot-ico{font-size:0.9rem;margin-top:2px;}
+.slot.av{background:rgba(43,187,216,0.1);border-color:rgba(43,187,216,0.3);color:var(--teal-deep);}
+.slot.av:hover{background:rgba(43,187,216,0.2);border-color:var(--teal);transform:scale(1.06);box-shadow:var(--shadow-glow-teal);}
+.slot.oc{background:rgba(224,60,60,0.07);border-color:rgba(224,60,60,0.2);color:var(--danger);cursor:not-allowed;}
+.slot.sl{background:rgba(252,210,113,0.25);border-color:var(--gold-deep);color:#6b4a00;box-shadow:var(--shadow-glow-gold);}
+.slot.ds{background:var(--surface-alt);border-color:var(--border);color:var(--ink-muted);cursor:not-allowed;opacity:0.6;}
+
+.map-summary{background:var(--dark);border-radius:var(--radius);padding:18px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px;}
+.ms-item{text-align:center;}
+.ms-val{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:#fff;}
+.ms-label{font-size:0.7rem;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;}
+
+.selected-slot-panel{background:var(--gold-light);border:1.5px solid var(--gold-deep);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin-top:16px;}
+.ssp-info{display:flex;align-items:center;gap:12px;}
+.ssp-badge{background:var(--gold);color:var(--dark);font-family:var(--font-display);font-size:1rem;font-weight:700;padding:8px 16px;border-radius:var(--radius-sm);}
+.ssp-details{font-size:0.85rem;color:var(--ink-soft);}
+.ssp-details strong{font-size:0.95rem;color:var(--ink);display:block;}
+
+/* ================================================================
+   PAGE 9 — BOOKING
+================================================================ */
+.booking-step{display:flex;align-items:flex-start;gap:16px;margin-bottom:28px;}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--dark);color:var(--gold);font-family:var(--font-display);font-size:0.9rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step-body{flex:1;}
+.step-title{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:12px;}
+
+.payment-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.payment-opt{border:2px solid var(--border);border-radius:var(--radius);padding:16px 18px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:14px;background:var(--surface);}
+.payment-opt:hover{border-color:var(--teal);}
+.payment-opt.selected{border-color:var(--teal);background:var(--teal-light);box-shadow:0 0 0 3px rgba(43,187,216,0.1);}
+.payment-opt input[type=radio]{accent-color:var(--teal);width:16px;height:16px;cursor:pointer;}
+.po-label{font-weight:700;font-size:0.9rem;color:var(--ink);}
+.po-sub{font-size:0.75rem;color:var(--ink-muted);margin-top:2px;}
+
+.fee-box{background:var(--dark);border-radius:var(--radius);padding:24px;text-align:center;position:relative;overflow:hidden;}
+.fee-box::before{content:'';position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(252,210,113,0.12) 0%,transparent 70%);top:-60px;right:-40px;pointer-events:none;}
+.fee-box-label{font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;}
+.fee-box-amount{font-family:var(--font-display);font-size:2.6rem;font-weight:700;color:var(--gold);line-height:1;}
+.fee-box-sub{font-size:0.78rem;color:rgba(255,255,255,0.35);margin-top:6px;}
+
+.booking-summary-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-md);}
+.bsc-header{background:var(--dark);padding:20px 24px;}
+.bsc-title{font-family:var(--font-display);font-size:1rem;font-weight:700;color:#fff;margin-bottom:4px;}
+.bsc-sub{font-size:0.8rem;color:rgba(255,255,255,0.45);}
+.bsc-body{padding:20px 24px;}
+.bsc-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;}
+.bsc-row:last-child{border-bottom:none;}
+.bsc-key{color:var(--ink-muted);font-weight:500;}
+.bsc-val{font-weight:700;color:var(--ink);}
+.bsc-total-row{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--gold-light);border-top:1px solid var(--border);}
+.bsc-total-label{font-size:0.8rem;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.05em;}
+.bsc-total-val{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--dark);}
+
+/* ================================================================
+   PAGE 10 — FEEDBACK
+================================================================ */
+.feedback-hero{background:linear-gradient(135deg,var(--dark) 0%,var(--dark-mid) 100%);border-radius:var(--radius-lg);padding:40px;text-align:center;margin-bottom:32px;position:relative;overflow:hidden;}
+.feedback-hero::before{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(252,210,113,0.08) 0%,transparent 70%);top:-100px;left:50%;transform:translateX(-50%);}
+.fh-emoji{font-size:3rem;margin-bottom:16px;position:relative;}
+.fh-title{font-family:var(--font-display);font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:8px;}
+.fh-sub{font-size:0.92rem;color:rgba(255,255,255,0.5);}
+
+.star-row{display:flex;gap:8px;align-items:center;}
+.star-btn{font-size:2.2rem;cursor:pointer;transition:transform 0.1s,filter 0.1s;background:none;border:none;padding:0;filter:grayscale(1) opacity(0.35);}
+.star-btn:hover,.star-btn.lit{filter:grayscale(0) opacity(1);transform:scale(1.12);}
+.star-rating-label{font-size:0.85rem;color:var(--ink-muted);margin-left:8px;font-weight:500;}
+
+.rating-categories{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.rating-cat{border:2px solid var(--border);border-radius:var(--radius-sm);padding:12px;text-align:center;cursor:pointer;transition:all 0.15s;background:var(--surface);}
+.rating-cat:hover{border-color:var(--teal);}
+.rating-cat.selected{border-color:var(--teal);background:var(--teal-light);}
+.rc-icon{font-size:1.4rem;margin-bottom:4px;}
+.rc-label{font-size:0.75rem;font-weight:700;color:var(--ink-soft);}
+
+/* ================================================================
+   ADMIN PAGES — common
+================================================================ */
+.admin-page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;}
+.admin-page-title{font-family:var(--font-display);font-size:1.7rem;font-weight:700;color:var(--ink);letter-spacing:-0.02em;}
+.admin-page-sub{font-size:0.9rem;color:var(--ink-muted);margin-top:4px;}
+
+.filter-bar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.filter-bar .search-wrap{flex:1;min-width:220px;max-width:360px;}
+
+/* Inline edit highlight */
+.editing td{background:#fffbf0 !important;}
+
+/* Modal overlay */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,25,30,0.55);backdrop-filter:blur(4px);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:36px;width:100%;max-width:500px;animation:modalIn 0.3s cubic-bezier(0.22,1,0.36,1);}
+@keyframes modalIn{from{opacity:0;transform:scale(0.94);}to{opacity:1;transform:scale(1);}}
+.modal-title{font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:6px;}
+.modal-sub{font-size:0.88rem;color:var(--ink-muted);margin-bottom:28px;}
+.modal-actions{display:flex;gap:10px;margin-top:24px;justify-content:flex-end;}
+
+/* Confirm delete modal */
+.modal-danger .modal-title{color:var(--danger);}
+
+/* Toast notification */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--dark);color:#fff;border-radius:var(--radius-sm);padding:14px 22px;font-size:0.88rem;font-weight:500;box-shadow:var(--shadow-lg);z-index:999;display:flex;align-items:center;gap:10px;transform:translateY(80px);opacity:0;transition:all 0.35s cubic-bezier(0.22,1,0.36,1);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-icon{font-size:1.1rem;}
+
+/* ================================================================
+   INLINE REUSABLE — Admin sidebar  
+================================================================ */
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     PAGE 6 — DRIVER PROFILE
+================================================================ -->
+<div class="page active" id="pg-profile">
+  <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-profile')">
+      <div class="logo-mark">P</div>ParkNow
+    </div>
+    <div class="topbar-right">
+      <span style="font-size:0.8rem;color:var(--ink-muted);">Driver Portal</span>
+      <button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button>
+    </div>
+  </div>
+  <div class="app-shell">
+    <!-- Driver Sidebar -->
+    <aside class="sidebar" id="driver-sidebar">
+      <div style="padding:16px 12px 0;">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div>
+          <div><div class="sidebar-uname">John Doe</div><div class="sidebar-role">Driver Account</div></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-dash')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item" onclick="nav('pg-map')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item" onclick="nav('pg-booking')"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item" onclick="nav('pg-vehicles')"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item active"><span class="s-icon">👤</span> My Profile</button>
+        <button class="sidebar-item" onclick="nav('pg-feedback')"><span class="s-icon">💬</span> Give Feedback</button>
+        <button class="sidebar-item"><span class="s-icon">🧾</span> Billing</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <!-- Profile Hero -->
+      <div class="profile-hero">
+        <div class="profile-avatar-xl">JD</div>
+        <div style="position:relative;z-index:1;">
+          <div class="profile-hero-name">John Doe</div>
+          <div class="profile-hero-meta">@johndoe · john@example.com · +94 77 123 4567</div>
+          <div class="profile-hero-badges">
+            <span class="profile-pill pp-teal"><span class="live-dot" style="background:var(--teal);"></span> Active Driver</span>
+            <span class="profile-pill pp-gold">⭐ 4.9 Rating</span>
+            <span class="profile-pill pp-teal">24 Bookings</span>
+          </div>
+        </div>
+        <div style="margin-left:auto;position:relative;z-index:1;">
+          <button class="btn btn-gold" onclick="toggleEdit()">✏️ Edit Profile</button>
+        </div>
+      </div>
+
+      <div class="g2" style="align-items:start;">
+        <!-- Personal Info -->
+        <div class="card">
+          <div class="section-title" style="margin-bottom:20px;">Personal Information</div>
+          <div class="gap-16" id="profile-fields">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input class="form-input" id="pf-name" value="John Doe" disabled>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <input class="form-input" id="pf-user" value="johndoe" disabled>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input class="form-input" id="pf-email" value="john@example.com" disabled>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input class="form-input" id="pf-phone" value="+94 77 123 4567" disabled>
+            </div>
+            <div id="profile-actions" style="display:none;gap:10px;display:none;">
+              <button class="btn btn-teal" onclick="saveProfile()">Save Changes</button>
+              <button class="btn btn-outline" onclick="cancelEdit()">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security -->
+        <div class="gap-20" style="display:flex;flex-direction:column;">
+          <div class="card">
+            <div class="section-title" style="margin-bottom:20px;">Security</div>
+            <div class="gap-16">
+              <div class="form-group">
+                <label class="form-label">Current Password</label>
+                <input class="form-input" type="password" placeholder="••••••••">
+              </div>
+              <div class="form-group">
+                <label class="form-label">New Password</label>
+                <input class="form-input" type="password" placeholder="••••••••">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm New Password</label>
+                <input class="form-input" type="password" placeholder="••••••••">
+              </div>
+              <button class="btn btn-dark" onclick="showToast('🔒 Password updated successfully')">Update Password</button>
+            </div>
+          </div>
+          <div class="card" style="border-color:var(--danger-light);">
+            <div class="section-title" style="margin-bottom:12px;color:var(--danger);">Danger Zone</div>
+            <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:16px;">These actions are permanent and cannot be undone.</p>
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-danger btn-sm" onclick="showToast('⚠️ Account deletion requested')">Delete Account</button>
+              <button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 7 — VEHICLE REGISTRATION
+================================================================ -->
+<div class="page" id="pg-vehicles">
+  <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-vehicles')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right">
+      <span style="font-size:0.8rem;color:var(--ink-muted);">Driver Portal</span>
+      <button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button>
+    </div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div><div><div class="sidebar-uname">John Doe</div><div class="sidebar-role">Driver Account</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-dash')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item" onclick="nav('pg-map')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item" onclick="nav('pg-booking')"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item active"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item" onclick="nav('pg-profile')"><span class="s-icon">👤</span> My Profile</button>
+        <button class="sidebar-item" onclick="nav('pg-feedback')"><span class="s-icon">💬</span> Give Feedback</button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div class="ph-row">
+          <div><h1>My Vehicles</h1><p>Register and manage vehicles linked to your account.</p></div>
+        </div>
+      </div>
+
+      <div class="g2" style="align-items:start;">
+        <!-- Register form -->
+        <div class="card">
+          <div class="section-title" style="margin-bottom:20px;">Register New Vehicle</div>
+          <div class="gap-16">
+            <div class="form-group">
+              <label class="form-label">Plate Number</label>
+              <input class="form-input" id="veh-plate" placeholder="e.g. CAR-ABC-1234" style="text-transform:uppercase;font-family:var(--font-display);font-weight:700;letter-spacing:0.05em;">
+              <span class="form-hint">Enter as shown on your registration document.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Vehicle Type</label>
+              <div class="vtype-grid" id="vtypeGrid">
+                <div class="vtype-card selected" onclick="selectVType(this)"><div class="vtype-icon">🚗</div><div class="vtype-label">Sedan</div></div>
+                <div class="vtype-card" onclick="selectVType(this)"><div class="vtype-icon">🚙</div><div class="vtype-label">SUV</div></div>
+                <div class="vtype-card" onclick="selectVType(this)"><div class="vtype-icon">🚐</div><div class="vtype-label">Van</div></div>
+                <div class="vtype-card" onclick="selectVType(this)"><div class="vtype-icon">🏍️</div><div class="vtype-label">Moto</div></div>
+                <div class="vtype-card" onclick="selectVType(this)"><div class="vtype-icon">🚚</div><div class="vtype-label">Truck</div></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Color</label>
+              <div class="color-swatches">
+                <div class="cswatch selected" style="background:#1a1a1a;" title="Black" onclick="selectColor(this,'Black')"></div>
+                <div class="cswatch" style="background:#f0f0f0;border:2px solid #ccc;" title="White" onclick="selectColor(this,'White')"></div>
+                <div class="cswatch" style="background:#c0392b;" title="Red" onclick="selectColor(this,'Red')"></div>
+                <div class="cswatch" style="background:#2471a3;" title="Blue" onclick="selectColor(this,'Blue')"></div>
+                <div class="cswatch" style="background:#1e8449;" title="Green" onclick="selectColor(this,'Green')"></div>
+                <div class="cswatch" style="background:#d4ac0d;" title="Yellow" onclick="selectColor(this,'Yellow')"></div>
+                <div class="cswatch" style="background:#e67e22;" title="Orange" onclick="selectColor(this,'Orange')"></div>
+                <div class="cswatch" style="background:#95a5a6;" title="Silver" onclick="selectColor(this,'Silver')"></div>
+                <div class="cswatch" style="background:#566573;" title="Gray" onclick="selectColor(this,'Gray')"></div>
+              </div>
+              <input class="form-input" id="veh-color" value="Black" placeholder="Color name" style="margin-top:10px;">
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-teal" style="flex:1;justify-content:center;" onclick="registerVehicle()">Register Vehicle</button>
+              <button class="btn btn-outline" onclick="resetVehForm()">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Registered vehicles -->
+        <div>
+          <div class="section-title">Registered Vehicles <span class="badge badge-teal">2 vehicles</span></div>
+          <div class="gap-16" id="vehicleList">
+            <div class="card" style="display:flex;align-items:center;gap:16px;">
+              <div style="font-size:2.5rem;">🚗</div>
+              <div style="flex:1;">
+                <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;">CAR-ABC-1234</div>
+                <div style="font-size:0.82rem;color:var(--ink-muted);margin-top:3px;">Sedan · ⬛ Black · Registered Jan 15, 2025</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span class="badge badge-success">Active</span>
+                <button class="btn btn-danger btn-sm" onclick="showToast('🗑️ Vehicle removed')">Remove</button>
+              </div>
+            </div>
+            <div class="card" style="display:flex;align-items:center;gap:16px;">
+              <div style="font-size:2.5rem;">🚐</div>
+              <div style="flex:1;">
+                <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;">VAN-XYZ-5678</div>
+                <div style="font-size:0.82rem;color:var(--ink-muted);margin-top:3px;">Van · ⬜ White · Registered Mar 22, 2025</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span class="badge badge-success">Active</span>
+                <button class="btn btn-danger btn-sm" onclick="showToast('🗑️ Vehicle removed')">Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 8 — PARKING SLOT MAP
+================================================================ -->
+<div class="page" id="pg-map">
+  <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-map')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right">
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--ink-muted);"><span class="live-dot"></span> Live</div>
+      <button class="btn btn-teal btn-sm" id="bookSlotBtn" onclick="nav('pg-booking')" style="display:none;">📅 Book Selected</button>
+      <button class="btn btn-outline btn-sm" onclick="nav('pg-vehicles')">🚗 Register Vehicle</button>
+    </div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div><div><div class="sidebar-uname">John Doe</div><div class="sidebar-role">Driver Account</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-dash')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item active"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item" onclick="nav('pg-booking')"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item" onclick="nav('pg-vehicles')"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item" onclick="nav('pg-profile')"><span class="s-icon">👤</span> My Profile</button>
+        <button class="sidebar-item" onclick="nav('pg-feedback')"><span class="s-icon">💬</span> Give Feedback</button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div class="ph-row">
+          <div><h1>Live Parking Map</h1><p>Click an available slot to select it, then proceed to booking.</p></div>
+          <div style="display:flex;gap:10px;">
+            <select class="form-input" style="width:150px;padding:9px 14px;">
+              <option>All Sections</option><option>Section A</option><option>Section B</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legend + toolbar -->
+      <div class="map-toolbar">
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot ld-available"></div>Available</div>
+          <div class="legend-item"><div class="legend-dot ld-occupied"></div>Occupied</div>
+          <div class="legend-item"><div class="legend-dot ld-selected"></div>Selected</div>
+          <div class="legend-item"><div class="legend-dot ld-disabled"></div>Maintenance</div>
+        </div>
+        <div style="margin-left:auto;font-size:0.78rem;color:var(--ink-muted);">Last updated: just now</div>
+      </div>
+
+      <!-- Map Canvas -->
+      <div class="map-canvas">
+        <div class="map-section-label">Section A — Ground Floor</div>
+        <div class="slot-grid" id="gridA"></div>
+        <div class="map-lane">⬅ Driving Lane ➡</div>
+        <div class="map-section-label" style="margin-top:8px;">Section B — Ground Floor</div>
+        <div class="slot-grid" id="gridB"></div>
+        <div class="map-lane">⬅ Driving Lane ➡</div>
+        <div class="map-section-label" style="margin-top:8px;">Section C — Ground Floor</div>
+        <div class="slot-grid" id="gridC"></div>
+
+        <!-- Selected slot panel -->
+        <div class="selected-slot-panel" id="selectedPanel" style="display:none;">
+          <div class="ssp-info">
+            <div class="ssp-badge" id="selectedSlotId">—</div>
+            <div class="ssp-details">
+              <strong id="selectedSlotSection">Section A</strong>
+              <span id="selectedSlotMeta">Standard · LKR 150/hr</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-gold btn-lg" onclick="nav('pg-booking')">📅 Book This Slot</button>
+            <button class="btn btn-outline btn-sm" onclick="clearSelection()">✕ Deselect</button>
+          </div>
+        </div>
+
+        <!-- Summary bar -->
+        <div class="map-summary">
+          <div class="ms-item"><div class="ms-val">240</div><div class="ms-label">Total Slots</div></div>
+          <div class="ms-item"><div class="ms-val" style="color:var(--teal);" id="mapAvailable">153</div><div class="ms-label">Available</div></div>
+          <div class="ms-item"><div class="ms-val" style="color:var(--orange);" id="mapOccupied">87</div><div class="ms-label">Occupied</div></div>
+          <div class="ms-item"><div class="ms-val" style="color:var(--gold);">63.7%</div><div class="ms-label">Free Rate</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 9 — SLOT BOOKING
+================================================================ -->
+<div class="page" id="pg-booking">
+  <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-booking')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost btn-sm" onclick="nav('pg-driver-dash')">← Dashboard</button>
+    </div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div><div><div class="sidebar-uname">John Doe</div><div class="sidebar-role">Driver Account</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-dash')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item" onclick="nav('pg-map')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item active"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item" onclick="nav('pg-vehicles')"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item" onclick="nav('pg-profile')"><span class="s-icon">👤</span> My Profile</button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header"><h1>Book a Parking Slot</h1><p>Complete the steps below to confirm your reservation.</p></div>
+
+      <div class="g2" style="align-items:start;gap:24px;">
+        <!-- Form Steps -->
+        <div style="display:flex;flex-direction:column;gap:0;">
+
+          <!-- Step 1 -->
+          <div class="booking-step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Select Slot &amp; Vehicle</div>
+              <div class="card" style="padding:20px;">
+                <div class="gap-16">
+                  <div class="form-group">
+                    <label class="form-label">Parking Slot</label>
+                    <select class="form-input" onchange="updateSummary()">
+                      <option value="A-07">A-07 — Section A, Standard (Available)</option>
+                      <option value="A-01">A-01 — Section A, Standard (Available)</option>
+                      <option value="B-05">B-05 — Section B, Large (Available)</option>
+                      <option value="C-12">C-12 — Section C, Standard (Available)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Your Vehicle</label>
+                    <select class="form-input" onchange="updateSummary()">
+                      <option>CAR-ABC-1234 — Sedan · Black</option>
+                      <option>VAN-XYZ-5678 — Van · White</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="booking-step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Set Date &amp; Time</div>
+              <div class="card" style="padding:20px;">
+                <div class="g2">
+                  <div class="form-group">
+                    <label class="form-label">Start Time</label>
+                    <input class="form-input" type="datetime-local" id="bk-start" onchange="calcFee()">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">End Time</label>
+                    <input class="form-input" type="datetime-local" id="bk-end" onchange="calcFee()">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="booking-step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Payment Method</div>
+              <div class="card" style="padding:20px;">
+                <div class="payment-options">
+                  <div class="payment-opt selected" id="pm-cash" onclick="selectPay('cash')">
+                    <input type="radio" name="pay" checked>
+                    <div><div class="po-label">💵 Cash</div><div class="po-sub">Pay at exit barrier</div></div>
+                  </div>
+                  <div class="payment-opt" id="pm-card" onclick="selectPay('card')">
+                    <input type="radio" name="pay">
+                    <div><div class="po-label">💳 Card</div><div class="po-sub">Pay securely online</div></div>
+                  </div>
+                </div>
+                <div id="card-fields" style="display:none;margin-top:16px;">
+                  <div class="divider" style="margin:0 0 16px;"></div>
+                  <div class="gap-16">
+                    <div class="form-group"><label class="form-label">Card Number</label><input class="form-input" placeholder="1234  5678  9012  3456"></div>
+                    <div class="g2">
+                      <div class="form-group"><label class="form-label">Expiry</label><input class="form-input" placeholder="MM / YY"></div>
+                      <div class="form-group"><label class="form-label">CVV</label><input class="form-input" placeholder="•••" type="password"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fee + CTA -->
+          <div style="padding-left:48px;">
+            <div class="fee-box mb-20">
+              <div class="fee-box-label">Estimated Total Fee</div>
+              <div class="fee-box-amount" id="fee-display">LKR 0</div>
+              <div class="fee-box-sub" id="fee-hours">Select times to calculate</div>
+            </div>
+            <div style="display:flex;gap:12px;">
+              <button class="btn btn-gold btn-lg" style="flex:1;justify-content:center;" onclick="confirmBooking()">Confirm Booking →</button>
+              <button class="btn btn-outline" onclick="resetBooking()">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="booking-summary-card">
+          <div class="bsc-header">
+            <div class="bsc-title">Booking Summary</div>
+            <div class="bsc-sub">Review before confirming</div>
+          </div>
+          <div class="bsc-body">
+            <div class="bsc-row"><span class="bsc-key">Slot</span><span class="bsc-val" id="s-slot">A-07</span></div>
+            <div class="bsc-row"><span class="bsc-key">Section</span><span class="bsc-val">Ground Floor — A</span></div>
+            <div class="bsc-row"><span class="bsc-key">Vehicle</span><span class="bsc-val">CAR-ABC-1234</span></div>
+            <div class="bsc-row"><span class="bsc-key">Start</span><span class="bsc-val" id="s-start">—</span></div>
+            <div class="bsc-row"><span class="bsc-key">End</span><span class="bsc-val" id="s-end">—</span></div>
+            <div class="bsc-row"><span class="bsc-key">Duration</span><span class="bsc-val" id="s-dur">—</span></div>
+            <div class="bsc-row"><span class="bsc-key">Rate</span><span class="bsc-val">LKR 150 / hr</span></div>
+            <div class="bsc-row"><span class="bsc-key">Payment</span><span class="bsc-val" id="s-pay">Cash</span></div>
+          </div>
+          <div class="bsc-total-row">
+            <span class="bsc-total-label">Total Due</span>
+            <span class="bsc-total-val" id="s-total">LKR 0</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 10 — FEEDBACK SUBMISSION
+================================================================ -->
+<div class="page" id="pg-feedback">
+  <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-feedback')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost btn-sm" onclick="nav('pg-driver-dash')">← Dashboard</button>
+    </div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div><div><div class="sidebar-uname">John Doe</div><div class="sidebar-role">Driver Account</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-dash')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item" onclick="nav('pg-map')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item" onclick="nav('pg-booking')"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item" onclick="nav('pg-vehicles')"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item" onclick="nav('pg-profile')"><span class="s-icon">👤</span> My Profile</button>
+        <button class="sidebar-item active"><span class="s-icon">💬</span> Give Feedback</button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content" style="display:flex;align-items:flex-start;justify-content:center;padding-top:20px;">
+      <div style="width:100%;max-width:620px;">
+        <!-- Feedback hero -->
+        <div class="feedback-hero">
+          <div class="fh-emoji">💬</div>
+          <div class="fh-title">Share Your Experience</div>
+          <div class="fh-sub">Your feedback helps us improve ParkNow for everyone.</div>
+        </div>
+
+        <div class="card" style="padding:32px;">
+          <div class="gap-16">
+
+            <!-- Star rating -->
+            <div class="form-group">
+              <label class="form-label">Overall Rating</label>
+              <div style="display:flex;align-items:center;gap:4px;">
+                <div class="star-row" id="stars">
+                  <button class="star-btn lit" onclick="setRating(1)">★</button>
+                  <button class="star-btn lit" onclick="setRating(2)">★</button>
+                  <button class="star-btn lit" onclick="setRating(3)">★</button>
+                  <button class="star-btn lit" onclick="setRating(4)">★</button>
+                  <button class="star-btn" onclick="setRating(5)">★</button>
+                </div>
+                <span class="star-rating-label" id="star-label">4 out of 5 — Good</span>
+              </div>
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+              <label class="form-label">What are you reviewing?</label>
+              <div class="rating-categories">
+                <div class="rating-cat selected" onclick="selectCat(this)"><div class="rc-icon">🌐</div><div class="rc-label">General</div></div>
+                <div class="rating-cat" onclick="selectCat(this)"><div class="rc-icon">✨</div><div class="rc-label">Cleanliness</div></div>
+                <div class="rating-cat" onclick="selectCat(this)"><div class="rc-icon">💰</div><div class="rc-label">Pricing</div></div>
+                <div class="rating-cat" onclick="selectCat(this)"><div class="rc-icon">📱</div><div class="rc-label">Booking App</div></div>
+                <div class="rating-cat" onclick="selectCat(this)"><div class="rc-icon">🧑‍💼</div><div class="rc-label">Staff</div></div>
+                <div class="rating-cat" onclick="selectCat(this)"><div class="rc-icon">🔒</div><div class="rc-label">Security</div></div>
+              </div>
+            </div>
+
+            <!-- Related booking -->
+            <div class="form-group">
+              <label class="form-label">Related Booking (optional)</label>
+              <select class="form-input">
+                <option value="">Select a booking...</option>
+                <option>#BK-1024 — Slot A-07 · Today</option>
+                <option>#BK-1021 — Slot B-12 · Nov 10</option>
+                <option>#BK-1018 — Slot C-03 · Nov 8</option>
+              </select>
+            </div>
+
+            <!-- Comment -->
+            <div class="form-group">
+              <label class="form-label">Your Comment</label>
+              <textarea class="form-input" rows="5" placeholder="Tell us what you loved or what could be improved..."></textarea>
+            </div>
+
+            <button class="btn btn-teal" style="width:100%;padding:14px;justify-content:center;font-size:0.95rem;" onclick="submitFeedback()">
+              Submit Feedback →
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 11 — DRIVER MANAGEMENT (ADMIN)
+================================================================ -->
+<div class="page" id="pg-driver-mgmt">
+  <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-driver-mgmt')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right"><span class="badge badge-gold">Administrator</span><button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button></div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar" id="adminSB1">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark-mid));color:#fff;">SA</div><div><div class="sidebar-uname">Super Admin</div><div class="sidebar-role">Administrator</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Overview</div>
+        <button class="sidebar-item" onclick="nav('pg-admin-dash')"><span class="s-icon">📊</span> Dashboard</button>
+        <button class="sidebar-item" onclick="nav('pg-map')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <div class="sidebar-section">Management</div>
+        <button class="sidebar-item active"><span class="s-icon">👥</span> Driver Management</button>
+        <button class="sidebar-item" onclick="nav('pg-vehicle-mgmt')"><span class="s-icon">🚗</span> Vehicle Management</button>
+        <button class="sidebar-item" onclick="nav('pg-slot-mgmt')"><span class="s-icon">🅿️</span> Slot Management</button>
+        <button class="sidebar-item" onclick="nav('pg-admin-mgmt')"><span class="s-icon">🛡️</span> Admin Management</button>
+        <div class="sidebar-section">Operations</div>
+        <button class="sidebar-item"><span class="s-icon">📋</span> Reservations</button>
+        <button class="sidebar-item" onclick="nav('pg-feedback-mgmt')"><span class="s-icon">💬</span> Feedback <span class="s-badge">3</span></button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="admin-page-header">
+        <div>
+          <div class="admin-page-title">Driver Management</div>
+          <div class="admin-page-sub">View, edit, and manage all registered driver accounts.</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-outline btn-sm">📤 Export CSV</button>
+        </div>
+      </div>
+
+      <div class="g4 mb-28">
+        <div class="stat-card c-teal"><div class="accent-bar"></div><div class="stat-label">Total Drivers</div><div class="stat-value">1,284</div><div class="stat-sub">Registered accounts</div></div>
+        <div class="stat-card c-green"><div class="accent-bar"></div><div class="stat-label">Active</div><div class="stat-value">1,241</div><div class="stat-sub">96.7% active rate</div></div>
+        <div class="stat-card c-orange"><div class="accent-bar"></div><div class="stat-label">Suspended</div><div class="stat-value">31</div><div class="stat-sub">Pending review</div></div>
+        <div class="stat-card c-gold"><div class="accent-bar"></div><div class="stat-label">New This Week</div><div class="stat-value">12</div><div class="stat-sub">↑ vs last week</div></div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="search-wrap"><div class="search-bar"><span>🔍</span><input type="text" placeholder="Search by name, username, or email..."></div></div>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Status</option><option>Active</option><option>Suspended</option></select>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Time</option><option>This Week</option><option>This Month</option></select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Driver ID</th><th>Full Name</th><th>Username</th><th>Email</th><th>Phone</th><th>Vehicles</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#D001</span></td>
+              <td><span style="font-weight:600;">John Doe</span></td>
+              <td>johndoe</td><td>john@example.com</td><td>+94 77 123 4567</td><td>2</td><td>Jan 15, 2025</td>
+              <td><span class="badge badge-success">Active</span></td>
+              <td><div class="td-actions"><button class="btn btn-outline btn-sm" onclick="openEditDriver()">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('driver','John Doe')">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#D002</span></td>
+              <td><span style="font-weight:600;">Sarah Kim</span></td>
+              <td>sarahk</td><td>sarah@example.com</td><td>+94 76 987 6543</td><td>1</td><td>Feb 3, 2025</td>
+              <td><span class="badge badge-success">Active</span></td>
+              <td><div class="td-actions"><button class="btn btn-outline btn-sm" onclick="openEditDriver()">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('driver','Sarah Kim')">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#D003</span></td>
+              <td><span style="font-weight:600;">Ahmed Ali</span></td>
+              <td>ahmed_a</td><td>ahmed@example.com</td><td>+94 71 456 7890</td><td>1</td><td>Mar 10, 2025</td>
+              <td><span class="badge badge-warning">Suspended</span></td>
+              <td><div class="td-actions"><button class="btn btn-outline btn-sm" onclick="openEditDriver()">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('driver','Ahmed Ali')">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#D004</span></td>
+              <td><span style="font-weight:600;">Priya Nair</span></td>
+              <td>priya_n</td><td>priya@example.com</td><td>+94 72 321 0987</td><td>3</td><td>Apr 20, 2025</td>
+              <td><span class="badge badge-success">Active</span></td>
+              <td><div class="td-actions"><button class="btn btn-outline btn-sm" onclick="openEditDriver()">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('driver','Priya Nair')">Delete</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 12 — VEHICLE MANAGEMENT (ADMIN)
+================================================================ -->
+<div class="page" id="pg-vehicle-mgmt">
+  <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-vehicle-mgmt')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right"><span class="badge badge-gold">Administrator</span><button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button></div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark-mid));color:#fff;">SA</div><div><div class="sidebar-uname">Super Admin</div><div class="sidebar-role">Administrator</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Overview</div>
+        <button class="sidebar-item" onclick="nav('pg-admin-dash')"><span class="s-icon">📊</span> Dashboard</button>
+        <div class="sidebar-section">Management</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-mgmt')"><span class="s-icon">👥</span> Driver Management</button>
+        <button class="sidebar-item active"><span class="s-icon">🚗</span> Vehicle Management</button>
+        <button class="sidebar-item" onclick="nav('pg-slot-mgmt')"><span class="s-icon">🅿️</span> Slot Management</button>
+        <button class="sidebar-item" onclick="nav('pg-admin-mgmt')"><span class="s-icon">🛡️</span> Admin Management</button>
+        <div class="sidebar-section">Operations</div>
+        <button class="sidebar-item"><span class="s-icon">📋</span> Reservations</button>
+        <button class="sidebar-item" onclick="nav('pg-feedback-mgmt')"><span class="s-icon">💬</span> Feedback <span class="s-badge">3</span></button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="admin-page-header">
+        <div><div class="admin-page-title">Vehicle Management</div><div class="admin-page-sub">All vehicles registered in the system.</div></div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-outline btn-sm">📤 Export</button>
+          <button class="btn btn-teal btn-sm" onclick="nav('pg-vehicles')">+ Register Vehicle</button>
+        </div>
+      </div>
+      <div class="g4 mb-28">
+        <div class="stat-card c-gold"><div class="accent-bar"></div><div class="stat-label">Total Vehicles</div><div class="stat-value">2,051</div></div>
+        <div class="stat-card c-teal"><div class="accent-bar"></div><div class="stat-label">Active</div><div class="stat-value">2,003</div></div>
+        <div class="stat-card c-orange"><div class="accent-bar"></div><div class="stat-label">Flagged</div><div class="stat-value">12</div></div>
+        <div class="stat-card c-green"><div class="accent-bar"></div><div class="stat-label">Types</div><div class="stat-value">5</div><div class="stat-sub">Sedan, SUV, Van, Moto, Truck</div></div>
+      </div>
+      <div class="filter-bar">
+        <div class="search-wrap"><div class="search-bar"><span>🔍</span><input type="text" placeholder="Search by plate number or owner..."></div></div>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Types</option><option>Sedan</option><option>SUV</option><option>Van</option><option>Motorcycle</option><option>Truck</option></select>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Status</option><option>Active</option><option>Flagged</option></select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Vehicle ID</th><th>Plate Number</th><th>Type</th><th>Color</th><th>Owner</th><th>Owner ID</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#V001</span></td><td><span style="font-family:var(--font-display);font-weight:700;">CAR-ABC-1234</span></td><td>Sedan</td><td>⬛ Black</td><td>John Doe</td><td>#D001</td><td>Jan 15, 2025</td><td><span class="badge badge-success">Active</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('vehicle','CAR-ABC-1234')">Delete</button></div></td></tr>
+            <tr><td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#V002</span></td><td><span style="font-family:var(--font-display);font-weight:700;">SUV-DEF-9012</span></td><td>SUV</td><td>🔵 Blue</td><td>Sarah Kim</td><td>#D002</td><td>Feb 3, 2025</td><td><span class="badge badge-success">Active</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('vehicle','SUV-DEF-9012')">Delete</button></div></td></tr>
+            <tr><td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#V003</span></td><td><span style="font-family:var(--font-display);font-weight:700;">VAN-XYZ-5678</span></td><td>Van</td><td>⬜ White</td><td>John Doe</td><td>#D001</td><td>Mar 22, 2025</td><td><span class="badge badge-success">Active</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('vehicle','VAN-XYZ-5678')">Delete</button></div></td></tr>
+            <tr><td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#V004</span></td><td><span style="font-family:var(--font-display);font-weight:700;">CAR-GHI-3456</span></td><td>Sedan</td><td>🔴 Red</td><td>Ahmed Ali</td><td>#D003</td><td>Mar 10, 2025</td><td><span class="badge badge-warning">Flagged</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('vehicle','CAR-GHI-3456')">Delete</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 13 — SLOT MANAGEMENT (ADMIN)
+================================================================ -->
+<div class="page" id="pg-slot-mgmt">
+  <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-slot-mgmt')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right"><span class="badge badge-gold">Administrator</span><button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button></div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark-mid));color:#fff;">SA</div><div><div class="sidebar-uname">Super Admin</div><div class="sidebar-role">Administrator</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Overview</div>
+        <button class="sidebar-item" onclick="nav('pg-admin-dash')"><span class="s-icon">📊</span> Dashboard</button>
+        <button class="sidebar-item" onclick="nav('pg-map')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <div class="sidebar-section">Management</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-mgmt')"><span class="s-icon">👥</span> Driver Management</button>
+        <button class="sidebar-item" onclick="nav('pg-vehicle-mgmt')"><span class="s-icon">🚗</span> Vehicle Management</button>
+        <button class="sidebar-item active"><span class="s-icon">🅿️</span> Slot Management</button>
+        <button class="sidebar-item" onclick="nav('pg-admin-mgmt')"><span class="s-icon">🛡️</span> Admin Management</button>
+        <div class="sidebar-section">Operations</div>
+        <button class="sidebar-item"><span class="s-icon">📋</span> Reservations</button>
+        <button class="sidebar-item" onclick="nav('pg-feedback-mgmt')"><span class="s-icon">💬</span> Feedback <span class="s-badge">3</span></button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="admin-page-header">
+        <div><div class="admin-page-title">Slot Management</div><div class="admin-page-sub">Edit slot configurations, rates, and availability status.</div></div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-outline btn-sm" onclick="nav('pg-map')">🗺️ View Map</button>
+        </div>
+      </div>
+      <div class="g4 mb-28">
+        <div class="stat-card c-dark"><div class="accent-bar"></div><div class="stat-label">Total Slots</div><div class="stat-value">240</div></div>
+        <div class="stat-card c-teal"><div class="accent-bar"></div><div class="stat-label">Available</div><div class="stat-value">153</div></div>
+        <div class="stat-card c-orange"><div class="accent-bar"></div><div class="stat-label">Occupied</div><div class="stat-value">87</div></div>
+        <div class="stat-card c-danger"><div class="accent-bar"></div><div class="stat-label">Maintenance</div><div class="stat-value">4</div></div>
+      </div>
+      <div class="filter-bar">
+        <div class="search-wrap"><div class="search-bar"><span>🔍</span><input type="text" placeholder="Search by slot ID..."></div></div>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Sections</option><option>Section A</option><option>Section B</option><option>Section C</option></select>
+        <select class="form-input" style="width:150px;padding:9px 14px;"><option>All Status</option><option>Available</option><option>Occupied</option><option>Maintenance</option></select>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Types</option><option>Standard</option><option>Large</option><option>Disabled</option></select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Slot ID</th><th>Section</th><th>Type</th><th>Floor</th><th>Status</th><th>Current Vehicle</th><th>Rate / hr</th><th>Last Updated</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">A-01</td><td>A</td><td>Standard</td><td>Ground</td><td><span class="badge badge-success">Available</span></td><td>—</td><td>LKR 150</td><td>Just now</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('A-01')">Edit</button></td></tr>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">A-07</td><td>A</td><td>Standard</td><td>Ground</td><td><span class="badge badge-danger">Occupied</span></td><td>CAR-ABC-1234</td><td>LKR 150</td><td>09:30 AM</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('A-07')">Edit</button></td></tr>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">A-15</td><td>A</td><td>Large</td><td>Ground</td><td><span class="badge badge-success">Available</span></td><td>—</td><td>LKR 200</td><td>1h ago</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('A-15')">Edit</button></td></tr>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">B-03</td><td>B</td><td>Standard</td><td>Ground</td><td><span class="badge badge-danger">Occupied</span></td><td>SUV-DEF-9012</td><td>LKR 150</td><td>08:45 AM</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('B-03')">Edit</button></td></tr>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">B-08</td><td>B</td><td>Disabled</td><td>Ground</td><td><span class="badge badge-warning">Maintenance</span></td><td>—</td><td>LKR 100</td><td>Nov 9</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('B-08')">Edit</button></td></tr>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">C-04</td><td>C</td><td>Standard</td><td>Ground</td><td><span class="badge badge-success">Available</span></td><td>—</td><td>LKR 150</td><td>2h ago</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('C-04')">Edit</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 14 — FEEDBACK MANAGEMENT (ADMIN)
+================================================================ -->
+<div class="page" id="pg-feedback-mgmt">
+  <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-feedback-mgmt')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right"><span class="badge badge-gold">Administrator</span><button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button></div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark-mid));color:#fff;">SA</div><div><div class="sidebar-uname">Super Admin</div><div class="sidebar-role">Administrator</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Overview</div>
+        <button class="sidebar-item" onclick="nav('pg-admin-dash')"><span class="s-icon">📊</span> Dashboard</button>
+        <div class="sidebar-section">Management</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-mgmt')"><span class="s-icon">👥</span> Driver Management</button>
+        <button class="sidebar-item" onclick="nav('pg-vehicle-mgmt')"><span class="s-icon">🚗</span> Vehicle Management</button>
+        <button class="sidebar-item" onclick="nav('pg-slot-mgmt')"><span class="s-icon">🅿️</span> Slot Management</button>
+        <button class="sidebar-item" onclick="nav('pg-admin-mgmt')"><span class="s-icon">🛡️</span> Admin Management</button>
+        <div class="sidebar-section">Operations</div>
+        <button class="sidebar-item"><span class="s-icon">📋</span> Reservations</button>
+        <button class="sidebar-item active"><span class="s-icon">💬</span> Feedback <span class="s-badge">3</span></button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="admin-page-header">
+        <div><div class="admin-page-title">Feedback &amp; Reviews</div><div class="admin-page-sub">Monitor, moderate, and manage all driver feedback submissions.</div></div>
+        <div style="display:flex;gap:10px;"><button class="btn btn-outline btn-sm">📤 Export</button></div>
+      </div>
+      <div class="g4 mb-28">
+        <div class="stat-card c-gold"><div class="accent-bar"></div><div class="stat-label">Average Rating</div><div class="stat-value">4.8 ★</div><div class="stat-sub">Out of 5.0</div></div>
+        <div class="stat-card c-teal"><div class="accent-bar"></div><div class="stat-label">Total Reviews</div><div class="stat-value">324</div></div>
+        <div class="stat-card c-green"><div class="accent-bar"></div><div class="stat-label">This Week</div><div class="stat-value">18</div><div class="stat-sub">↑ 3 from last week</div></div>
+        <div class="stat-card c-danger"><div class="accent-bar"></div><div class="stat-label">Flagged</div><div class="stat-value">3</div><div class="stat-sub">Requires review</div></div>
+      </div>
+      <div class="filter-bar">
+        <div class="search-wrap"><div class="search-bar"><span>🔍</span><input type="text" placeholder="Search by driver or comment..."></div></div>
+        <select class="form-input" style="width:130px;padding:9px 14px;"><option>All Ratings</option><option>5 ★</option><option>4 ★</option><option>3 ★</option><option>1-2 ★</option></select>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Categories</option><option>General</option><option>Cleanliness</option><option>Pricing</option><option>Staff</option></select>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Status</option><option>Published</option><option>Flagged</option><option>Hidden</option></select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Driver</th><th>Rating</th><th>Category</th><th>Comment</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td style="font-weight:700;color:var(--teal);">#F032</td><td>John Doe</td><td style="color:#f0a500;font-weight:700;">★★★★☆ 4/5</td><td><span class="badge badge-teal">General</span></td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Great service, easy to book!</td><td>Nov 11, 2025</td><td><span class="badge badge-success">Published</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('review','#F032')">Delete</button></div></td></tr>
+            <tr><td style="font-weight:700;color:var(--teal);">#F031</td><td>Sarah Kim</td><td style="color:#f0a500;font-weight:700;">★★★★★ 5/5</td><td><span class="badge badge-teal">Cleanliness</span></td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Very clean and well-maintained.</td><td>Nov 10, 2025</td><td><span class="badge badge-success">Published</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('review','#F031')">Delete</button></div></td></tr>
+            <tr><td style="font-weight:700;color:var(--teal);">#F030</td><td>Ahmed Ali</td><td style="color:var(--danger);font-weight:700;">★★☆☆☆ 2/5</td><td><span class="badge badge-orange">Pricing</span></td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Rates are too high on weekends.</td><td>Nov 9, 2025</td><td><span class="badge badge-warning">Flagged</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('review','#F030')">Delete</button></div></td></tr>
+            <tr><td style="font-weight:700;color:var(--teal);">#F029</td><td>Priya Nair</td><td style="color:#f0a500;font-weight:700;">★★★★★ 5/5</td><td><span class="badge badge-teal">Staff</span></td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Staff was incredibly helpful!</td><td>Nov 8, 2025</td><td><span class="badge badge-success">Published</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('review','#F029')">Delete</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE 15 — ADMIN MANAGEMENT
+================================================================ -->
+<div class="page" id="pg-admin-mgmt">
+  <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-admin-mgmt')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right"><span class="badge badge-gold">Administrator</span><button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button></div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark-mid));color:#fff;">SA</div><div><div class="sidebar-uname">Super Admin</div><div class="sidebar-role">Administrator</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Overview</div>
+        <button class="sidebar-item" onclick="nav('pg-admin-dash')"><span class="s-icon">📊</span> Dashboard</button>
+        <div class="sidebar-section">Management</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-mgmt')"><span class="s-icon">👥</span> Driver Management</button>
+        <button class="sidebar-item" onclick="nav('pg-vehicle-mgmt')"><span class="s-icon">🚗</span> Vehicle Management</button>
+        <button class="sidebar-item" onclick="nav('pg-slot-mgmt')"><span class="s-icon">🅿️</span> Slot Management</button>
+        <button class="sidebar-item active"><span class="s-icon">🛡️</span> Admin Management</button>
+        <div class="sidebar-section">Operations</div>
+        <button class="sidebar-item"><span class="s-icon">📋</span> Reservations</button>
+        <button class="sidebar-item" onclick="nav('pg-feedback-mgmt')"><span class="s-icon">💬</span> Feedback <span class="s-badge">3</span></button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="admin-page-header">
+        <div><div class="admin-page-title">Admin Management</div><div class="admin-page-sub">Manage system administrators and their access roles.</div></div>
+        <button class="btn btn-teal" onclick="toggleAddAdmin()">+ Add Administrator</button>
+      </div>
+
+      <!-- Add Admin form (collapsible) -->
+      <div class="card mb-28" id="addAdminForm" style="display:none;border-color:var(--teal);border-left:4px solid var(--teal);">
+        <div class="section-title" style="color:var(--teal);margin-bottom:20px;">New Administrator Account</div>
+        <div class="g2">
+          <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" placeholder="Admin Full Name"></div>
+          <div class="form-group"><label class="form-label">Username</label><input class="form-input" placeholder="admin_username"></div>
+          <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" placeholder="admin@parknow.com"></div>
+          <div class="form-group">
+            <label class="form-label">Admin Role</label>
+            <select class="form-input">
+              <option>Super Admin</option>
+              <option selected>Parking Admin</option>
+              <option>Finance Admin</option>
+              <option>Read-Only Admin</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="••••••••"></div>
+          <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-input" type="password" placeholder="••••••••"></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+          <button class="btn btn-teal" onclick="showToast('✅ New administrator created successfully')">Create Administrator</button>
+          <button class="btn btn-outline" onclick="toggleAddAdmin()">Cancel</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Admin ID</th><th>Full Name</th><th>Username</th><th>Email</th><th>Role</th><th>Created</th><th>Last Login</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td style="font-family:var(--font-display);font-weight:700;color:var(--gold);">#A001</td>
+              <td><span style="font-weight:600;">Super Admin</span></td>
+              <td>superadmin</td><td>super@parknow.com</td>
+              <td><span class="badge badge-gold">Super Admin</span></td>
+              <td>Jan 1, 2025</td><td>Today, 09:00 AM</td>
+              <td><span class="badge badge-success">Active</span></td>
+              <td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" disabled style="opacity:0.35;cursor:not-allowed;" title="Cannot delete super admin">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#A002</td>
+              <td><span style="font-weight:600;">Park Admin</span></td>
+              <td>parkadmin</td><td>park@parknow.com</td>
+              <td><span class="badge badge-teal">Parking Admin</span></td>
+              <td>Jan 5, 2025</td><td>Today, 08:15 AM</td>
+              <td><span class="badge badge-success">Active</span></td>
+              <td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('admin','Park Admin')">Delete</button></div></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#A003</td>
+              <td><span style="font-weight:600;">Finance Manager</span></td>
+              <td>finmgr</td><td>finance@parknow.com</td>
+              <td><span class="badge badge-orange">Finance Admin</span></td>
+              <td>Feb 12, 2025</td><td>Nov 10, 2025</td>
+              <td><span class="badge badge-success">Active</span></td>
+              <td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('admin','Finance Manager')">Delete</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ================================================================
+     EDIT MODAL (Driver / Slot shared)
+================================================================ -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <div class="modal-title" id="editModalTitle">Edit Record</div>
+    <div class="modal-sub" id="editModalSub">Update the fields below and save.</div>
+    <div class="gap-16" id="editModalFields">
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" value="John Doe"></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" value="john@example.com"></div>
+      <div class="form-group"><label class="form-label">Status</label><select class="form-input"><option>Active</option><option>Suspended</option></select></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('editModal')">Cancel</button>
+      <button class="btn btn-teal" onclick="closeModal('editModal');showToast('✅ Record updated successfully')">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box modal-danger">
+    <div class="modal-title">⚠️ Confirm Deletion</div>
+    <div class="modal-sub" id="deleteModalMsg">Are you sure you want to delete this record? This action cannot be undone.</div>
+    <div style="background:var(--danger-light);border:1px solid rgba(224,60,60,0.2);border-radius:var(--radius-sm);padding:14px 16px;font-size:0.85rem;color:var(--danger);font-weight:500;">
+      This is a permanent action. The data cannot be recovered after deletion.
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('deleteModal')">Cancel</button>
+      <button class="btn btn-danger" onclick="closeModal('deleteModal');showToast('🗑️ Record deleted successfully')">Delete Permanently</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLOT EDIT MODAL -->
+<div class="modal-overlay" id="slotEditModal">
+  <div class="modal-box">
+    <div class="modal-title">Edit Slot <span id="slotEditId" style="color:var(--teal);">A-07</span></div>
+    <div class="modal-sub">Update slot configuration and pricing.</div>
+    <div class="gap-16">
+      <div class="g2">
+        <div class="form-group"><label class="form-label">Slot ID</label><input class="form-input" id="seSlotId" value="A-07" disabled></div>
+        <div class="form-group"><label class="form-label">Section</label><select class="form-input"><option>A</option><option>B</option><option>C</option></select></div>
+      </div>
+      <div class="g2">
+        <div class="form-group"><label class="form-label">Type</label><select class="form-input"><option>Standard</option><option>Large</option><option>Disabled</option></select></div>
+        <div class="form-group"><label class="form-label">Floor</label><select class="form-input"><option>Ground</option><option>Level 1</option><option>Level 2</option></select></div>
+      </div>
+      <div class="g2">
+        <div class="form-group"><label class="form-label">Rate (LKR / hr)</label><input class="form-input" type="number" value="150"></div>
+        <div class="form-group"><label class="form-label">Status</label><select class="form-input"><option>Available</option><option>Occupied</option><option>Maintenance</option></select></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('slotEditModal')">Cancel</button>
+      <button class="btn btn-teal" onclick="closeModal('slotEditModal');showToast('✅ Slot updated successfully')">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✅</span>
+  <span id="toast-msg">Action completed</span>
+</div>
+
+<!-- PAGE NAV LINKS (for demo, not visible) -->
+<div id="pg-driver-dash" style="display:none;"></div>
+<div id="pg-admin-dash" style="display:none;"></div>
+
+<script>
+// ========== NAVIGATION ==========
+function nav(id) {
+  // Internal pages in this file
+  const internalPages = ['pg-profile','pg-vehicles','pg-map','pg-booking','pg-feedback',
+    'pg-driver-mgmt','pg-vehicle-mgmt','pg-slot-mgmt','pg-feedback-mgmt','pg-admin-mgmt'];
+  if (internalPages.includes(id)) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const t = document.getElementById(id);
+    if (t) { t.classList.add('active'); window.scrollTo(0,0); }
+  } else {
+    showToast('🔗 Navigate to: ' + id + ' (open core UI file)');
+  }
+}
+
+// ========== TOAST ==========
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ========== MODALS ==========
+function openEditDriver() { openModal('editModal'); }
+function openDeleteModal(type, name) {
+  document.getElementById('deleteModalMsg').textContent =
+    `Are you sure you want to delete the ${type} "${name}"? This action cannot be undone.`;
+  openModal('deleteModal');
+}
+function openEditSlot(id) {
+  document.getElementById('slotEditId').textContent = id;
+  document.getElementById('seSlotId').value = id;
+  openModal('slotEditModal');
+}
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ========== PARKING MAP ==========
+const occupiedA = [3,7,9,14,17,20];
+const occupiedB = [1,4,8,11,16,19];
+const occupiedC = [2,5,10,13,18];
+const maintenanceA = [];
+const maintenanceB = [6];
+const maintenanceC = [];
+let selectedSlot = null;
+
+function buildGrid(containerId, prefix, count, occ, maint) {
+  const g = document.getElementById(containerId);
+  if (!g) return;
+  g.innerHTML = '';
+  for (let i = 1; i <= count; i++) {
+    const id = prefix + '-' + String(i).padStart(2,'0');
+    const d = document.createElement('div');
+    let cls = 'slot ';
+    if (maint.includes(i))   cls += 'ds';
+    else if (occ.includes(i)) cls += 'oc';
+    else                      cls += 'av';
+    d.className = cls;
+    d.innerHTML = `<div class="slot-id">${id}</div><div class="slot-ico">${maint.includes(i)? '🔧' : occ.includes(i)? '🔴':'🟢'}</div>`;
+    if (!occ.includes(i) && !maint.includes(i)) {
+      d.onclick = () => selectSlot(id, prefix);
+    }
+    g.appendChild(d);
+  }
+}
+
+function selectSlot(id, section) {
+  // Deselect previous
+  document.querySelectorAll('.slot.sl').forEach(s => {
+    s.classList.replace('sl','av');
+    s.querySelector('.slot-ico').textContent = '🟢';
+  });
+  // Select new
+  const cells = document.querySelectorAll('.slot');
+  cells.forEach(c => {
+    if (c.querySelector('.slot-id') && c.querySelector('.slot-id').textContent === id) {
+      c.classList.replace('av','sl');
+      c.querySelector('.slot-ico').textContent = '⭐';
+    }
+  });
+  selectedSlot = id;
+  document.getElementById('selectedSlotId').textContent = id;
+  document.getElementById('selectedSlotSection').textContent = 'Section ' + section + ' — Ground Floor';
+  document.getElementById('selectedSlotMeta').textContent = 'Standard · LKR 150/hr';
+  document.getElementById('selectedPanel').style.display = 'flex';
+  document.getElementById('bookSlotBtn').style.display = 'inline-flex';
+}
+
+function clearSelection() {
+  document.querySelectorAll('.slot.sl').forEach(s => {
+    s.classList.replace('sl','av');
+    s.querySelector('.slot-ico').textContent = '🟢';
+  });
+  selectedSlot = null;
+  document.getElementById('selectedPanel').style.display = 'none';
+  document.getElementById('bookSlotBtn').style.display = 'none';
+}
+
+// ========== BOOKING LOGIC ==========
+function calcFee() {
+  const s = document.getElementById('bk-start').value;
+  const e = document.getElementById('bk-end').value;
+  if (s && e) {
+    const diff = (new Date(e) - new Date(s)) / 3600000;
+    if (diff > 0) {
+      const lkr = Math.round(diff * 150);
+      const fee = 'LKR ' + lkr.toLocaleString();
+      document.getElementById('fee-display').textContent = fee;
+      document.getElementById('fee-hours').textContent = diff.toFixed(1) + ' hours × LKR 150/hr';
+      document.getElementById('s-total').textContent = fee;
+      // Update summary times
+      const fmt = v => new Date(v).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      document.getElementById('s-start').textContent = fmt(s);
+      document.getElementById('s-end').textContent = fmt(e);
+      document.getElementById('s-dur').textContent = diff.toFixed(1) + ' hours';
+    }
+  }
+}
+
+function selectPay(type) {
+  document.getElementById('pm-cash').classList.toggle('selected', type==='cash');
+  document.getElementById('pm-card').classList.toggle('selected', type==='card');
+  document.getElementById('card-fields').style.display = type==='card' ? 'block' : 'none';
+  document.getElementById('s-pay').textContent = type === 'card' ? '💳 Card' : '💵 Cash';
+}
+
+function resetBooking() {
+  document.getElementById('bk-start').value = '';
+  document.getElementById('bk-end').value = '';
+  document.getElementById('fee-display').textContent = 'LKR 0';
+  document.getElementById('fee-hours').textContent = 'Select times to calculate';
+  document.getElementById('s-total').textContent = 'LKR 0';
+  document.getElementById('s-start').textContent = '—';
+  document.getElementById('s-end').textContent = '—';
+  document.getElementById('s-dur').textContent = '—';
+  selectPay('cash');
+}
+
+function confirmBooking() {
+  showToast('✅ Booking confirmed! Slot A-07 reserved.');
+}
+
+// ========== PROFILE EDIT ==========
+function toggleEdit() {
+  const inputs = document.querySelectorAll('#profile-fields input');
+  const actions = document.getElementById('profile-actions');
+  const isDisabled = inputs[0].disabled;
+  inputs.forEach(i => i.disabled = !isDisabled);
+  actions.style.display = isDisabled ? 'flex' : 'none';
+  if (isDisabled) inputs[0].focus();
+}
+function cancelEdit() {
+  document.querySelectorAll('#profile-fields input').forEach(i => i.disabled = true);
+  document.getElementById('profile-actions').style.display = 'none';
+}
+function saveProfile() {
+  cancelEdit();
+  showToast('✅ Profile updated successfully');
+}
+
+// ========== VEHICLE FORM ==========
+function selectVType(el) {
+  document.querySelectorAll('.vtype-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function selectColor(el, color) {
+  document.querySelectorAll('.cswatch').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('veh-color').value = color;
+}
+function resetVehForm() {
+  document.getElementById('veh-plate').value = '';
+  document.getElementById('veh-color').value = 'Black';
+  document.querySelectorAll('.cswatch').forEach(s => s.classList.remove('selected'));
+  document.querySelector('.cswatch').classList.add('selected');
+  document.querySelectorAll('.vtype-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector('.vtype-card').classList.add('selected');
+}
+function registerVehicle() {
+  const plate = document.getElementById('veh-plate').value;
+  if (!plate) { showToast('⚠️ Please enter a plate number'); return; }
+  showToast('✅ Vehicle ' + plate.toUpperCase() + ' registered successfully');
+  resetVehForm();
+}
+
+// ========== STAR RATING ==========
+let currentRating = 4;
+const ratingLabels = ['','Terrible 😞','Poor 😕','Okay 😐','Good 😊','Excellent 🤩'];
+function setRating(n) {
+  currentRating = n;
+  const stars = document.querySelectorAll('#stars .star-btn');
+  stars.forEach((s,i) => s.classList.toggle('lit', i < n));
+  document.getElementById('star-label').textContent = n + ' out of 5 — ' + ratingLabels[n];
+}
+
+// ========== FEEDBACK CAT ==========
+function selectCat(el) {
+  document.querySelectorAll('.rating-cat').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function submitFeedback() {
+  showToast('💬 Feedback submitted — Thank you!');
+}
+
+// ========== ADMIN MANAGEMENT ==========
+let addAdminOpen = false;
+function toggleAddAdmin() {
+  addAdminOpen = !addAdminOpen;
+  document.getElementById('addAdminForm').style.display = addAdminOpen ? 'block' : 'none';
+}
+
+// ========== INIT ==========
+window.addEventListener('load', () => {
+  buildGrid('gridA', 'A', 20, occupiedA, maintenanceA);
+  buildGrid('gridB', 'B', 20, occupiedB, maintenanceB);
+  buildGrid('gridC', 'C', 20, occupiedC, maintenanceC);
+
+  // Set default booking times
+  const now = new Date();
+  const later = new Date(now.getTime() + 3*3600000);
+  const fmt = d => d.toISOString().slice(0,16);
+  const bs = document.getElementById('bk-start');
+  const be = document.getElementById('bk-end');
+  if (bs) { bs.value = fmt(now); be.value = fmt(later); calcFee(); }
+});
+</script>
+</body>
+</html>
