@@ -12,6 +12,17 @@ public class HomeController {
     //handle HTTP GET requests for specific URL paths ("/" and "/home")
     @GetMapping({"/", "/home"})
     public String home() {
-        return "parknow";
+        return "index.html";
     }
+
+    @GetMapping("/register")
+    public String register() {
+        return "register.html";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login.html";
+    }
+    
 }
