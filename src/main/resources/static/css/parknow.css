@@ -65,8 +65,7 @@ body {
 }
 
 /* ===================== PAGE SYSTEM ===================== */
-.page { display: none; min-height: 100vh; flex-direction: column; }
-.page.active { display: flex; animation: pageIn 0.4s cubic-bezier(0.22,1,0.36,1); }
+
 @keyframes pageIn {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -616,3 +615,16 @@ tbody tr:hover td { background: #f4fbfd; }
 .mc-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--ink); }
 .mc-desc  { font-size: 0.8rem; color: var(--ink-muted); line-height: 1.5; }
 .mc-count { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--ink-soft); }
+
+/* Registration / Auth form messages */
+.form-msg {
+    margin-top: 10px;
+    margin-bottom: 4px;
+    font-size: 0.875rem;
+    text-align: center;
+    min-height: 18px;
+    font-weight: 500;
+}
+.form-msg.success { color: #22c55e; }
+.form-msg.error   { color: #ef4444; }
+.form-msg.info    { color: #94a3b8; }
