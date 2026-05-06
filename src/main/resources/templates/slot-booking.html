@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkNow — Slot Booking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/parknow_remaining.css">
+</head>
+<body>
+    <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-booking')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost btn-sm" onclick="nav('pg-driver-dash')">← Dashboard</button>
+    </div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div><div><div class="sidebar-uname">John Doe</div><div class="sidebar-role">Driver Account</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-dash')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item" onclick="nav('pg-map')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item active"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item" onclick="nav('pg-vehicles')"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item" onclick="nav('pg-profile')"><span class="s-icon">👤</span> My Profile</button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header"><h1>Book a Parking Slot</h1><p>Complete the steps below to confirm your reservation.</p></div>
+
+      <div class="g2" style="align-items:start;gap:24px;">
+        <!-- Form Steps -->
+        <div style="display:flex;flex-direction:column;gap:0;">
+
+          <!-- Step 1 -->
+          <div class="booking-step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Select Slot &amp; Vehicle</div>
+              <div class="card" style="padding:20px;">
+                <div class="gap-16">
+                  <div class="form-group">
+                    <label class="form-label">Parking Slot</label>
+                    <select class="form-input" onchange="updateSummary()">
+                      <option value="A-07">A-07 — Section A, Standard (Available)</option>
+                      <option value="A-01">A-01 — Section A, Standard (Available)</option>
+                      <option value="B-05">B-05 — Section B, Large (Available)</option>
+                      <option value="C-12">C-12 — Section C, Standard (Available)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Your Vehicle</label>
+                    <select class="form-input" onchange="updateSummary()">
+                      <option>CAR-ABC-1234 — Sedan · Black</option>
+                      <option>VAN-XYZ-5678 — Van · White</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="booking-step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Set Date &amp; Time</div>
+              <div class="card" style="padding:20px;">
+                <div class="g2">
+                  <div class="form-group">
+                    <label class="form-label">Start Time</label>
+                    <input class="form-input" type="datetime-local" id="bk-start" onchange="calcFee()">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">End Time</label>
+                    <input class="form-input" type="datetime-local" id="bk-end" onchange="calcFee()">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="booking-step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Payment Method</div>
+              <div class="card" style="padding:20px;">
+                <div class="payment-options">
+                  <div class="payment-opt selected" id="pm-cash" onclick="selectPay('cash')">
+                    <input type="radio" name="pay" checked>
+                    <div><div class="po-label">💵 Cash</div><div class="po-sub">Pay at exit barrier</div></div>
+                  </div>
+                  <div class="payment-opt" id="pm-card" onclick="selectPay('card')">
+                    <input type="radio" name="pay">
+                    <div><div class="po-label">💳 Card</div><div class="po-sub">Pay securely online</div></div>
+                  </div>
+                </div>
+                <div id="card-fields" style="display:none;margin-top:16px;">
+                  <div class="divider" style="margin:0 0 16px;"></div>
+                  <div class="gap-16">
+                    <div class="form-group"><label class="form-label">Card Number</label><input class="form-input" placeholder="1234  5678  9012  3456"></div>
+                    <div class="g2">
+                      <div class="form-group"><label class="form-label">Expiry</label><input class="form-input" placeholder="MM / YY"></div>
+                      <div class="form-group"><label class="form-label">CVV</label><input class="form-input" placeholder="•••" type="password"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fee + CTA -->
+          <div style="padding-left:48px;">
+            <div class="fee-box mb-20">
+              <div class="fee-box-label">Estimated Total Fee</div>
+              <div class="fee-box-amount" id="fee-display">LKR 0</div>
+              <div class="fee-box-sub" id="fee-hours">Select times to calculate</div>
+            </div>
+            <div style="display:flex;gap:12px;">
+              <button class="btn btn-gold btn-lg" style="flex:1;justify-content:center;" onclick="confirmBooking()">Confirm Booking →</button>
+              <button class="btn btn-outline" onclick="resetBooking()">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="booking-summary-card">
+          <div class="bsc-header">
+            <div class="bsc-title">Booking Summary</div>
+            <div class="bsc-sub">Review before confirming</div>
+          </div>
+          <div class="bsc-body">
+            <div class="bsc-row"><span class="bsc-key">Slot</span><span class="bsc-val" id="s-slot">A-07</span></div>
+            <div class="bsc-row"><span class="bsc-key">Section</span><span class="bsc-val">Ground Floor — A</span></div>
+            <div class="bsc-row"><span class="bsc-key">Vehicle</span><span class="bsc-val">CAR-ABC-1234</span></div>
+            <div class="bsc-row"><span class="bsc-key">Start</span><span class="bsc-val" id="s-start">—</span></div>
+            <div class="bsc-row"><span class="bsc-key">End</span><span class="bsc-val" id="s-end">—</span></div>
+            <div class="bsc-row"><span class="bsc-key">Duration</span><span class="bsc-val" id="s-dur">—</span></div>
+            <div class="bsc-row"><span class="bsc-key">Rate</span><span class="bsc-val">LKR 150 / hr</span></div>
+            <div class="bsc-row"><span class="bsc-key">Payment</span><span class="bsc-val" id="s-pay">Cash</span></div>
+          </div>
+          <div class="bsc-total-row">
+            <span class="bsc-total-label">Total Due</span>
+            <span class="bsc-total-val" id="s-total">LKR 0</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/slot-booking.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkNow - Slot Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/parknow_remaining.css">
+</head>
+<body>
+    
+    <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-slot-mgmt')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right"><span class="badge badge-gold">Administrator</span><button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button></div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark-mid));color:#fff;">SA</div><div><div class="sidebar-uname">Super Admin</div><div class="sidebar-role">Administrator</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Overview</div>
+        <button class="sidebar-item" onclick="nav('pg-admin-dash')"><span class="s-icon">📊</span> Dashboard</button>
+        <button class="sidebar-item" onclick="nav('pg-map')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <div class="sidebar-section">Management</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-mgmt')"><span class="s-icon">👥</span> Driver Management</button>
+        <button class="sidebar-item" onclick="nav('pg-vehicle-mgmt')"><span class="s-icon">🚗</span> Vehicle Management</button>
+        <button class="sidebar-item active"><span class="s-icon">🅿️</span> Slot Management</button>
+        <button class="sidebar-item" onclick="nav('pg-admin-mgmt')"><span class="s-icon">🛡️</span> Admin Management</button>
+        <div class="sidebar-section">Operations</div>
+        <button class="sidebar-item"><span class="s-icon">📋</span> Reservations</button>
+        <button class="sidebar-item" onclick="nav('pg-feedback-mgmt')"><span class="s-icon">💬</span> Feedback <span class="s-badge">3</span></button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="admin-page-header">
+        <div><div class="admin-page-title">Slot Management</div><div class="admin-page-sub">Edit slot configurations, rates, and availability status.</div></div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-outline btn-sm" onclick="nav('pg-map')">🗺️ View Map</button>
+        </div>
+      </div>
+      <div class="g4 mb-28">
+        <div class="stat-card c-dark"><div class="accent-bar"></div><div class="stat-label">Total Slots</div><div class="stat-value">240</div></div>
+        <div class="stat-card c-teal"><div class="accent-bar"></div><div class="stat-label">Available</div><div class="stat-value">153</div></div>
+        <div class="stat-card c-orange"><div class="accent-bar"></div><div class="stat-label">Occupied</div><div class="stat-value">87</div></div>
+        <div class="stat-card c-danger"><div class="accent-bar"></div><div class="stat-label">Maintenance</div><div class="stat-value">4</div></div>
+      </div>
+      <div class="filter-bar">
+        <div class="search-wrap"><div class="search-bar"><span>🔍</span><input type="text" placeholder="Search by slot ID..."></div></div>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Sections</option><option>Section A</option><option>Section B</option><option>Section C</option></select>
+        <select class="form-input" style="width:150px;padding:9px 14px;"><option>All Status</option><option>Available</option><option>Occupied</option><option>Maintenance</option></select>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Types</option><option>Standard</option><option>Large</option><option>Disabled</option></select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Slot ID</th><th>Section</th><th>Type</th><th>Floor</th><th>Status</th><th>Current Vehicle</th><th>Rate / hr</th><th>Last Updated</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">A-01</td><td>A</td><td>Standard</td><td>Ground</td><td><span class="badge badge-success">Available</span></td><td>—</td><td>LKR 150</td><td>Just now</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('A-01')">Edit</button></td></tr>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">A-07</td><td>A</td><td>Standard</td><td>Ground</td><td><span class="badge badge-danger">Occupied</span></td><td>CAR-ABC-1234</td><td>LKR 150</td><td>09:30 AM</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('A-07')">Edit</button></td></tr>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">A-15</td><td>A</td><td>Large</td><td>Ground</td><td><span class="badge badge-success">Available</span></td><td>—</td><td>LKR 200</td><td>1h ago</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('A-15')">Edit</button></td></tr>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">B-03</td><td>B</td><td>Standard</td><td>Ground</td><td><span class="badge badge-danger">Occupied</span></td><td>SUV-DEF-9012</td><td>LKR 150</td><td>08:45 AM</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('B-03')">Edit</button></td></tr>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">B-08</td><td>B</td><td>Disabled</td><td>Ground</td><td><span class="badge badge-warning">Maintenance</span></td><td>—</td><td>LKR 100</td><td>Nov 9</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('B-08')">Edit</button></td></tr>
+            <tr><td style="font-family:var(--font-display);font-weight:700;">C-04</td><td>C</td><td>Standard</td><td>Ground</td><td><span class="badge badge-success">Available</span></td><td>—</td><td>LKR 150</td><td>2h ago</td><td><button class="btn btn-outline btn-sm" onclick="openEditSlot('C-04')">Edit</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/slot-management.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkNow — Vehicle Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/parknow_remaining.css">
+</head>
+
+<body>
+    <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-vehicles')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right">
+      <span style="font-size:0.8rem;color:var(--ink-muted);">Driver Portal</span>
+      <button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button>
+    </div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div><div><div class="sidebar-uname">John Doe</div><div class="sidebar-role">Driver Account</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-dash')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item" onclick="nav('pg-map')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item" onclick="nav('pg-booking')"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item active"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item" onclick="nav('pg-profile')"><span class="s-icon">👤</span> My Profile</button>
+        <button class="sidebar-item" onclick="nav('pg-feedback')"><span class="s-icon">💬</span> Give Feedback</button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div class="ph-row">
+          <div><h1>My Vehicles</h1><p>Register and manage vehicles linked to your account.</p></div>
+        </div>
+      </div>
+
+      <div class="g2" style="align-items:start;">
+        <!-- Register form -->
+        <div class="card">
+          <div class="section-title" style="margin-bottom:20px;">Register New Vehicle</div>
+          <div class="gap-16">
+            <div class="form-group">
+              <label class="form-label">Plate Number</label>
+              <input class="form-input" id="veh-plate" placeholder="e.g. CAR-ABC-1234" style="text-transform:uppercase;font-family:var(--font-display);font-weight:700;letter-spacing:0.05em;">
+              <span class="form-hint">Enter as shown on your registration document.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Vehicle Type</label>
+              <div class="vtype-grid" id="vtypeGrid">
+                <div class="vtype-card selected" onclick="selectVType(this)"><div class="vtype-icon">🚗</div><div class="vtype-label">Sedan</div></div>
+                <div class="vtype-card" onclick="selectVType(this)"><div class="vtype-icon">🚙</div><div class="vtype-label">SUV</div></div>
+                <div class="vtype-card" onclick="selectVType(this)"><div class="vtype-icon">🚐</div><div class="vtype-label">Van</div></div>
+                <div class="vtype-card" onclick="selectVType(this)"><div class="vtype-icon">🏍️</div><div class="vtype-label">Moto</div></div>
+                <div class="vtype-card" onclick="selectVType(this)"><div class="vtype-icon">🚚</div><div class="vtype-label">Truck</div></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Color</label>
+              <div class="color-swatches">
+                <div class="cswatch selected" style="background:#1a1a1a;" title="Black" onclick="selectColor(this,'Black')"></div>
+                <div class="cswatch" style="background:#f0f0f0;border:2px solid #ccc;" title="White" onclick="selectColor(this,'White')"></div>
+                <div class="cswatch" style="background:#c0392b;" title="Red" onclick="selectColor(this,'Red')"></div>
+                <div class="cswatch" style="background:#2471a3;" title="Blue" onclick="selectColor(this,'Blue')"></div>
+                <div class="cswatch" style="background:#1e8449;" title="Green" onclick="selectColor(this,'Green')"></div>
+                <div class="cswatch" style="background:#d4ac0d;" title="Yellow" onclick="selectColor(this,'Yellow')"></div>
+                <div class="cswatch" style="background:#e67e22;" title="Orange" onclick="selectColor(this,'Orange')"></div>
+                <div class="cswatch" style="background:#95a5a6;" title="Silver" onclick="selectColor(this,'Silver')"></div>
+                <div class="cswatch" style="background:#566573;" title="Gray" onclick="selectColor(this,'Gray')"></div>
+              </div>
+              <input class="form-input" id="veh-color" value="Black" placeholder="Color name" style="margin-top:10px;">
+            </div>
+
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-teal" style="flex:1;justify-content:center;" onclick="registerVehicle()">Register Vehicle</button>
+              <button class="btn btn-outline" onclick="resetVehForm()">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Registered vehicles -->
+        <div>
+          <div class="section-title">Registered Vehicles <span class="badge badge-teal">2 vehicles</span></div>
+          <div class="gap-16" id="vehicleList">
+            <div class="card" style="display:flex;align-items:center;gap:16px;">
+              <div style="font-size:2.5rem;">🚗</div>
+              <div style="flex:1;">
+                <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;">CAR-ABC-1234</div>
+                <div style="font-size:0.82rem;color:var(--ink-muted);margin-top:3px;">Sedan · ⬛ Black · Registered Jan 15, 2025</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span class="badge badge-success">Active</span>
+                <button class="btn btn-danger btn-sm" onclick="showToast('🗑️ Vehicle removed')">Remove</button>
+              </div>
+            </div>
+            <div class="card" style="display:flex;align-items:center;gap:16px;">
+              <div style="font-size:2.5rem;">🚐</div>
+              <div style="flex:1;">
+                <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;">VAN-XYZ-5678</div>
+                <div style="font-size:0.82rem;color:var(--ink-muted);margin-top:3px;">Van · ⬜ White · Registered Mar 22, 2025</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span class="badge badge-success">Active</span>
+                <button class="btn btn-danger btn-sm" onclick="showToast('🗑️ Vehicle removed')">Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/register-vehicle.js"></script>
+
+</body>
+</html>

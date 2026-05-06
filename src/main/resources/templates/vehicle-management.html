@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkNow - Vehicle Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/parknow_remaining.css">
+</head>
+<body>
+    
+    <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-vehicle-mgmt')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right"><span class="badge badge-gold">Administrator</span><button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button></div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark-mid));color:#fff;">SA</div><div><div class="sidebar-uname">Super Admin</div><div class="sidebar-role">Administrator</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Overview</div>
+        <button class="sidebar-item" onclick="nav('pg-admin-dash')"><span class="s-icon">📊</span> Dashboard</button>
+        <div class="sidebar-section">Management</div>
+        <button class="sidebar-item" onclick="nav('pg-driver-mgmt')"><span class="s-icon">👥</span> Driver Management</button>
+        <button class="sidebar-item active"><span class="s-icon">🚗</span> Vehicle Management</button>
+        <button class="sidebar-item" onclick="nav('pg-slot-mgmt')"><span class="s-icon">🅿️</span> Slot Management</button>
+        <button class="sidebar-item" onclick="nav('pg-admin-mgmt')"><span class="s-icon">🛡️</span> Admin Management</button>
+        <div class="sidebar-section">Operations</div>
+        <button class="sidebar-item"><span class="s-icon">📋</span> Reservations</button>
+        <button class="sidebar-item" onclick="nav('pg-feedback-mgmt')"><span class="s-icon">💬</span> Feedback <span class="s-badge">3</span></button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="admin-page-header">
+        <div><div class="admin-page-title">Vehicle Management</div><div class="admin-page-sub">All vehicles registered in the system.</div></div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-outline btn-sm">📤 Export</button>
+          <button class="btn btn-teal btn-sm" onclick="nav('pg-vehicles')">+ Register Vehicle</button>
+        </div>
+      </div>
+      <div class="g4 mb-28">
+        <div class="stat-card c-gold"><div class="accent-bar"></div><div class="stat-label">Total Vehicles</div><div class="stat-value">2,051</div></div>
+        <div class="stat-card c-teal"><div class="accent-bar"></div><div class="stat-label">Active</div><div class="stat-value">2,003</div></div>
+        <div class="stat-card c-orange"><div class="accent-bar"></div><div class="stat-label">Flagged</div><div class="stat-value">12</div></div>
+        <div class="stat-card c-green"><div class="accent-bar"></div><div class="stat-label">Types</div><div class="stat-value">5</div><div class="stat-sub">Sedan, SUV, Van, Moto, Truck</div></div>
+      </div>
+      <div class="filter-bar">
+        <div class="search-wrap"><div class="search-bar"><span>🔍</span><input type="text" placeholder="Search by plate number or owner..."></div></div>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Types</option><option>Sedan</option><option>SUV</option><option>Van</option><option>Motorcycle</option><option>Truck</option></select>
+        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Status</option><option>Active</option><option>Flagged</option></select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Vehicle ID</th><th>Plate Number</th><th>Type</th><th>Color</th><th>Owner</th><th>Owner ID</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#V001</span></td><td><span style="font-family:var(--font-display);font-weight:700;">CAR-ABC-1234</span></td><td>Sedan</td><td>⬛ Black</td><td>John Doe</td><td>#D001</td><td>Jan 15, 2025</td><td><span class="badge badge-success">Active</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('vehicle','CAR-ABC-1234')">Delete</button></div></td></tr>
+            <tr><td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#V002</span></td><td><span style="font-family:var(--font-display);font-weight:700;">SUV-DEF-9012</span></td><td>SUV</td><td>🔵 Blue</td><td>Sarah Kim</td><td>#D002</td><td>Feb 3, 2025</td><td><span class="badge badge-success">Active</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('vehicle','SUV-DEF-9012')">Delete</button></div></td></tr>
+            <tr><td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#V003</span></td><td><span style="font-family:var(--font-display);font-weight:700;">VAN-XYZ-5678</span></td><td>Van</td><td>⬜ White</td><td>John Doe</td><td>#D001</td><td>Mar 22, 2025</td><td><span class="badge badge-success">Active</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('vehicle','VAN-XYZ-5678')">Delete</button></div></td></tr>
+            <tr><td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#V004</span></td><td><span style="font-family:var(--font-display);font-weight:700;">CAR-GHI-3456</span></td><td>Sedan</td><td>🔴 Red</td><td>Ahmed Ali</td><td>#D003</td><td>Mar 10, 2025</td><td><span class="badge badge-warning">Flagged</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('vehicle','CAR-GHI-3456')">Delete</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/vehicle-management.js"></script>
+
+</body>
+</html>
