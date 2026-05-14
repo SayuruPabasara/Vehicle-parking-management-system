@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParkNow — Billing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/parknow_remaining.css">
+</head>
+
+<body onclick="closeDropdown()">
+
+    <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-logo" onclick="showPage('pg-home')">
+      <div class="logo-mark">P</div>ParkNow
+    </div>
+    <div class="topbar-right">
+      <span style="font-size:0.8rem;color:var(--ink-muted);">Driver Portal</span>
+      <button class="btn btn-outline btn-sm" onclick="showPage('pg-login')">Logout</button>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div>
+          <div>
+            <div class="sidebar-uname">John Doe</div>
+            <div class="sidebar-role">Driver Account</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item" onclick="showPage('pg-dashboard')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item" onclick="showPage('pg-slotMap')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item" onclick="showPage('pg-bookings')"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item" onclick="showPage('pg-vehicles')"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item" onclick="showPage('pg-profile')"><span class="s-icon">👤</span> My Profile</button>
+        <button class="sidebar-item" onclick="showPage('pg-feedback')"><span class="s-icon">💬</span> Give Feedback</button>
+        <button class="sidebar-item active" onclick="showPage('pg-billing')"><span class="s-icon">🧾</span> Billing</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="sidebar-item" onclick="showPage('pg-login')"><span class="s-icon">🚪</span> Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+      
+      <header class="page-header">
+            <div class="ph-row">
+                <div>
+                    <h1>Financial Overview</h1>
+                    <p>Manage your balances, payment methods, and history.</p>
+                </div>
+                <div class="badge badge-success">Account Active</div>
+            </div>
+        </header>
+
+        <div class="g3 mb-28">
+            <div class="stat-card c-green">
+                <div class="accent-bar"></div>
+                <div class="stat-label">Total Paid (All Time)</div>
+                <div class="stat-value" id="stat-total-paid">LKR 0</div>
+                <div class="stat-sub" id="stat-paid-meta">—</div>
+            </div>
+
+            <div class="stat-card c-danger">
+                <div class="accent-bar"></div>
+                <div class="stat-label">Amount Due</div>
+                <div class="stat-value" id="stat-amount-due">LKR 0</div>
+                <div class="stat-sub" id="stat-due-meta">Unpaid reservation fees</div>
+            </div>
+
+            <div class="stat-card c-teal">
+                <div class="accent-bar"></div>
+                <div class="stat-label">Current Rate</div>
+                <div class="stat-value" id="stat-default-rate">LKR 150<small>/hr</small></div>
+                <div class="stat-sub">From your parking slots</div>
+            </div>
+        </div>
+
+        <div class="g2" style="grid-template-columns: 1.5fr 1fr;">
+            
+            <div class="gap-20">
+                
+                <section class="card">
+                    <h3 class="section-title">Select Payment Method</h3>
+						
+						 
+						  <p id="billing-msg" class="form-msg" style="display:none;margin-bottom:12px;"></p>
+						  <div class="card" style="padding:20px;">
+							<div class="payment-options">
+							  <div class="payment-opt selected" id="pm-cash" onclick="selectPay('cash')">
+								<input type="radio" name="pay" checked>
+								<div><div class="po-label">💵 Cash</div><div class="po-sub">Pay at exit barrier</div></div>
+							  </div>
+							  <div class="payment-opt" id="pm-card" onclick="selectPay('card')">
+								<input type="radio" name="pay">
+								<div><div class="po-label">💳 Card</div><div class="po-sub">Pay securely online</div></div>
+							  </div>
+							</div>
+							<div id="card-fields" style="display:none;margin-top:16px;">
+							  <div class="divider" style="margin:0 0 16px;"></div>
+							  <div class="gap-16">
+								<div class="form-group"><label class="form-label">Card Number</label><input class="form-input" placeholder="1234  5678  9012  3456"></div>
+								<div class="g2">
+								  <div class="form-group"><label class="form-label">Expiry</label><input class="form-input" placeholder="MM / YY"></div>
+								  <div class="form-group"><label class="form-label">CVV</label><input class="form-input" placeholder="•••" type="password"></div>
+								</div>
+							  </div>
+							</div>
+						  </div>
+						
+                    <button type="button" class="btn btn-teal btn-lg" id="pay-outstanding-btn" style="width: 100%;" onclick="showPaymentInfo()">Pay Outstanding Balance</button>
+                </section>
+
+                <section class="card">
+                    <h3 class="section-title">Payment History</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Ref ID</th>
+                                    <th>Slot</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <div class="gap-20">
+                <div class="billing-summary-panel">
+                    <div class="bsp-header">
+                        <div class="bsp-title">Usage Breakdown</div>
+                        <div class="bsp-sub" id="bsp-month-label">This month</div>
+                    </div>
+                    <div class="bsp-body">
+                        <div class="bsp-row">
+                            <span class="bsp-key">Parking Fees (bookings)</span>
+                            <span class="bsp-val" id="bsp-month-fees">LKR 0</span>
+                        </div>
+                        <div class="bsp-row">
+                            <span class="bsp-key">Amount still due</span>
+                            <span class="bsp-val" id="bsp-due-side">LKR 0</span>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="bsp-total">
+                            <span class="bsp-total-label">Outstanding</span>
+                            <span class="bsp-total-val" id="bsp-outstanding">LKR 0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="section-title" style="font-size: 0.85rem;">Billing Settings</h3>
+                    <div class="gap-16">
+                        <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: flex-start;">
+                            <span>📧</span> Email Monthly Statements
+                        </button>
+                        <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: flex-start;">
+                            <span>🛠️</span> Update Billing Address
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+  </div>
+
+    <script src="/js/billing.js"></script>
+</body>
+
+</html>

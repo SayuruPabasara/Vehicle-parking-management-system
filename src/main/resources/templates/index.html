@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParkNow — Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/parknow.css">
+</head>
+<body onclick="closeDropdown()">
+<!-- Navbar -->
+  <nav class="home-nav">
+    <div class="topbar-logo" onclick="showPage('pg-home')" style="font-family:var(--font-display);font-size:1.35rem;font-weight:700;color:var(--dark);display:flex;align-items:center;gap:10px;cursor:pointer;">
+      <div class="logo-mark">P</div>
+      ParkNow
+    </div>
+    <div class="home-nav-links">
+      <button class="home-nav-link" onclick="showPage('pg-home')">Home</button>
+      <button class="home-nav-link" onclick="showPage('pg-live-map')">Live Map</button>
+      <button class="home-nav-link" onclick="showPage('pg-pricing')">Pricing</button>
+      <button class="home-nav-link" onclick="showPage('pg-about')">About</button>
+      <button class="home-nav-link" onclick="showPage('pg-contact')">Contact</button>
+    </div>
+    <div class="home-nav-actions">
+      <button class="btn btn-outline" onclick="showPage('pg-login')">Log In</button>
+      <button class="btn btn-dark" onclick="showPage('pg-register')">Sign Up</button>
+    </div>
+  </nav>
+
+    <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg-circle hero-bg-c1"></div>
+    <div class="hero-bg-circle hero-bg-c2"></div>
+    <div class="hero-grid-overlay"></div>
+    <div class="hero-diagonal"></div>
+
+	<div class="hero-content">
+		
+		<div class="row-container">
+			<div class="left-box">
+				<h1>
+			Smart <span class="h-gold">Parking</span><br>
+			for the <span class="h-teal">Modern</span><br>
+			<span class="h-orange">Driver.</span>
+		  </h1>
+			</div>
+
+			<div class="right-box">
+				<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module"></script>
+			<dotlottie-wc src="https://lottie.host/2f82168e-a0a6-4726-a108-0ad70dd84a2f/gQ2BBXCdm6.lottie" style="width: 300px;height: 300px" autoplay loop></dotlottie-wc>
+
+			</div>
+		</div>  
+		  
+		</div>
+		  <p class="hero-desc">
+			Reserve your parking slot in seconds. Real-time availability, instant booking, and seamless payments — all from one place.
+		  </p>
+
+		  <div class="hero-btns">
+			<button class="btn btn-gold btn-xl" onclick="showPage('pg-login')">Reserve a Slot</button>
+		  </div>
+		  
+	</div>
+		
+		<!-- Stats -->
+	  <div class="hero-stats-panel">
+		<div class="hero-stats-row">
+		  <div class="hero-stat">
+			<div class="hero-stat-label">Total Capacity</div>
+			<div class="hero-stat-val">240</div>
+			<div class="hero-stat-sub">Slots available</div>
+		  </div>
+		  <div class="hero-stat">
+			<div class="hero-stat-label">Occupied</div>
+			<div class="hero-stat-val v-orange">87</div>
+			<div class="hero-stat-sub">36.3% utilization</div>
+		  </div>
+		  <div class="hero-stat">
+			<div class="hero-stat-label">Available</div>
+			<div class="hero-stat-val v-teal">153</div>
+			<div class="hero-stat-sub">63.7% free</div>
+		  </div>
+		  <div class="hero-stat">
+			<div class="hero-stat2-icon">👤</div>
+			<div>
+			  <div class="hero-stat-val">4,821</div>
+			  <div class="hero-stat-label">Happy Clients</div>
+			</div>
+		  </div>
+		  <div class="hero-stat">
+			<div class="hero-stat2-icon">📅</div>
+			<div>
+			  <div class="hero-stat-val">38.6K</div>
+			  <div class="hero-stat-label">Total Reservations</div>
+			</div>
+		  </div>
+		  <div class="hero-stat">
+			<div class="hero-stat2-icon">⭐</div>
+			<div>
+			  <div class="hero-stat-val" style="color:var(--gold);">4.8 / 5</div>
+			  <div class="hero-stat-label">Avg. Rating</div>
+			</div>
+		  </div>
+		</div>
+	
+		</div>
+</section>
+
+  <!-- Pricing Section -->
+  <section id="pricing-section" style="padding: 80px 56px; background: var(--dark);">
+    <div class="hero-content">
+      <div class="section-title">
+        <h2 style="font-family: var(--font-display); font-size: 2.5rem; color: var(--white);">Flexible Pricing</h2>
+      </div>
+      
+        <div class="card">
+          
+          <div style="font-size: 2rem; color: var(--dark); font-weight: 700; margin: 20px 0; text-align: center;">LKR 150<small style="font-size: 1rem; color: var(--ink-muted); text-align: center;">/hr</small></div>
+          
+          <ul style="margin-top: 20px; font-size: 0.85rem; color: var(--ink-soft); list-style: none; display: flex; flex-direction: column; gap: 8px;">
+            <li>✓ For All type of Vehicles</li>
+          </ul>
+        </div>
+        
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about-section" style="padding: 80px 56px; background: var(--dark);;">
+    <div class="hero-content">
+      <div class="row-container">
+        <div class="left-box" style="top: 0;">
+          <div class="section-title">
+            <h2 style="font-family: var(--font-display); font-size: 2.5rem; color: var(--white);">About <span class="h-orange">ParkNow</span></h2>
+          </div>
+		  <div class="card">
+          <p style="font-size: 1.1rem; color: var(--ink-soft); line-height: 1.8; margin-top: 20px;">
+            ParkNow is a Vehicle Parking Management System developed as a Year 1 Semester 2 Java OOP project at Sri Lanka Institute of Information Technology. The project was created by a dedicated team of six members with the aim of improving traditional parking management through a more efficient digital solution.
+          </p>
+          <p style="font-size: 1.1rem; color: var(--ink-soft); line-height: 1.8; margin-top: 15px;">
+            This system allows users to easily manage parking activities by providing features such as parking slot reservations, vehicle entry tracking, availability monitoring, and administrative management functions. It helps reduce manual errors, save time, and improve the overall parking experience for both drivers and administrators.
+          </p>
+          <p style="font-size: 1.1rem; color: var(--ink-soft); line-height: 1.8; margin-top: 15px;">
+            Built using object-oriented programming principles, the project demonstrates practical implementation of Java concepts while solving a real-world problem through smart parking management.
+          </p>
+		  </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div id="contact-info">
+      <div style="margin-bottom: 12px;"><strong>ParkNow</strong> &copy; 2025 · Vehicle Parking Management System</div>
+      <div style="display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem;">
+        <span>📧 support@parknow.com</span>
+        <span>📞 +94 11 234 5678</span>
+        <span>📍 123 Parking Plaza, Colombo 03, Sri Lanka</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:24px;">
+      <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Support</a>
+    </div>
+  </footer>
+    <script src="/js/index.js"></script>
+</body>
+</html>
