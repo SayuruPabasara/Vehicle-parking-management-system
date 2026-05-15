@@ -29,7 +29,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @Value("${parknow.data.activity-log}")
-    private String activityLogPath;
+    private String activityLogPath ;
 
     public AdminController(AdminService adminService) {
         this.adminService = adminService;
