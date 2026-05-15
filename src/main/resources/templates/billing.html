@@ -17,7 +17,7 @@
     </div>
     <div class="topbar-right">
       <span style="font-size:0.8rem;color:var(--ink-muted);">Driver Portal</span>
-      <button class="btn btn-outline btn-sm" onclick="showPage('pg-login')">Logout</button>
+      <button class="btn btn-outline btn-sm" type="button" onclick="logout()">Logout</button>
     </div>
   </div>
 
@@ -45,7 +45,7 @@
         <button class="sidebar-item active" onclick="showPage('pg-billing')"><span class="s-icon">🧾</span> Billing</button>
       </nav>
       <div class="sidebar-bottom">
-        <button class="sidebar-item" onclick="showPage('pg-login')"><span class="s-icon">🚪</span> Logout</button>
+        <button class="sidebar-item" type="button" onclick="logout()"><span class="s-icon">🚪</span> Logout</button>
       </div>
     </aside>
 
@@ -181,6 +181,7 @@
     </main>
   </div>
 
+    <script src="/js/auth.js"></script>
     <script src="/js/billing.js"></script>
 </body>
 

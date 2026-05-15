@@ -6,16 +6,18 @@ public class Feedback {
     
     private String id;
     private String driverId;
-    private int rating; // 1 to 5
+    private int rating;
+    private String category;// 1 to 5
     private String comments;
     private LocalDateTime submittedAt;
 
     public Feedback() {}
 
-    public Feedback(String id, String driverId, int rating, String comments) {
+    public Feedback(String id, String driverId, int rating,String category,String comments) {
         this.id = id;
         this.driverId = driverId;
         this.rating = rating;
+        this.category = category;
         this.comments = comments;
         this.submittedAt = LocalDateTime.now();
     }
@@ -28,6 +30,9 @@ public class Feedback {
 
     public int getRating() { return rating; }
     public void setRating(int rating) { this.rating = rating; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 
     public String getComments() { return comments; }
     public void setComments(String comments) { this.comments = comments; }
@@ -59,16 +64,15 @@ public class Feedback {
     }
 
     public String toCsvRow() {
-        // Matches FeedbackRepository expected format: 
-        // id, driverId, rating, category, comment, submittedAt, status
+        
+        // id, driverId, rating, category, comment, submittedAt
         return String.join(",",
                 id,
                 driverId,
                 String.valueOf(rating),
-                "General", // Default category placeholder
+                category != null ? category : "GENERAL",
                 "\"" + (comments != null ? comments.replace("\"", "\"\"") : "") + "\"",
-                submittedAt != null ? submittedAt.toString() : LocalDateTime.now().toString(),
-                "PENDING" // Default status placeholder
+                submittedAt != null ? submittedAt.toString() : LocalDateTime.now().toString()
         );
     }
 }

@@ -3,10 +3,13 @@
 function showPage(pageId) {
     switch (pageId) {
         case 'pg-login':
-            window.location.href = '/login.html';
+            window.location.href = '/login';
             break;
         case 'pg-home':
-            window.location.href = '/index.html';
+            window.location.href = '/';
+            break;
+        case 'pg-register':
+            window.location.href = '/register';
             break;
         default:
             console.warn('Unknown page:', pageId);

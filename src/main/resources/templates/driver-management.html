@@ -1,98 +1,150 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>ParkNow - Driver Management</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="/css/parknow_remaining.css">
+
 </head>
 
+
+
 <body>
+
     <div class="topbar">
-    <div class="topbar-logo" onclick="nav('pg-driver-mgmt')"><div class="logo-mark">P</div>ParkNow</div>
-    <div class="topbar-right"><span class="badge badge-gold">Administrator</span><button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button></div>
+
+    <div class="topbar-logo" onclick="showPage('pg-admin-dash')"><div class="logo-mark">P</div>ParkNow</div>
+
+    <div class="topbar-right"><span class="badge badge-gold">Administrator</span><button class="btn btn-outline btn-sm" type="button" onclick="logout()">Logout</button></div>
+
   </div>
+
   <div class="app-shell">
+
     <aside class="sidebar" id="adminSB1">
+
       <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark-mid));color:#fff;">SA</div><div><div class="sidebar-uname">Super Admin</div><div class="sidebar-role">Administrator</div></div></div></div>
+
       <nav class="sidebar-nav">
+
         <div class="sidebar-section">Overview</div>
+
         <button class="sidebar-item" onclick="showPage('pg-admin-dash')"><span class="s-icon">📊</span> Dashboard</button>
+
         <div class="sidebar-section">Management</div>
+
         <button class="sidebar-item active" onclick="showPage('pg-drivers')"><span class="s-icon">👥</span> Driver Management</button>
+
         <button class="sidebar-item" onclick="showPage('pg-vehicles')"><span class="s-icon">🚗</span> Vehicle Management</button>
+
         <button class="sidebar-item" onclick="showPage('pg-slots')"><span class="s-icon">🅿️</span> Slot Management</button>
+
         <button class="sidebar-item" onclick="showPage('pg-admins')"><span class="s-icon">🛡️</span> Admin Management</button>
+
         <button class="sidebar-item" onclick="showPage('pg-reservations')"><span class="s-icon">📋</span> Reservation Management</button>
+
         <button class="sidebar-item" onclick="showPage('pg-feedback')"><span class="s-icon">💬</span> Feedback Management</button>
+
       </nav>
-      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+
+      <div class="sidebar-bottom"><button class="sidebar-item" type="button" onclick="logout()"><span class="s-icon">🚪</span> Logout</button></div>
+
     </aside>
 
+
+
     <main class="main-content">
+
       <div class="admin-page-header">
+
         <div>
+
           <div class="admin-page-title">Driver Management</div>
+
           <div class="admin-page-sub">View, edit, and manage all registered driver accounts.</div>
+
         </div>
+
         <div style="display:flex;gap:10px;">
-          <button class="btn btn-outline btn-sm">📤 Export CSV</button>
+
+          <button class="btn btn-outline btn-sm" type="button" disabled>📤 Export CSV</button>
+
         </div>
+
       </div>
+
+
 
       <div class="g4 mb-28">
-        <div class="stat-card c-teal"><div class="accent-bar"></div><div class="stat-label">Total Drivers</div><div class="stat-value">1,284</div><div class="stat-sub">Registered accounts</div></div>
-        <div class="stat-card c-green"><div class="accent-bar"></div><div class="stat-label">Active</div><div class="stat-value">1,241</div><div class="stat-sub">96.7% active rate</div></div>
-        <div class="stat-card c-orange"><div class="accent-bar"></div><div class="stat-label">Suspended</div><div class="stat-value">31</div><div class="stat-sub">Pending review</div></div>
-        <div class="stat-card c-gold"><div class="accent-bar"></div><div class="stat-label">New This Week</div><div class="stat-value">12</div><div class="stat-sub">↑ vs last week</div></div>
+
+        <div class="stat-card c-teal"><div class="accent-bar"></div><div class="stat-label">Total Drivers</div><div class="stat-value" id="statTotalDrivers">—</div><div class="stat-sub">Registered accounts</div></div>
+
+        <div class="stat-card c-green"><div class="accent-bar"></div><div class="stat-label">Active</div><div class="stat-value" id="statActiveDrivers">—</div><div class="stat-sub" id="statActiveSub">—</div></div>
+
+        <div class="stat-card c-orange"><div class="accent-bar"></div><div class="stat-label">Suspended</div><div class="stat-value" id="statSuspendedDrivers">—</div><div class="stat-sub">Not tracked in system</div></div>
+
+        <div class="stat-card c-gold"><div class="accent-bar"></div><div class="stat-label">New This Week</div><div class="stat-value" id="statNewThisWeek">—</div><div class="stat-sub">From registration log</div></div>
+
       </div>
+
+
 
       <div class="filter-bar">
-        <div class="search-wrap"><div class="search-bar"><span>🔍</span><input type="text" placeholder="Search by name, username, or email..."></div></div>
-        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Status</option><option>Active</option><option>Suspended</option></select>
-        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Time</option><option>This Week</option><option>This Month</option></select>
+
+        <div class="search-wrap"><div class="search-bar"><span>🔍</span><input type="text" id="driverSearch" placeholder="Search by name, username, or email..."></div></div>
+
+        <select class="form-input" id="driverStatusFilter" style="width:140px;padding:9px 14px;">
+
+          <option value="all">All Status</option>
+
+          <option value="ACTIVE">Active</option>
+
+          <option value="SUSPENDED">Suspended</option>
+
+        </select>
+
       </div>
+
+
 
       <div class="table-wrap">
+
         <table>
+
           <thead><tr><th>Driver ID</th><th>Full Name</th><th>Username</th><th>Email</th><th>Phone</th><th>Vehicles</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#D001</span></td>
-              <td><span style="font-weight:600;">John Doe</span></td>
-              <td>johndoe</td><td>john@example.com</td><td>+94 77 123 4567</td><td>2</td><td>Jan 15, 2025</td>
-              <td><span class="badge badge-success">Active</span></td>
-              <td><div class="td-actions"><button class="btn btn-outline btn-sm" onclick="openEditDriver()">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('driver','John Doe')">Delete</button></div></td>
-            </tr>
-            <tr>
-              <td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#D002</span></td>
-              <td><span style="font-weight:600;">Sarah Kim</span></td>
-              <td>sarahk</td><td>sarah@example.com</td><td>+94 76 987 6543</td><td>1</td><td>Feb 3, 2025</td>
-              <td><span class="badge badge-success">Active</span></td>
-              <td><div class="td-actions"><button class="btn btn-outline btn-sm" onclick="openEditDriver()">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('driver','Sarah Kim')">Delete</button></div></td>
-            </tr>
-            <tr>
-              <td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#D003</span></td>
-              <td><span style="font-weight:600;">Ahmed Ali</span></td>
-              <td>ahmed_a</td><td>ahmed@example.com</td><td>+94 71 456 7890</td><td>1</td><td>Mar 10, 2025</td>
-              <td><span class="badge badge-warning">Suspended</span></td>
-              <td><div class="td-actions"><button class="btn btn-outline btn-sm" onclick="openEditDriver()">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('driver','Ahmed Ali')">Delete</button></div></td>
-            </tr>
-            <tr>
-              <td><span style="font-family:var(--font-display);font-weight:700;color:var(--teal);">#D004</span></td>
-              <td><span style="font-weight:600;">Priya Nair</span></td>
-              <td>priya_n</td><td>priya@example.com</td><td>+94 72 321 0987</td><td>3</td><td>Apr 20, 2025</td>
-              <td><span class="badge badge-success">Active</span></td>
-              <td><div class="td-actions"><button class="btn btn-outline btn-sm" onclick="openEditDriver()">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('driver','Priya Nair')">Delete</button></div></td>
-            </tr>
+
+          <tbody id="driversTableBody">
+
+            <tr><td colspan="9" style="text-align:center;color:var(--ink-muted);padding:24px;">Loading drivers…</td></tr>
+
           </tbody>
+
         </table>
+
       </div>
+
     </main>
+
   </div>
 
-  <script src="/js/driver-management.js"> </script>
+
+
+  <script src="/js/auth.js"></script>
+
+  <script src="/js/driver-management.js"></script>
+
+
 
 </body>
+
 </html>
+

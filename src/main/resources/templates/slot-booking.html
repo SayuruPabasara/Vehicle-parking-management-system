@@ -28,7 +28,7 @@
         <button class="sidebar-item" onclick="showPage('pg-feedback')"><span class="s-icon">💬</span> Give Feedback</button>
         <button class="sidebar-item" onclick="showPage('pg-billing')"><span class="s-icon">🧾</span> Billing</button>
       </nav>
-      <div class="sidebar-bottom"><button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button></div>
+      <div class="sidebar-bottom"><button class="sidebar-item" type="button" onclick="logout()"><span class="s-icon">🚪</span> Logout</button></div>
     </aside>
 
     <main class="main-content">
@@ -121,6 +121,7 @@
     </main>
   </div>
 
+  <script src="/js/auth.js"></script>
   <script src="/js/slot-booking.js"></script>
 
 </body>

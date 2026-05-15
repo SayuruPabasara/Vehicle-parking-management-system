@@ -77,11 +77,18 @@ public class UserRepository {
 
     /** Count registered drivers (users.csv rows with role DRIVER). */
     public int countDrivers() {
-        int n = 0;
+        return findAllDrivers().size();
+    }
+
+    /** All accounts with role DRIVER (from users.csv and admins.csv). */
+    public List<Driver> findAllDrivers() {
+        List<Driver> drivers = new ArrayList<>();
         for (User u : findAll()) {
-            if ("DRIVER".equalsIgnoreCase(u.getRole())) n++;
+            if (u instanceof Driver d) {
+                drivers.add(d);
+            }
         }
-        return n;
+        return drivers;
     }
 
     /** Find a user by their unique ID. */

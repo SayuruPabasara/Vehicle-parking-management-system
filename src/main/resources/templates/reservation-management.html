@@ -18,7 +18,7 @@
     </div>
 <div class="topbar-right">
 <span style="font-size:0.8rem;color:var(--ink-muted);">Admin Portal</span>
-<button class="btn btn-outline btn-sm" onclick="showPage('pg-login')">Logout</button>
+<button class="btn btn-outline btn-sm" type="button" onclick="logout()">Logout</button>
 </div>
 </div>
 <div class="app-shell">
@@ -138,6 +138,7 @@
 </main>
 </div>
 
+<script src="/js/auth.js"></script>
 <script src="/js/reservation-management.js"></script>
 
 <div id="toast" class="toast" style="position:fixed;bottom:24px;right:24px;background:var(--dark);color:#fff;padding:14px 18px;border-radius:12px;box-shadow:var(--shadow-md);display:none;z-index:9999;max-width:320px;">

@@ -57,6 +57,7 @@ public class FeedbackRepository {
 
     // ── Write operations ──────────────────────────────────────────────────────
 
+    //save new feedback
     public void save(Feedback feedback) {
         ensureFileExists();
         try (PrintWriter pw = new PrintWriter(new FileWriter(filePath, true))) {
@@ -66,6 +67,7 @@ public class FeedbackRepository {
         }
     }
 
+    // Update an existing feedback entry. Returns true if successful, false if not found.
     public boolean update(Feedback updated) {
         List<Feedback> all = findAll();
         boolean found = false;
@@ -80,6 +82,7 @@ public class FeedbackRepository {
         return found;
     }
 
+    // Delete a feedback entry by ID. Returns true if successful, false if not found.
     public boolean deleteById(String id) {
         List<Feedback> all = findAll();
         boolean removed = all.removeIf(f -> f.getId().equals(id));

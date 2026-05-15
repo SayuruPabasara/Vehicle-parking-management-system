@@ -16,7 +16,7 @@
       <div class="auth-left-bg1"></div>
       <div class="auth-left-bg2"></div>
       <div class="auth-left-content">
-        <div class="auth-brand">
+        <div class="auth-brand" onclick="showPage('pg-home')" style="cursor:pointer;" role="link" tabindex="0" onkeydown="if(event.key==='Enter')showPage('pg-home')">
           <div class="logo-mark">P</div>
           ParkNow
         </div>
@@ -37,6 +37,7 @@
     <!-- Right panel -->
     <div class="auth-right">
       <div class="auth-box">
+        <div class="auth-switch" style="margin-bottom:14px;text-align:left;"><a onclick="showPage('pg-home')">← Back to home</a></div>
         <div class="auth-box-title">Welcome Back</div>
         <div class="auth-box-sub">Enter your credentials to access your account.</div>
 
@@ -50,14 +51,12 @@
             <input class="form-input" type="password" placeholder="••••••••" id="login-pass">
           </div>
 
-          <!-- Message div — shows success/error/info message -->
           <div class="form-msg" id="login-msg" ></div>
 
           <button class="btn btn-dark" style="width:100%;padding:14px;font-size:0.95rem;" onclick="handleLogin()">
             Sign In
           </button>
 
-        
           <div class="auth-divider"><span>or</span></div>
           <div class="auth-switch">Don't have an account? <a onclick="showPage('pg-register')">Register here</a></div>
         </form>

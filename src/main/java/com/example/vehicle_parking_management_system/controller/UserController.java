@@ -88,4 +88,13 @@ public class UserController {
                 "redirect", redirect
         ));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "redirect", "/login"
+        ));
+    }
 }

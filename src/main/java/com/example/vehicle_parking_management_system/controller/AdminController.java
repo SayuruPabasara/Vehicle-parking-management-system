@@ -2,6 +2,7 @@ package com.example.vehicle_parking_management_system.controller;
 
 import com.example.vehicle_parking_management_system.model.Admin;
 import com.example.vehicle_parking_management_system.service.AdminService;
+import com.example.vehicle_parking_management_system.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +28,14 @@ import java.util.Map;
 public class AdminController {
 
     private final AdminService adminService;
+    private final UserService userService;
 
     @Value("${parknow.data.activity-log}")
     private String activityLogPath;
 
-    public AdminController(AdminService adminService) {
+    public AdminController(AdminService adminService, UserService userService) {
         this.adminService = adminService;
+        this.userService = userService;
     }
 
     // ── Auth helpers ──────────────────────────────────────────────────────────
@@ -151,17 +154,14 @@ public class AdminController {
     // ── Driver oversight ──────────────────────────────────────────────────────
 
     /**
-     * GET /admin/users
-     * Returns all driver accounts for admin review.
+     * GET /admin/drivers/data
+     * Returns driver list and summary stats for the admin driver-management UI.
      */
-   
-
-
-
-
-
-
-    
+    @GetMapping("/admin/drivers/data")
+    public ResponseEntity<?> driverManagementData(HttpSession session) {
+        if (!isAdmin(session)) return forbidden();
+        return ResponseEntity.ok(userService.getDriverManagementData());
+    }
 
     // ── Activity log ──────────────────────────────────────────────────────────
 

@@ -53,6 +53,17 @@ public class VehicleRepository {
         return result;
     }
 
+    /** Count vehicles per owner (driver) ID. */
+    public Map<String, Integer> countByOwnerId() {
+        Map<String, Integer> counts = new HashMap<>();
+        for (Vehicle v : findAll()) {
+            String ownerId = v.getOwnerId();
+            if (ownerId == null || ownerId.isBlank()) continue;
+            counts.merge(ownerId, 1, Integer::sum);
+        }
+        return counts;
+    }
+
     // ── Write operations ──────────────────────────────────────────────────────
 
     public void save(Vehicle vehicle) {

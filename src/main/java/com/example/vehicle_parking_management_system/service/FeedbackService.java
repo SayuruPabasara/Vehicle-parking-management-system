@@ -6,6 +6,7 @@ import com.example.vehicle_parking_management_system.repository.FeedbackReposito
 import com.example.vehicle_parking_management_system.util.ActivityLogger;
 import com.example.vehicle_parking_management_system.util.IdGenerator;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,13 +37,8 @@ public class FeedbackService {
     }
 
     // ── Submit feedback ───────────────────────────────────────────────────────
-
-    /**
-     * Submit a new feedback entry.
-     *
-     * @throws IllegalArgumentException if rating is not 1-5
-     */
-    public Feedback submitFeedback(String driverId, int rating, String comment) {
+    public Feedback submitFeedback(String driverId, int rating,String category, String comment) {
+        
         // Validate rating range
         if (rating < 1 || rating > 5) {
             throw new IllegalArgumentException("Rating must be between 1 and 5.");
@@ -52,7 +48,8 @@ public class FeedbackService {
                 IdGenerator.next("FBK"),
                 driverId,
                 rating,
-                comment
+                category,
+                comment   
         );
         feedbackRepository.save(feedback);
         activityLogger.log(driverId, "DRIVER", "FEEDBACK_SUBMITTED", "Rating: " + rating);

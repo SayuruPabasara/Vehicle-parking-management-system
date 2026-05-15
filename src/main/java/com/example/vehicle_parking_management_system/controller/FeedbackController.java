@@ -47,11 +47,34 @@ public class FeedbackController {
      * POST /feedback/submit
      * Body params: reservationId, rating (1-5), category, comment
      */
-    
+    @PostMapping("/submit-feedback")
+    public ResponseEntity<?> submitFeedback(
+                                            @RequestParam int rating,
+                                            @RequestParam String category,
+                                            @RequestParam String comment,
+                                            HttpSession session) {
+        
+        String driverId = (String) session.getAttribute("userId");
 
+        if (driverId == null) return unauthorised();
 
+        
+        try{
 
+            feedbackService.submitFeedback(driverId, rating, category, comment);
 
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Feedback submitted successfully."
+            ));
+
+        }catch(IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", e.getMessage()
+            ));
+        }
+    }
 
 
 
