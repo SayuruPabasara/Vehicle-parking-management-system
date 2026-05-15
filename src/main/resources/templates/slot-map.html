@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkNow — Slot Map</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/parknow_remaining.css">
+</head>
+
+<body>
+    <div class="topbar">
+    <div class="topbar-logo"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right">
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--ink-muted);"><span class="live-dot"></span> Live</div>
+      <button class="btn btn-teal btn-sm" id="bookSlotBtn" onclick="nav('pg-booking')" style="display:none;">📅 Book Selected</button>
+      <button class="btn btn-outline btn-sm" onclick="nav('pg-vehicles')">🚗 Register Vehicle</button>
+    </div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div><div><div class="sidebar-uname">John Doe</div><div class="sidebar-role">Driver Account</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item" onclick="showPage('pg-dashboard')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item active" onclick="showPage('pg-slotMap')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item" onclick="showPage('pg-bookings')"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item" onclick="showPage('pg-vehicles')"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item" onclick="showPage('pg-profile')"><span class="s-icon">👤</span> My Profile</button>
+        <button class="sidebar-item" onclick="showPage('pg-feedback')"><span class="s-icon">💬</span> Give Feedback</button>
+        <button class="sidebar-item" onclick="showPage('pg-billing')"><span class="s-icon">🧾</span> Billing</button>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div class="ph-row">
+          <div><h1>Live Parking Map</h1><p>Click an available slot to select it, then proceed to booking.</p></div>
+        </div>
+      </div>
+
+      <!-- Legend + toolbar -->
+      <div class="map-toolbar">
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot ld-available"></div>Available</div>
+          <div class="legend-item"><div class="legend-dot ld-occupied"></div>Occupied</div>
+          <div class="legend-item"><div class="legend-dot ld-disabled"></div>Maintenance</div>
+        </div>
+        <div style="margin-left:auto;font-size:0.78rem;color:var(--ink-muted);">Last updated: <span id="mapUpdated">—</span></div>
+      </div>
+
+      <!-- Map Canvas -->
+      <div class="map-canvas">
+        <div class="map-section-label">Section A</div>
+        <div class="slot-grid" id="gridA"></div>
+        <div class="map-lane">⬅ Driving Lane ➡</div>
+        <div class="map-section-label" style="margin-top:8px;">Section B</div>
+        <div class="slot-grid" id="gridB"></div>
+        <div class="map-lane">⬅ Driving Lane ➡</div>
+        <div class="map-section-label" style="margin-top:8px;">Section C</div>
+        <div class="slot-grid" id="gridC"></div>
+
+        <!-- Selected slot panel -->
+        <div class="selected-slot-panel" id="selectedPanel" style="display:none;">
+          <div class="ssp-info">
+            <div class="ssp-badge" id="selectedSlotId">—</div>
+            <div class="ssp-details">
+              <strong id="selectedSlotSection">Section A</strong>
+              <span id="selectedSlotMeta">Standard · LKR 150/hr</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-gold btn-lg" onclick="nav('pg-booking')">📅 Book This Slot</button>
+            <button class="btn btn-outline btn-sm" onclick="clearSelection()">✕ Deselect</button>
+          </div>
+        </div>
+
+        <!-- Summary bar -->
+        <div class="map-summary">
+          <div class="ms-item"><div class="ms-val" id="mapTotal">30</div><div class="ms-label">Total Slots</div></div>
+          <div class="ms-item"><div class="ms-val" style="color:var(--teal);" id="mapAvailable">—</div><div class="ms-label">Available</div></div>
+          <div class="ms-item"><div class="ms-val" style="color:var(--orange);" id="mapOccupied">—</div><div class="ms-label">Occupied</div></div>
+          <div class="ms-item"><div class="ms-val" style="color:var(--gold);" id="mapFreeRate">—</div><div class="ms-label">Free Rate</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/slot-map.js"></script>
+
+</body>
+</html>
