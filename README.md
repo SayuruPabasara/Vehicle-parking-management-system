@@ -8,6 +8,7 @@ A robust, Spring Boot-based solution designed to streamline vehicle parking oper
 
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/SayuruPabasara/Vehicle-parking-management-system)
 ![Maven Central Version](https://img.shields.io/maven-central/v/org.apache.maven.plugins/maven-compiler-plugin)
+![GitHub License](https://img.shields.io/github/license/SayuruPabasara/Vehicle-parking-management-system)
 
 
 ## 🚀 Features
