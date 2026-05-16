@@ -1,4 +1,6 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/SayuruPabasara/Vehicle-parking-management-system)
+![Maven Central Version](https://img.shields.io/maven-central/v/org.apache.maven.plugins/maven-compiler-plugin)
+
 
 # Vehicle Parking Management System
 
