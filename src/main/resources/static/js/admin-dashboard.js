@@ -50,6 +50,7 @@ async function logout() {
     window.location.href = '/login';
   }
 }
+
 async function loadRecentActivity() {
       const tbody = document.getElementById('dashboard-activity-tbody');
       if (!tbody) return;

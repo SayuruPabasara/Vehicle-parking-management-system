@@ -17,7 +17,7 @@
       <span style="font-size:0.8rem;color:var(--ink-muted);">Driver Portal</span>
       <button class="btn btn-outline btn-sm" type="button" onclick="logout()">Logout</button>
     </div>
-  </div>
+    </div>
   <div class="app-shell">
     <!-- Driver Sidebar -->
     <aside class="sidebar" id="driver-sidebar">
@@ -109,20 +109,12 @@
               <button class="btn btn-dark" onclick="showToast('🔒 Password updated successfully')">Update Password</button>
             </div>
           </div>
-          <div class="card" style="border-color:var(--danger-light);">
-            <div class="section-title" style="margin-bottom:12px;color:var(--danger);">Danger Zone</div>
-            <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:16px;">These actions are permanent and cannot be undone.</p>
-            <div style="display:flex;gap:10px;">
-              <button class="btn btn-danger btn-sm" onclick="showToast('⚠️ Account deletion requested')">Delete Account</button>
-              <button class="btn btn-outline btn-sm" type="button" onclick="logout()">Logout</button>
-            </div>
-          </div>
+          
         </div>
       </div>
     </main>
   </div>
 
-  <script src="/js/auth.js"></script>
   <script src="/js/driver-profile.js"></script>
 
 </body>

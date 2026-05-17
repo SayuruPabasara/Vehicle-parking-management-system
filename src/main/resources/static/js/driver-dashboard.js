@@ -29,23 +29,7 @@ function showPage(pageId){
   }
 }
 
-// ========== PROFILE EDIT ==========
-function toggleEdit() {
-  const inputs = document.querySelectorAll('#profile-fields input');
-  const actions = document.getElementById('profile-actions');
-  const isDisabled = inputs[0].disabled;
-  inputs.forEach(i => i.disabled = !isDisabled);
-  actions.style.display = isDisabled ? 'flex' : 'none';
-  if (isDisabled) inputs[0].focus();
-}
-function cancelEdit() {
-  document.querySelectorAll('#profile-fields input').forEach(i => i.disabled = true);
-  document.getElementById('profile-actions').style.display = 'none';
-}
-function saveProfile() {
-  cancelEdit();
-  showToast('✅ Profile updated successfully');
-}
+
 
 function toggleSidebar(page) {
   if (!page) return;
@@ -70,3 +54,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+async function logout() {
+  try {
+    const response = await fetch('/logout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+    const data = await response.json().catch(() => ({}));
+    sessionStorage.clear();
+    window.location.href = data.redirect || '/login';
+  } catch {
+    sessionStorage.clear();
+    window.location.href = '/login';
+  }
+}

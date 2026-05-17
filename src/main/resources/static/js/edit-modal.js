@@ -19,3 +19,18 @@ function closeModal(id) {
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
+
+async function logout() {
+  try {
+    const response = await fetch('/logout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+    const data = await response.json().catch(() => ({}));
+    sessionStorage.clear();
+    window.location.href = data.redirect || '/login';
+  } catch {
+    sessionStorage.clear();
+    window.location.href = '/login';
+  }
+}
