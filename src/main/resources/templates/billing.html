@@ -17,7 +17,7 @@
     </div>
     <div class="topbar-right">
       <span style="font-size:0.8rem;color:var(--ink-muted);">Driver Portal</span>
-      <button class="btn btn-outline btn-sm" onclick="showPage('pg-login')">Logout</button>
+      <button class="btn btn-outline btn-sm" type="button" onclick="logout()">Logout</button>
     </div>
   </div>
 
@@ -45,7 +45,7 @@
         <button class="sidebar-item active" onclick="showPage('pg-billing')"><span class="s-icon">🧾</span> Billing</button>
       </nav>
       <div class="sidebar-bottom">
-        <button class="sidebar-item" onclick="showPage('pg-login')"><span class="s-icon">🚪</span> Logout</button>
+        <button class="sidebar-item" type="button" onclick="logout()"><span class="s-icon">🚪</span> Logout</button>
       </div>
     </aside>
 
@@ -58,7 +58,6 @@
                     <h1>Financial Overview</h1>
                     <p>Manage your balances, payment methods, and history.</p>
                 </div>
-                <div class="badge badge-success">Account Active</div>
             </div>
         </header>
 
@@ -163,24 +162,13 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="card">
-                    <h3 class="section-title" style="font-size: 0.85rem;">Billing Settings</h3>
-                    <div class="gap-16">
-                        <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: flex-start;">
-                            <span>📧</span> Email Monthly Statements
-                        </button>
-                        <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: flex-start;">
-                            <span>🛠️</span> Update Billing Address
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 
     </main>
   </div>
 
+    <script src="/js/auth.js"></script>
     <script src="/js/billing.js"></script>
 </body>
 

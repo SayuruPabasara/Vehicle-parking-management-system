@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkNow — Feedback Submission</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/parknow_remaining.css">
+</head>
+
+<body>
+    <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-vehicles')"><div class="logo-mark">P</div>ParkNow</div>
+    <div class="topbar-right">
+      <span style="font-size:0.8rem;color:var(--ink-muted);">Driver Portal</span>
+      <button class="btn btn-outline btn-sm" type="button" onclick="logout()">Logout</button>
+    </div>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div><div><div class="sidebar-uname">John Doe</div><div class="sidebar-role">Driver Account</div></div></div></div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item" onclick="showPage('pg-dashboard')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item" onclick="showPage('pg-slotMap')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item" onclick="showPage('pg-bookings')"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item" onclick="showPage('pg-vehicles')"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item" onclick="showPage('pg-profile')"><span class="s-icon">👤</span> My Profile</button>
+        <button class="sidebar-item active" onclick="showPage('pg-feedback')"><span class="s-icon">💬</span> Give Feedback</button>
+        <button class="sidebar-item" onclick="showPage('pg-billing')"><span class="s-icon">🧾</span> Billing</button>
+      </nav>
+      <div class="sidebar-bottom"><button class="sidebar-item" type="button" onclick="logout()"><span class="s-icon">🚪</span> Logout</button></div>
+    </aside>
+
+    <main class="main-content" style="display:flex;align-items:flex-start;justify-content:center;padding-top:20px;">
+      <div style="width:100%;max-width:620px;">
+        <!-- Feedback hero -->
+        <div class="feedback-hero">
+          <div class="fh-emoji">💬</div>
+          <div class="fh-title">Share Your Experience</div>
+          <div class="fh-sub">Your feedback helps us improve ParkNow for everyone.</div>
+        </div>
+
+        <div class="card" style="padding:32px;">
+          <div class="gap-16">
+
+            <!-- Star rating -->
+            <div class="form-group">
+              <label class="form-label">Overall Rating</label>
+              <div style="display:flex;align-items:center;gap:4px;">
+                <div class="star-row" id="stars">
+                  <button class="star-btn lit" onclick="setRating(1)">★</button>
+                  <button class="star-btn lit" onclick="setRating(2)">★</button>
+                  <button class="star-btn lit" onclick="setRating(3)">★</button>
+                  <button class="star-btn lit" onclick="setRating(4)">★</button>
+                  <button class="star-btn" onclick="setRating(5)">★</button>
+                </div>
+                <span class="star-rating-label" id="star-label">4 out of 5 — Good</span>
+              </div>
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+              <label class="form-label">What are you reviewing?</label>
+              <div class="rating-categories" id="feedback-categories">
+                <div class="rating-cat selected" onclick="selectCat(this)" data-cat="GENERAL"><div class="rc-icon">🌐</div><div class="rc-label">General</div></div>
+                <div class="rating-cat" onclick="selectCat(this)" data-cat="CLEANLINESS"><div class="rc-icon">✨</div><div class="rc-label">Cleanliness</div></div>
+                <div class="rating-cat" onclick="selectCat(this)" data-cat="GENERAL"><div class="rc-icon">💰</div><div class="rc-label">Pricing</div></div>
+                <div class="rating-cat" onclick="selectCat(this)" data-cat="GENERAL"><div class="rc-icon">📱</div><div class="rc-label">Booking App</div></div>
+                <div class="rating-cat" onclick="selectCat(this)" data-cat="STAFF"><div class="rc-icon">🧑‍💼</div><div class="rc-label">Staff</div></div>
+                <div class="rating-cat" onclick="selectCat(this)" data-cat="SAFETY"><div class="rc-icon">🔒</div><div class="rc-label">Security</div></div>
+              </div>
+            </div>
+
+            <!-- Comment -->
+            <div class="form-group">
+              <label class="form-label">Your Comment</label>
+              <textarea class="form-input" id="feedback-comments" rows="5" placeholder="Tell us what you loved or what could be improved..."></textarea>
+            </div>
+
+            <button class="btn btn-teal" style="width:100%;padding:14px;justify-content:center;font-size:0.95rem;" onclick="submitFeedback()">
+              Submit Feedback
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/auth.js"></script>
+  <script src="/js/feedback-submission.js"></script>
+
+</body>
+</html>

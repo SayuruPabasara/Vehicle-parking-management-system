@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParkNow — Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/parknow.css">
+</head>
+
+<body onclick="closeDropdown()">
+
+<div class="auth-page">
+    <!-- Left panel -->
+    <div class="auth-left">
+      <div class="auth-left-bg1"></div>
+      <div class="auth-left-bg2"></div>
+      <div class="auth-left-content" >
+        <div class="topbar-logo" onclick="showPage('pg-home')" style="font-family:var(--font-display);font-size:1.35rem;font-weight:700;color:var(--white);display:flex;align-items:center;gap:10px;cursor:pointer;margin-top:-40px;">
+            <div class="logo-mark">P</div>
+            ParkNow
+        </div>
+        <div><br> </div>
+        <div class="auth-tagline">
+          Join <span class="ht-gold">thousands</span><br>
+          of smart<br>
+          <span class="ht-teal">drivers.</span>
+        </div>
+        <p class="auth-sub-text">Create your free account and start reserving parking slots instantly. No queues, no hassle.</p>
+        <div class="auth-features">
+          <div class="auth-feat"><div class="auth-feat-text">Live parking map with real-time availability</div></div>
+          <div class="auth-feat"><div class="auth-feat-text">Book a slot in under 30 seconds</div></div>
+          <div class="auth-feat"><div class="auth-feat-text">Secure online or cash payment options</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="auth-right">
+      <div class="auth-box">
+        <div class="auth-switch" style="margin-bottom:14px;text-align:left;"><a onclick="showPage('pg-home')">← Back to home</a></div>
+        <div class="auth-box-title">Create Account</div>
+        <div class="auth-box-sub">Start your journey with ParkNow — it's free.</div>
+
+        <form class="auth-form" onsubmit="return false;">
+          <div class="g2">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input class="form-input" id="reg-fullname" type="text" placeholder="Anura Perera">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <input class="form-input" id="reg-username" type="text" placeholder="anurap">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input class="form-input" id="reg-email" type="email" placeholder="anurap@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input class="form-input" id="reg-phone" type="tel" placeholder="+94 77 123 4567">
+          </div>
+          <div class="g2">
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input class="form-input" id="reg-password" type="password" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm Password</label>
+              <input class="form-input" id="reg-confirm" type="password" placeholder="••••••••">
+            </div>
+          </div>
+
+          <!-- Message div — shows success/error/info message -->
+          <div class="form-msg" id="reg-msg" ></div>
+
+          <button class="btn btn-dark" style="width:100%;padding:14px;font-size:0.95rem;" onclick="handleRegistration()">
+            Create Account
+          </button>
+          <div class="auth-divider"><span>or</span></div>
+          <div class="auth-switch">Already have an account? <a onclick="showPage('pg-login')">Sign in here</a></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <script src="/js/register.js"></script>
+</body>
+
+</html>

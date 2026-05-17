@@ -29,8 +29,12 @@ function showPage(pageId){
 // ========== STAR RATING ==========
 let currentRating = 4;
 const ratingLabels = ['','Terrible 😞','Poor 😕','Okay 😐','Good 😊','Excellent 🤩'];
+
 function setRating(n) {
+
   currentRating = n;
+
+  // Update star visuals and label
   const stars = document.querySelectorAll('#stars .star-btn');
   stars.forEach((s,i) => s.classList.toggle('lit', i < n));
   document.getElementById('star-label').textContent = n + ' out of 5 — ' + ratingLabels[n];
@@ -42,6 +46,47 @@ function selectCat(el) {
   el.classList.add('selected');
 }
 
-function submitFeedback() {
-  showToast('💬 Feedback submitted — Thank you!');
+//submit feedback form
+async function submitFeedback() {
+  const rating = currentRating;
+  const category = document.querySelector('.rating-cat.selected')?.dataset.cat || 'GENERAL';
+  const comments = document.getElementById('feedback-comments').value.trim();
+  
+  const params = new URLSearchParams({ rating, category, comment: comments });
+
+  try {
+    const response = await fetch('/submit-feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+
+    const data = await response.json();
+    if (response.ok) { 
+      alert('Feedback submitted successfully! Thank you for your input.');
+      // Optionally reset form
+      setRating(0);
+      document.querySelectorAll('.rating-cat').forEach(c => c.classList.remove('selected'));
+      document.getElementById('feedback-comments').value = '';
+    } else {
+      alert('Error submitting feedback: ' + data.message);
+    }
+  } catch (error) {
+    alert('An unexpected error occurred while submitting your feedback. Please try again later.');
+  }
+}
+
+async function logout() {
+  try {
+    const response = await fetch('/logout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+    const data = await response.json().catch(() => ({}));
+    sessionStorage.clear();
+    window.location.href = data.redirect || '/login';
+  } catch {
+    sessionStorage.clear();
+    window.location.href = '/login';
+  }
 }

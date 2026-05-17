@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>ParkNow — Reservation Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/parknow.css">
+</head>
+
+<body onclick="closeDropdown()">
+
+<!-- Topbar -->
+<div class="topbar">
+<div class="topbar-logo" onclick="showPage('pg-home')">
+<div class="logo-mark">P</div>ParkNow
+    </div>
+<div class="topbar-right">
+<span style="font-size:0.8rem;color:var(--ink-muted);">Admin Portal</span>
+<button class="btn btn-outline btn-sm" type="button" onclick="logout()">Logout</button>
+</div>
+</div>
+<div class="app-shell">
+<!-- Sidebar -->
+<aside class="sidebar">
+<div style="padding:16px 12px 0;">
+<div class="sidebar-user">
+<div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark));color:#fff;">AD</div>
+<div>
+<div class="sidebar-uname">Admin User</div>
+<div class="sidebar-role">Super Admin</div>
+</div>
+</div>
+</div>
+<nav class="sidebar-nav">
+<div class="sidebar-section">Overview</div>
+        <button class="sidebar-item" onclick="showPage('pg-admin-dash')"><span class="s-icon">📊</span> Dashboard</button>
+       <div class="sidebar-section">Management</div>
+        <button class="sidebar-item" onclick="showPage('pg-drivers')"><span class="s-icon">👥</span> Driver Management</button>
+        <button class="sidebar-item" onclick="showPage('pg-vehicles')"><span class="s-icon">🚗</span> Vehicle Management</button>
+        <button class="sidebar-item" onclick="showPage('pg-slots')"><span class="s-icon">🅿️</span> Slot Management</button>
+        <button class="sidebar-item" onclick="showPage('pg-admins')"><span class="s-icon">🛡️</span> Admin Management</button>
+        <button class="sidebar-item active" onclick="showPage('pg-reservations')"><span class="s-icon">📋</span> Reservation Management</button>
+        <button class="sidebar-item" onclick="showPage('pg-feedback')"><span class="s-icon">💬</span> Feedback Management</button>
+</nav>
+</aside>
+<!-- Main content -->
+<main class="main-content">
+<!-- Hero -->
+<div class="res-hero">
+<div>
+<div class="res-hero-title">Reservation Management</div>
+<div class="res-hero-sub">Monitor, manage and remove parking reservations</div>
+</div>
+</div>
+<!-- Stat strip -->
+<div class="g4 mb-28" style="display: flex; gap: 16px;">
+<div class="stat-card c-teal">
+<div class="accent-bar"></div>
+<div class="stat-icon">📋</div>
+<div class="stat-label">Total Reservations</div>
+<div class="stat-value" id="stat-total">0</div>
+<div class="stat-sub">All time</div>
+</div>
+<div class="stat-card c-gold">
+<div class="accent-bar"></div>
+<div class="stat-icon">🟢</div>
+<div class="stat-label">Total Active Sessions</div>
+<div class="stat-value" id="stat-active">0</div>
+<div class="stat-sub">Currently parked</div>
+</div>
+<div class="stat-card c-orange">
+<div class="accent-bar"></div>
+<div class="stat-icon">⏳</div>
+<div class="stat-label">Pending Payments</div>
+<div class="stat-value" id="stat-pending">0</div>
+<div class="stat-sub">Awaiting confirmation</div>
+</div>
+</div>
+<!-- Filter bar -->
+<div class="filter-bar mb-20">
+<div class="status-tabs">
+<button class="status-tab active" onclick="filterBy('all', this)">All</button>
+<button class="status-tab" onclick="filterBy('active', this)">Active</button>
+<button class="status-tab" onclick="filterBy('completed', this)">Completed</button>
+<button class="status-tab" onclick="filterBy('payment_pending', this)">Pending</button>
+</div>
+<div class="search-wrap" style="flex:1;min-width:220px;max-width:320px;">
+<div class="search-bar">
+<span style="font-size:0.9rem;color:var(--ink-muted);">🔍</span>
+<input oninput="onSearch(this.value)" placeholder="Search by ID, driver, slot, plate…" type="text"/>
+</div>
+</div>
+<select class="form-input" onchange="sortBy(this.value)" style="width:auto;font-size:0.82rem;padding:9px 12px;">
+<option value="newest">Newest First</option>
+<option value="oldest">Oldest First</option>
+<option value="longest">Longest Duration</option>
+</select>
+</div>
+ <div class="section-title">
+        Recent Reservations
+    </div> 
+<!-- Bulk Actions -->
+<div class="bulk-actions" id="bulk-actions">
+<div class="bulk-label"><span id="sel-count">0</span> records selected</div>
+<button class="btn btn-danger btn-sm" onclick="bulkAction('delete')">🗑 Delete</button>
+<button class="btn btn-outline btn-sm" onclick="bulkAction('modify')" style="background: white;">✏️ Modify</button>
+<button class="btn btn-outline btn-sm" onclick="bulkAction('end')" style="background: white;">⏹ End Session</button>
+<button class="btn btn-teal btn-sm" onclick="bulkAction('pay')">💰 Confirm Payment</button>
+</div>
+<!-- Table -->
+
+<div class="table-wrap">
+<table id="reservations-table">
+<thead>
+<tr>
+<th style="width: 40px;"><input class="custom-checkbox" id="check-all" onchange="toggleAll(this)" type="checkbox"/></th>
+<th>Session ID</th>
+<th>Driver Name</th>
+<th>Vehicle Plate</th>
+<th>Slot</th>
+<th>Start Time</th>
+<th>Duration</th>
+<th>Fee (LKR)</th>
+<th>Session</th>
+<th>Payment</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="reservations-tbody"></tbody>
+</table>
+</div>
+<div id="empty-state" style="display:none;text-align:center;padding:60px 20px;color:var(--ink-muted);">
+<div style="font-size:2.5rem;opacity:0.35;margin-bottom:12px;">📋</div>
+<div style="font-size:0.9rem;">No reservations match your filters.</div>
+</div>
+</main>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/reservation-management.js"></script>
+
+<div id="toast" class="toast" style="position:fixed;bottom:24px;right:24px;background:var(--dark);color:#fff;padding:14px 18px;border-radius:12px;box-shadow:var(--shadow-md);display:none;z-index:9999;max-width:320px;">
+  <span id="toast-icon" style="margin-right:8px;"></span><span id="toast-msg"></span>
+</div>
+<style>.toast.show{display:flex!important;align-items:center;}</style>
+
+</body>
+</html>

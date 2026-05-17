@@ -3,10 +3,13 @@
 function showPage(pageId) {
     switch (pageId) {
         case 'pg-login':
-            window.location.href = '/login.html';
+            window.location.href = '/login';
             break;
         case 'pg-home':
-            window.location.href = '/index.html';
+            window.location.href = '/';
+            break;
+        case 'pg-register':
+            window.location.href = '/register';
             break;
         default:
             console.warn('Unknown page:', pageId);
@@ -93,3 +96,18 @@ document.addEventListener('DOMContentLoaded', () => {
             input.parentElement.classList.remove('is-focused'));
     });
 });
+
+async function logout() {
+  try {
+    const response = await fetch('/logout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+    const data = await response.json().catch(() => ({}));
+    sessionStorage.clear();
+    window.location.href = data.redirect || '/login';
+  } catch {
+    sessionStorage.clear();
+    window.location.href = '/login';
+  }
+}

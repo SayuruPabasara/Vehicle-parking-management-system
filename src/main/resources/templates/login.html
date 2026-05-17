@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParkNow — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/parknow.css">
+</head>
+
+<body onclick="closeDropdown()">
+
+<div class="auth-page">
+    <!-- Left panel -->
+    <div class="auth-left">
+      <div class="auth-left-bg1"></div>
+      <div class="auth-left-bg2"></div>
+      <div class="auth-left-content">
+        <div class="auth-brand" onclick="showPage('pg-home')" style="cursor:pointer;" role="link" tabindex="0" onkeydown="if(event.key==='Enter')showPage('pg-home')">
+          <div class="logo-mark">P</div>
+          ParkNow
+        </div>
+        <div class="auth-tagline">
+          Your slot<br>
+          is <span class="ht-gold">waiting</span><br>
+          for <span class="ht-teal">you.</span>
+        </div>
+        <p class="auth-sub-text">Sign in to manage your bookings, track sessions, and access the live parking map.</p>
+        <div class="auth-features">
+          <div class="auth-feat"><div class="auth-feat-icon">📊</div><div class="auth-feat-text">View your complete booking history</div></div>
+          <div class="auth-feat"><div class="auth-feat-icon">🔔</div><div class="auth-feat-text">Get notified when your session ends</div></div>
+          <div class="auth-feat"><div class="auth-feat-icon">🚗</div><div class="auth-feat-text">Manage all your registered vehicles</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="auth-right">
+      <div class="auth-box">
+        <div class="auth-switch" style="margin-bottom:14px;text-align:left;"><a onclick="showPage('pg-home')">← Back to home</a></div>
+        <div class="auth-box-title">Welcome Back</div>
+        <div class="auth-box-sub">Enter your credentials to access your account.</div>
+
+        <form class="auth-form" onsubmit="return false;">
+          <div class="form-group">
+            <label class="form-label">Username or Email</label>
+            <input class="form-input" type="text" placeholder="johndoe or john@example.com" id="login-user">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" type="password" placeholder="••••••••" id="login-pass">
+          </div>
+
+          <div class="form-msg" id="login-msg" ></div>
+
+          <button class="btn btn-dark" style="width:100%;padding:14px;font-size:0.95rem;" onclick="handleLogin()">
+            Sign In
+          </button>
+
+          <div class="auth-divider"><span>or</span></div>
+          <div class="auth-switch">Don't have an account? <a onclick="showPage('pg-register')">Register here</a></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <script src="/js/login.js"></script>
+</body>
+
+</html>
