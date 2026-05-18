@@ -15,9 +15,9 @@
     </div>
     <div class="topbar-right">
       <span style="font-size:0.8rem;color:var(--ink-muted);">Driver Portal</span>
-      <button class="btn btn-outline btn-sm" type="button" onclick="logout()">Logout</button>
+      <button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button>
     </div>
-    </div>
+  </div>
   <div class="app-shell">
     <!-- Driver Sidebar -->
     <aside class="sidebar" id="driver-sidebar">
@@ -39,7 +39,7 @@
         <button class="sidebar-item" onclick="showPage('pg-billing')"><span class="s-icon">🧾</span> Billing</button>
       </nav>
       <div class="sidebar-bottom">
-        <button class="sidebar-item" type="button" onclick="logout()"><span class="s-icon">🚪</span> Logout</button>
+        <button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button>
       </div>
     </aside>
 
@@ -109,7 +109,14 @@
               <button class="btn btn-dark" onclick="showToast('🔒 Password updated successfully')">Update Password</button>
             </div>
           </div>
-          
+          <div class="card" style="border-color:var(--danger-light);">
+            <div class="section-title" style="margin-bottom:12px;color:var(--danger);">Danger Zone</div>
+            <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:16px;">These actions are permanent and cannot be undone.</p>
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-danger btn-sm" onclick="showToast('⚠️ Account deletion requested')">Delete Account</button>
+              <button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button>
+            </div>
+          </div>
         </div>
       </div>
     </main>
