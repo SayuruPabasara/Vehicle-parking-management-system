@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkNow — Driver Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/parknow_remaining.css">
+</head>
+
+<body>
+    <div class="topbar">
+    <div class="topbar-logo" onclick="nav('pg-profile')">
+      <div class="logo-mark">P</div>ParkNow
+    </div>
+    <div class="topbar-right">
+      <span style="font-size:0.8rem;color:var(--ink-muted);">Driver Portal</span>
+      <button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button>
+    </div>
+  </div>
+  <div class="app-shell">
+    <!-- Driver Sidebar -->
+    <aside class="sidebar" id="driver-sidebar">
+      <div style="padding:16px 12px 0;">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--dark);">JD</div>
+          <div><div class="sidebar-uname">John Doe</div><div class="sidebar-role">Driver Account</div></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <button class="sidebar-item" onclick="showPage('pg-dashboard')"><span class="s-icon">🏠</span> Dashboard</button>
+        <button class="sidebar-item" onclick="showPage('pg-slotMap')"><span class="s-icon">🗺️</span> Parking Map</button>
+        <button class="sidebar-item" onclick="showPage('pg-bookings')"><span class="s-icon">📅</span> Book a Slot</button>
+        <div class="sidebar-section">Account</div>
+        <button class="sidebar-item" onclick="showPage('pg-vehicles')"><span class="s-icon">🚗</span> My Vehicles</button>
+        <button class="sidebar-item active" onclick="showPage('pg-profile')"><span class="s-icon">👤</span> My Profile</button>
+        <button class="sidebar-item" onclick="showPage('pg-feedback')"><span class="s-icon">💬</span> Give Feedback</button>
+        <button class="sidebar-item" onclick="showPage('pg-billing')"><span class="s-icon">🧾</span> Billing</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="sidebar-item" onclick="alert('Logged out')"><span class="s-icon">🚪</span> Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <!-- Profile Hero -->
+      <div class="profile-hero">
+        <div class="profile-avatar-xl">JD</div>
+        <div style="position:relative;z-index:1;">
+          <div class="profile-hero-name">John Doe</div>
+          <div class="profile-hero-meta">@johndoe · john@example.com · +94 77 123 4567</div>
+          <div class="profile-hero-badges">
+            <span class="profile-pill pp-teal"><span class="live-dot" style="background:var(--teal);"></span> Active Driver</span>
+            <span class="profile-pill pp-gold">⭐ 4.9 Rating</span>
+            <span class="profile-pill pp-teal">24 Bookings</span>
+          </div>
+        </div>
+        <div style="margin-left:auto;position:relative;z-index:1;">
+          <button class="btn btn-gold" onclick="toggleEdit()">✏️ Edit Profile</button>
+        </div>
+      </div>
+
+      <div class="g2" style="align-items:start;">
+        <!-- Personal Info -->
+        <div class="card">
+          <div class="section-title" style="margin-bottom:20px;">Personal Information</div>
+          <div class="gap-16" id="profile-fields">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input class="form-input" id="pf-name" value="John Doe" disabled>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <input class="form-input" id="pf-user" value="johndoe" disabled>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input class="form-input" id="pf-email" value="john@example.com" disabled>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input class="form-input" id="pf-phone" value="+94 77 123 4567" disabled>
+            </div>
+            <div id="profile-actions" style="display:none;gap:10px;display:none;">
+              <button class="btn btn-teal" onclick="saveProfile()">Save Changes</button>
+              <button class="btn btn-outline" onclick="cancelEdit()">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security -->
+        <div class="gap-20" style="display:flex;flex-direction:column;">
+          <div class="card">
+            <div class="section-title" style="margin-bottom:20px;">Security</div>
+            <div class="gap-16">
+              <div class="form-group">
+                <label class="form-label">Current Password</label>
+                <input class="form-input" type="password" placeholder="••••••••">
+              </div>
+              <div class="form-group">
+                <label class="form-label">New Password</label>
+                <input class="form-input" type="password" placeholder="••••••••">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm New Password</label>
+                <input class="form-input" type="password" placeholder="••••••••">
+              </div>
+              <button class="btn btn-dark" onclick="showToast('🔒 Password updated successfully')">Update Password</button>
+            </div>
+          </div>
+          <div class="card" style="border-color:var(--danger-light);">
+            <div class="section-title" style="margin-bottom:12px;color:var(--danger);">Danger Zone</div>
+            <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:16px;">These actions are permanent and cannot be undone.</p>
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-danger btn-sm" onclick="showToast('⚠️ Account deletion requested')">Delete Account</button>
+              <button class="btn btn-outline btn-sm" onclick="alert('Logged out')">Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/driver-profile.js"></script>
+
+</body>
+</html>
