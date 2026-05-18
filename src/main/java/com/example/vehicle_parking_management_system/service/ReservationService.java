@@ -127,6 +127,55 @@ public class ReservationService {
         }
         return updated;
     }
+    
+    /**
+     * Driver confirms cash payment (e.g. at exit): marks completed, unpaid reservations with a fee as PAID.
+     */
+    public Map<String, Object> confirmDriverCashPayments(String driverId) {
+        List<Reservation> list = reservationRepository.findByDriverId(driverId);
+        int updated = 0;
+        for (Reservation r : list) {
+            if (r.getStatus() != Reservation.ReservationStatus.COMPLETED) continue;
+            if (r.getPaymentStatus() != Reservation.PaymentStatus.UNPAID) continue;
+            if (r.getFee() <= 0) continue;
+            r.setPaymentStatus(Reservation.PaymentStatus.PAID);
+            if (reservationRepository.update(r)) {
+                updated++;
+                activityLogger.log(driverId, "DRIVER", "PAYMENT_CONFIRMED_CASH",
+                        "Reservation: " + r.getId() + " | LKR " + r.getFee());
+            }
+        }
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("success", true);
+        out.put("updated", updated);
+        out.put("message", updated == 0
+                ? "No unpaid completed reservations to confirm."
+                : updated + " reservation(s) marked as paid.");
+        return out;
+    }
+
+    /**
+     * Admin marks completed reservation(s) as unpaid (correction).
+     */
+    public int markPaymentsUnpaid(List<String> reservationIds, String adminId) {
+        if (reservationIds == null || reservationIds.isEmpty()) return 0;
+        int updated = 0;
+        for (String id : reservationIds) {
+            if (id == null || id.isBlank()) continue;
+            Optional<Reservation> opt = reservationRepository.findById(id.trim());
+            if (opt.isEmpty()) continue;
+            Reservation r = opt.get();
+            if (r.getStatus() != Reservation.ReservationStatus.COMPLETED) continue;
+            if (r.getPaymentStatus() != Reservation.PaymentStatus.PAID) continue;
+            r.setPaymentStatus(Reservation.PaymentStatus.UNPAID);
+            if (reservationRepository.update(r)) {
+                updated++;
+                activityLogger.log(adminId != null ? adminId : "ADMIN", "ADMIN", "PAYMENT_REVERTED",
+                        "Reservation: " + id + " marked unpaid.");
+            }
+        }
+        return updated;
+    }
 
     /** Billing overview + history rows for the driver billing page. */
     public Map<String, Object> getDriverBillingSummary(String driverId) {

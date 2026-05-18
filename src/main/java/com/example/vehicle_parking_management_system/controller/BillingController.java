@@ -27,7 +27,19 @@ public class BillingController {
     }
 
     /**
-     * Driver-initiated "pay" is not used — admins confirm payment in Reservation Management.
+     * Driver confirms cash payment for completed sessions with an outstanding fee.
+     */
+    @PostMapping("/confirm-cash")
+    public ResponseEntity<?> confirmCashPayment(HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Authentication required."));
+        }
+        return ResponseEntity.ok(reservationService.confirmDriverCashPayments(userId));
+    }
+
+    /**
+     * Card / online payment placeholder (not integrated).
      */
     @PostMapping("/pay")
     public ResponseEntity<?> processPayment(HttpSession session) {
@@ -37,6 +49,6 @@ public class BillingController {
         }
         return ResponseEntity.badRequest().body(Map.of(
                 "success", false,
-                "message", "Payments are recorded when an administrator confirms them in Reservation Management."));
+                "message", "Online card payment is not enabled. Pay with cash and tap Confirm Payment, or ask an administrator for help."));
     }
 }

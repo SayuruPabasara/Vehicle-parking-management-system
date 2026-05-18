@@ -194,6 +194,27 @@ public class ReservationController {
                 "message", updated + " reservation(s) marked as paid."));
     }
 
+    /**
+     * POST /admin/reservations/mark-unpaid
+     * Marks selected completed reservations as UNPAID (admin correction).
+     */
+    @PostMapping("/admin/reservations/mark-unpaid")
+    public ResponseEntity<?> markReservationPaymentsUnpaid(
+            @RequestParam(value = "reservationIds", required = false) List<String> reservationIds,
+            HttpSession session) {
+        if (!isAdmin(session)) return adminForbidden();
+        if (reservationIds == null || reservationIds.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false, "message", "No reservations selected."));
+        }
+        String adminId = (String) session.getAttribute("userId");
+        int updated = reservationService.markPaymentsUnpaid(reservationIds, adminId);
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "updated", updated,
+                "message", updated + " reservation(s) marked as unpaid."));
+    }
+
     private boolean isAdmin(HttpSession session) {
         return "ADMIN".equals(session.getAttribute("userRole"))
                 && session.getAttribute("userId") != null;
