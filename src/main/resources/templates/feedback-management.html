@@ -36,32 +36,42 @@
         <div style="display:flex;gap:10px;"><button class="btn btn-outline btn-sm">📤 Export</button></div>
       </div>
       <div class="g4 mb-28">
-        <div class="stat-card c-gold"><div class="accent-bar"></div><div class="stat-label">Average Rating</div><div class="stat-value">4.8 ★</div><div class="stat-sub">Out of 5.0</div></div>
-        <div class="stat-card c-teal"><div class="accent-bar"></div><div class="stat-label">Total Reviews</div><div class="stat-value">324</div></div>
-        <div class="stat-card c-green"><div class="accent-bar"></div><div class="stat-label">This Week</div><div class="stat-value">18</div><div class="stat-sub">↑ 3 from last week</div></div>
-        <div class="stat-card c-danger"><div class="accent-bar"></div><div class="stat-label">Flagged</div><div class="stat-value">3</div><div class="stat-sub">Requires review</div></div>
+        <div class="stat-card c-gold"><div class="accent-bar"></div><div class="stat-label">Average Rating</div><div class="stat-value" id="stat-avg-rating">—</div><div class="stat-sub">Out of 5.0</div></div>
+        <div class="stat-card c-teal"><div class="accent-bar"></div><div class="stat-label">Total Reviews</div><div class="stat-value" id="stat-total-reviews">0</div></div>
+        <div class="stat-card c-green"><div class="accent-bar"></div><div class="stat-label">This Week</div><div class="stat-value" id="stat-this-week">0</div><div class="stat-sub" id="stat-week-sub">—</div></div>
+        <div class="stat-card c-danger"><div class="accent-bar"></div><div class="stat-label">Flagged</div><div class="stat-value" id="stat-flagged">0</div><div class="stat-sub">Low ratings (1–2 ★)</div></div>
       </div>
       <div class="filter-bar">
-        <div class="search-wrap"><div class="search-bar"><span>🔍</span><input type="text" placeholder="Search by driver or comment..."></div></div>
-        <select class="form-input" style="width:130px;padding:9px 14px;"><option>All Ratings</option><option>5 ★</option><option>4 ★</option><option>3 ★</option><option>1-2 ★</option></select>
-        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Categories</option><option>General</option><option>Cleanliness</option><option>Pricing</option><option>Staff</option></select>
-        <select class="form-input" style="width:140px;padding:9px 14px;"><option>All Status</option><option>Published</option><option>Flagged</option><option>Hidden</option></select>
+        <div class="search-wrap"><div class="search-bar"><span>🔍</span><input type="text" id="feedback-search" placeholder="Search by driver or comment..." oninput="onFeedbackSearch(this.value)"></div></div>
+        <select class="form-input" id="filter-rating" style="width:130px;padding:9px 14px;" onchange="renderFeedbackTable()">
+          <option value="">All Ratings</option>
+          <option value="5">5 ★</option>
+          <option value="4">4 ★</option>
+          <option value="3">3 ★</option>
+          <option value="low">1-2 ★</option>
+        </select>
+        <select class="form-input" id="filter-category" style="width:140px;padding:9px 14px;" onchange="renderFeedbackTable()">
+          <option value="">All Categories</option>
+          <option value="GENERAL">General</option>
+          <option value="CLEANLINESS">Cleanliness</option>
+          <option value="SAFETY">Safety</option>
+          <option value="STAFF">Staff</option>
+        </select>
+        <select class="form-input" id="filter-status" style="width:140px;padding:9px 14px;" onchange="renderFeedbackTable()">
+          <option value="">All Status</option>
+          <option value="PUBLISHED">Published</option>
+          <option value="FLAGGED">Flagged</option>
+        </select>
       </div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>ID</th><th>Driver</th><th>Rating</th><th>Category</th><th>Comment</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody>
-            <tr><td style="font-weight:700;color:var(--teal);">#F032</td><td>John Doe</td><td style="color:#f0a500;font-weight:700;">★★★★☆ 4/5</td><td><span class="badge badge-teal">General</span></td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Great service, easy to book!</td><td>Nov 11, 2025</td><td><span class="badge badge-success">Published</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('review','#F032')">Delete</button></div></td></tr>
-            <tr><td style="font-weight:700;color:var(--teal);">#F031</td><td>Sarah Kim</td><td style="color:#f0a500;font-weight:700;">★★★★★ 5/5</td><td><span class="badge badge-teal">Cleanliness</span></td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Very clean and well-maintained.</td><td>Nov 10, 2025</td><td><span class="badge badge-success">Published</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('review','#F031')">Delete</button></div></td></tr>
-            <tr><td style="font-weight:700;color:var(--teal);">#F030</td><td>Ahmed Ali</td><td style="color:var(--danger);font-weight:700;">★★☆☆☆ 2/5</td><td><span class="badge badge-orange">Pricing</span></td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Rates are too high on weekends.</td><td>Nov 9, 2025</td><td><span class="badge badge-warning">Flagged</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('review','#F030')">Delete</button></div></td></tr>
-            <tr><td style="font-weight:700;color:var(--teal);">#F029</td><td>Priya Nair</td><td style="color:#f0a500;font-weight:700;">★★★★★ 5/5</td><td><span class="badge badge-teal">Staff</span></td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Staff was incredibly helpful!</td><td>Nov 8, 2025</td><td><span class="badge badge-success">Published</span></td><td><div class="td-actions"><button class="btn btn-outline btn-sm">Edit</button><button class="btn btn-danger btn-sm" onclick="openDeleteModal('review','#F029')">Delete</button></div></td></tr>
-          </tbody>
+          <tbody id="feedback-tbody"></tbody>
         </table>
       </div>
     </main>
   </div>
 
-  <script src="/js/auth.js"></script>
   <script src="/js/feedback-management.js"></script>
 
 </body>
