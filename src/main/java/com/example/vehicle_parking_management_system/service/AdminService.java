@@ -3,6 +3,7 @@ package com.example.vehicle_parking_management_system.service;
 import com.example.vehicle_parking_management_system.model.Admin;
 import com.example.vehicle_parking_management_system.model.ParkingSlot;
 import com.example.vehicle_parking_management_system.model.Reservation;
+import com.example.vehicle_parking_management_system.model.User;
 import com.example.vehicle_parking_management_system.repository.AdminRepository;
 import com.example.vehicle_parking_management_system.repository.FeedbackRepository;
 import com.example.vehicle_parking_management_system.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -197,23 +199,44 @@ public class AdminService {
     // ── Activity log reading ──────────────────────────────────────────────────
 
     /**
-     * Read the system activity log file and return each line as a string.
-     * The controller/view is responsible for display formatting.
+     * Recent activity rows for the admin dashboard (from ActivityLogger).
+     */
+    public List<Map<String, Object>> getRecentActivityForDashboard(int limit) {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM d, yyyy · HH:mm", Locale.ENGLISH);
+        List<Map<String, Object>> rows = new ArrayList<>();
+        for (ActivityLogger.LogEntry entry : activityLogger.readRecent(limit)) {
+            String userIdentity = userRepository.findById(entry.actorId())
+                    .map(User::getFullName)
+                    .orElse(entry.actorId());
+
+            String timestampDisplay;
+            try {
+                timestampDisplay = LocalDateTime.parse(entry.timestamp()).format(fmt);
+            } catch (Exception e) {
+                timestampDisplay = entry.timestamp();
+            }
+
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("timestamp", timestampDisplay);
+            row.put("actorId", entry.actorId());
+            row.put("userIdentity", userIdentity);
+            row.put("role", entry.actorRole());
+            row.put("action", entry.action());
+            row.put("details", entry.detail() != null && !entry.detail().isBlank() ? entry.detail() : "—");
+            rows.add(row);
+        }
+        return rows;
+    }
+
+    /**
+     * Read raw log lines (newest first) — legacy helper.
      */
     public List<String> getActivityLog(String logFilePath) {
+        List<ActivityLogger.LogEntry> entries = activityLogger.readRecent(Integer.MAX_VALUE);
         List<String> lines = new ArrayList<>();
-        java.io.File file = new java.io.File(logFilePath);
-        if (!file.exists()) return lines;
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (!line.isBlank()) lines.add(line);
-            }
-        } catch (java.io.IOException e) {
-            throw new RuntimeException("Failed to read activity log: " + e.getMessage(), e);
+        for (ActivityLogger.LogEntry e : entries) {
+            lines.add(String.join(" | ", e.timestamp(), e.actorId(), e.actorRole(), e.action(), e.detail()));
         }
-        // Return newest first
-        Collections.reverse(lines);
         return lines;
     }
 }
