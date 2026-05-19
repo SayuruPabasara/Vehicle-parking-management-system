@@ -195,10 +195,8 @@ function renderSlotTable() {
         '<tr>' +
         `<td style="font-family:var(--font-display);font-weight:700;">${slotEsc}</td>` +
         `<td>${escapeHtml(s.section)}</td>` +
-        `<td>${escapeHtml(s.floor)}</td>` +
         `<td>${statusBadge(s.status)}</td>` +
         `<td>${escapeHtml(s.currentVehicle)}</td>` +
-        `<td>${escapeHtml(formatRate(s.hourlyRate))}</td>` +
         `<td>${escapeHtml(s.lastUpdated)}</td>` +
         '</tr>'
       );

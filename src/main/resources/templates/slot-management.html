@@ -59,14 +59,6 @@
               <input class="form-input" id="editSlotSection" type="text" readonly placeholder="—">
             </div>
             <div class="form-group">
-              <label class="form-label">Floor</label>
-              <input class="form-input" id="editSlotFloor" type="text" readonly placeholder="—">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Current Vehicle</label>
-              <input class="form-input" id="editSlotVehicle" type="text" readonly placeholder="—">
-            </div>
-            <div class="form-group">
               <label class="form-label">Status</label>
               <select class="form-input" id="editSlotStatus" name="status" required>
                 <option value="AVAILABLE">Available</option>
@@ -75,8 +67,8 @@
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Rate per hour (LKR)</label>
-              <input class="form-input" id="editSlotRate" name="hourlyRate" type="number" min="0" step="1" required placeholder="150">
+              <label class="form-label">Current Vehicle</label>
+              <input class="form-input" id="editSlotVehicle" type="text" readonly placeholder="—">
             </div>
           </div>
           <div style="display:flex;gap:10px;margin-top:20px;">
@@ -106,7 +98,7 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Slot ID</th><th>Section</th><th>Floor</th><th>Status</th><th>Current Vehicle</th><th>Rate / hr</th><th>Last Updated</th></tr></thead>
+          <thead><tr><th>Slot ID</th><th>Section</th><th>Status</th><th>Current Vehicle</th><th>Last Updated</th></tr></thead>
           <tbody id="slotsTableBody">
             <tr><td colspan="9" style="text-align:center;color:var(--ink-muted);padding:24px;">Loading slots…</td></tr>
           </tbody>

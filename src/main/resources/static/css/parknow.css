@@ -276,27 +276,19 @@ tbody tr:hover td { background: #f4fbfd; }
 .mb-20 { margin-bottom: 20px; }
 
 /* ===================== STAT CARD ===================== */
-.stat-card {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 22px 24px;
-  box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.stat-card .accent-bar {
-  position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  border-radius: var(--radius) var(--radius) 0 0;
-}
-.stat-card.c-gold .accent-bar  { background: var(--gold); }
-.stat-card.c-orange .accent-bar { background: var(--orange); }
-.stat-card.c-teal .accent-bar  { background: var(--teal); }
-.stat-card.c-green .accent-bar { background: var(--success); }
-.stat-card.c-danger .accent-bar{ background: var(--danger); }
-.stat-card.c-dark .accent-bar  { background: var(--dark); }
-.stat-icon { font-size: 1.5rem; margin-bottom: 12px; }
-.stat-label { font-size: 0.72rem; font-weight: 700; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
-.stat-value { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; color: var(--ink); line-height: 1; }
-.stat-sub   { font-size: 0.78rem; color: var(--ink-muted); margin-top: 6px; }
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.stat-card .accent-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0;}
+.stat-card.c-gold .accent-bar{background:var(--gold);}
+.stat-card.c-orange .accent-bar{background:var(--orange);}
+.stat-card.c-teal .accent-bar{background:var(--teal);}
+.stat-card.c-green .accent-bar{background:var(--success);}
+.stat-card.c-danger .accent-bar{background:var(--danger);}
+.stat-card.c-dark .accent-bar{background:var(--dark);}
+.stat-icon{font-size:1.5rem;margin-bottom:12px;}
+.stat-label{font-size:0.72rem;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+.stat-value{font-family:var(--font-display);font-size:1.9rem;font-weight:700;color:var(--ink);line-height:1;}
+.stat-sub{font-size:0.78rem;color:var(--ink-muted);margin-top:6px;}
 
 /* ===================== SECTION TITLE ===================== */
 .section-title {
