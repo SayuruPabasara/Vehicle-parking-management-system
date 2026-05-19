@@ -71,7 +71,9 @@ public class HomeController {
         return "slot-booking.html";
     }
     @GetMapping("/slot-map")
-    public String slotMap() {
+    public String slotMap(HttpSession session, Model model) {
+        Object name = session.getAttribute("userName");
+        model.addAttribute("username", name != null ? name.toString() : "Guest");
         return "slot-map.html";
     }
     @GetMapping("/driver/profile")
