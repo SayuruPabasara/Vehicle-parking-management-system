@@ -205,7 +205,6 @@ function renderTable() {
         <td style="font-weight:600;">${fee}</td>
         <td>${sessionBadge(r)}</td>
         <td>${paymentBadge(r)}</td>
-        <td><div class="td-actions" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;">${actionButtons}</div></td>
       </tr>`;
     })
     .join('');

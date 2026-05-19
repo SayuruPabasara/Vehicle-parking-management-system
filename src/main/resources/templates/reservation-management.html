@@ -77,26 +77,22 @@
 <div class="stat-sub">Awaiting confirmation</div>
 </div>
 </div>
+
 <!-- Filter bar -->
 <div class="filter-bar mb-20">
-<div class="status-tabs">
-<button class="status-tab active" onclick="filterBy('all', this)">All</button>
-<button class="status-tab" onclick="filterBy('active', this)">Active</button>
-<button class="status-tab" onclick="filterBy('completed', this)">Completed</button>
-<button class="status-tab" onclick="filterBy('payment_pending', this)">Pending</button>
-</div>
 <div class="search-wrap" style="flex:1;min-width:220px;max-width:320px;">
 <div class="search-bar">
 <span style="font-size:0.9rem;color:var(--ink-muted);">🔍</span>
 <input oninput="onSearch(this.value)" placeholder="Search by ID, driver, slot, plate…" type="text"/>
 </div>
 </div>
-<select class="form-input" onchange="sortBy(this.value)" style="width:auto;font-size:0.82rem;padding:9px 12px;">
-<option value="newest">Newest First</option>
-<option value="oldest">Oldest First</option>
-<option value="longest">Longest Duration</option>
-</select>
+<div class="status-tabs">
+<button class="status-tab active" onclick="filterBy('all', this)">All</button>
+<button class="status-tab" onclick="filterBy('active', this)">Active</button>
+<button class="status-tab" onclick="filterBy('completed', this)">Completed</button>
 </div>
+</div>
+
  <div class="section-title">
         Recent Reservations
     </div> 
@@ -124,7 +120,6 @@
 <th>Fee (LKR)</th>
 <th>Session</th>
 <th>Payment</th>
-<th>Actions</th>
 </tr>
 </thead>
 <tbody id="reservations-tbody"></tbody>
