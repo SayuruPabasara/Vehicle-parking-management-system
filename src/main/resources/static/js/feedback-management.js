@@ -132,12 +132,6 @@ function categoryBadgeClass(category) {
   return 'badge-orange';
 }
 
-function statusBadge(r) {
-  if (r.status === 'FLAGGED') {
-    return '<span class="badge badge-warning">Flagged</span>';
-  }
-  return '<span class="badge badge-success">Published</span>';
-}
 
 function renderFeedbackTable() {
   const tbody = document.getElementById('feedback-tbody');
@@ -165,7 +159,6 @@ function renderFeedbackTable() {
         `<td><span class="badge ${catClass}">${escapeHtml(r.categoryLabel)}</span></td>` +
         `<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${comment}">${comment}</td>` +
         `<td>${escapeHtml(r.date)}</td>` +
-        `<td>${statusBadge(r)}</td>` +
         '<td><div class="td-actions">' +
         `<button type="button" class="btn btn-danger btn-sm" onclick="deleteFeedback('${idEsc}')">Delete</button>` +
         '</div></td>' +

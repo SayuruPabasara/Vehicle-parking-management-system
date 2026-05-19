@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +15,15 @@
   </div>
   <div class="app-shell">
     <aside class="sidebar">
-      <div style="padding:16px 12px 0;"><div class="sidebar-user"><div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark-mid));color:#fff;">SA</div><div><div class="sidebar-uname">Super Admin</div><div class="sidebar-role">Administrator</div></div></div></div>
+      <div style="padding:16px 12px 0;">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" style="background:linear-gradient(135deg,var(--teal),var(--dark-mid));color:#fff;" th:with="pad=${username + username}" th:text="${#strings.toUpperCase(#strings.substring(pad,0,2))}">SA</div>
+          <div>
+            <div class="sidebar-uname" th:text="${username}">Super Admin</div>
+            <div class="sidebar-role">System Administrator</div>
+          </div>
+        </div>
+      </div>
       <nav class="sidebar-nav">
         <div class="sidebar-section">Overview</div>
         <button class="sidebar-item" onclick="showPage('pg-admin-dash')"><span class="s-icon">📊</span> Dashboard</button>

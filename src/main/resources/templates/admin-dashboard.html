@@ -55,7 +55,6 @@
           <div class="aw-sub"><span th:text="${todayFormatted}">Today</span> · Active sessions: <span th:text="${activeSessions}">0</span> · Slots: <span th:text="${availableSlots}">0</span> available / <span th:text="${totalSlots}">0</span> total</div>
         </div>
         <div style="display:flex;gap:10px;position:relative;z-index:1;">
-        <button class="btn btn-teal btn-lg" onclick="document.getElementById('mgmt-modules').scrollIntoView({ behavior: 'smooth' })">See Modules</button>
           <button class="btn btn-teal btn-lg" onclick="document.getElementById('recent-activity').scrollIntoView({behavior:'smooth'})">See recent Activity</button>
         </div>
       </div>
@@ -96,77 +95,6 @@
           <div class="stat-label">Revenue</div>
           <div class="stat-value" style="font-size:1.4rem;" th:text="${revenueMonthDisplay}">0</div>
           <div class="stat-sub">LKR <span th:text="${#numbers.formatInteger(revenueMonthLkr, 0, 'COMMA')}">0</span> · this month</div>
-        </div>
-      </div>
-
-      <!-- Management Modules -->
-    <div class="section-title" id="mgmt-modules">Management Modules</div>
-      <div class="mgmt-cards mb-28">
-        <div class="mgmt-card mc-teal">
-          <div class="mc-icon">👥</div>
-          <div>
-            <div class="mc-title">Driver Management</div>
-            <div class="mc-desc">View, edit, and remove registered driver accounts from the system.</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="mc-count" th:text="${#numbers.formatInteger(totalDrivers, 0, 'COMMA')}">0</div>
-            <button class="btn btn-teal btn-sm">Open →</button>
-          </div>
-        </div>
-        <div class="mgmt-card mc-gold">
-          <div class="mc-icon">🚗</div>
-          <div>
-            <div class="mc-title">Vehicle Management</div>
-            <div class="mc-desc">Manage all registered vehicles and their driver associations.</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="mc-count" th:text="${#numbers.formatInteger(totalVehicles, 0, 'COMMA')}">0</div>
-            <button class="btn btn-gold btn-sm" style="color:var(--dark);">Open →</button>
-          </div>
-        </div>
-        <div class="mgmt-card mc-orange">
-          <div class="mc-icon">🅿️</div>
-          <div>
-            <div class="mc-title">Slot Management</div>
-            <div class="mc-desc">Edit parking slot configurations, rates, and maintenance status.</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="mc-count" th:text="${totalSlots}">0</div>
-            <button class="btn btn-orange btn-sm">Open →</button>
-          </div>
-        </div>
-        <div class="mgmt-card mc-dark">
-          <div class="mc-icon">🛡️</div>
-          <div>
-            <div class="mc-title">Admin Management</div>
-            <div class="mc-desc">Add and manage system administrator accounts and roles.</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="mc-count" th:text="${totalAdmins}">0</div>
-            <button class="btn btn-dark btn-sm">Open →</button>
-          </div>
-        </div>
-        <div class="mgmt-card mc-teal">
-          <div class="mc-icon">📋</div>
-          <div>
-            <div class="mc-title">Reservation Management</div>
-            <div class="mc-desc">Monitor active bookings, sessions history, and revenue tracking.</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="mc-count" th:text="${#numbers.formatInteger(totalReservations, 0, 'COMMA')}">0</div>
-            <button class="btn btn-teal btn-sm">Open →</button>
-          </div>
-        </div>
-        <div class="mgmt-card mc-gold">
-          <div class="mc-icon">💬</div>
-          <div>
-            <div class="mc-title">Feedback Management</div>
-            <div class="mc-desc">Review driver ratings and feedback submissions.</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="mc-count" th:text="${#numbers.formatInteger(totalFeedback, 0, 'COMMA')}">0</div>
-            <button class="btn btn-gold btn-sm" style="color:var(--dark);">Open →</button>
-          </div>
         </div>
       </div>
 
