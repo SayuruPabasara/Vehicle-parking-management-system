@@ -43,7 +43,7 @@ function showPaymentInfo() {
   el.style.display = 'block';
   el.className = 'form-msg info';
   el.textContent =
-    'Outstanding balances are cleared when an administrator confirms your payment in Reservation Management. Refresh this page after payment is confirmed.';
+    'Outstanding balances are cleared when an administrator confirms your payment.Refresh this page after payment is confirmed.';
 }
 
 function selectPay(type) {
