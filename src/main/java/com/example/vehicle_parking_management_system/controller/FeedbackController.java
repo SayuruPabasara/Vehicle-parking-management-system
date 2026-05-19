@@ -97,17 +97,15 @@ public class FeedbackController {
     // ── Admin: view all feedback ──────────────────────────────────────────────
 
     /**
-     * GET /admin/feedback
-     * Returns all feedback entries with admin-format display text.
-     * Optional query param: status=PENDING|APPROVED|REJECTED
+     * GET /admin/feedback/data
+     * Admin-only: stats and feedback rows for the management UI.
      */
+    @GetMapping("/admin/feedback/data")
+    public ResponseEntity<?> adminFeedbackData(HttpSession session) {
+        if (!isAdmin(session)) return adminForbidden();
+        return ResponseEntity.ok(feedbackService.getAdminFeedbackManagementData());
+    }
     
-
-
-
-
-    
-
     // ── Admin: moderate ───────────────────────────────────────────────────────
 
     /**

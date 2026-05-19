@@ -104,6 +104,21 @@ public class ReservationRepository {
         return found;
     }
 
+    /** Remove all reservations for a driver. Returns reservations removed (for slot cleanup). */
+    public List<Reservation> deleteByDriverId(String driverId) {
+        List<Reservation> all = findAll();
+        List<Reservation> removed = new ArrayList<>();
+        boolean changed = all.removeIf(r -> {
+            if (driverId != null && driverId.equals(r.getDriverId())) {
+                removed.add(r);
+                return true;
+            }
+            return false;
+        });
+        if (changed) rewriteAll(all);
+        return removed;
+    }
+
     // ── Internal helpers ──────────────────────────────────────────────────────
 
     private void rewriteAll(List<Reservation> reservations) {

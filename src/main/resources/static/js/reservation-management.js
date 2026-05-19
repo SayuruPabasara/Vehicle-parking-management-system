@@ -173,7 +173,23 @@ function renderTable() {
           ? `<span data-live-dur data-live-res="${escapeAttr(r.id)}" style="font-weight:600;font-size:0.88rem;">${durString(r)}</span>`
           : `<span style="font-weight:600;font-size:0.88rem;">${durString(r)}</span>`;
       const fee = Number(r.fee || 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
-      const canSelectPay = r.paymentStatus === 'UNPAID' && Number(r.fee) > 0;
+      const showConfirmPaid =
+        r.status === 'COMPLETED' && r.paymentStatus === 'UNPAID' && Number(r.fee) > 0;
+      const showMarkUnpaid = r.status === 'COMPLETED' && r.paymentStatus === 'PAID';
+      let actionButtons = '';
+      if (showConfirmPaid) {
+        actionButtons += `<button type="button" class="btn btn-teal btn-sm" onclick="markSinglePaid('${escapeAttr(
+          r.id
+        )}')">Mark paid</button>`;
+      }
+      if (showMarkUnpaid) {
+        actionButtons += `<button type="button" class="btn btn-outline btn-sm" onclick="markSingleUnpaid('${escapeAttr(
+          r.id
+        )}')">Mark unpaid</button>`;
+      }
+      if (!actionButtons) {
+        actionButtons = '<span style="font-size:0.75rem;color:var(--ink-muted);">—</span>';
+      }
       return `<tr class="${isSelected ? 'selected-row' : ''}">
         <td><input type="checkbox" class="custom-checkbox row-cb" value="${escapeAttr(
           r.id
@@ -189,13 +205,7 @@ function renderTable() {
         <td style="font-weight:600;">${fee}</td>
         <td>${sessionBadge(r)}</td>
         <td>${paymentBadge(r)}</td>
-        <td><div class="td-actions">
-          ${
-            canSelectPay
-              ? `<button type="button" class="btn btn-teal btn-sm" onclick="markSinglePaid('${escapeAttr(r.id)}')">Confirm paid</button>`
-              : '<span style="font-size:0.75rem;color:var(--ink-muted);">—</span>'
-          }
-        </div></td>
+        <td><div class="td-actions" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;">${actionButtons}</div></td>
       </tr>`;
     })
     .join('');
@@ -249,6 +259,29 @@ async function markSinglePaid(id) {
   selectedRows.add(id);
   await bulkAction('pay');
   selectedRows.clear();
+}
+
+async function markSingleUnpaid(id) {
+  const body = new URLSearchParams();
+  body.append('reservationIds', id);
+  try {
+    const res = await fetch('/admin/reservations/mark-unpaid', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.success) {
+      showToast('✅', data.message || 'Marked unpaid.');
+      await loadReservations();
+    } else {
+      showToast('❌', data.message || 'Could not update payment.');
+    }
+  } catch (e) {
+    console.error(e);
+    showToast('❌', 'Network error.');
+  }
 }
 
 async function bulkAction(action) {
@@ -328,7 +361,6 @@ setInterval(() => {
     if (r) el.textContent = durString(r);
   });
 }, 30000);
-
 
 async function logout() {
   try {

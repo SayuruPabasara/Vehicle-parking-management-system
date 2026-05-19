@@ -127,16 +127,19 @@ public class FeedbackRepository {
     private Feedback parseLine(String line) {
         // Split respecting quoted comment field
         List<String> parts = splitCsvLine(line);
-        if (parts.size() < 7) return null;
-
+        // id,driverId,rating,category,"comment",submittedAt
+        if (parts.size() < 6) return null;
+        
         Feedback f = new Feedback();
         f.setId(parts.get(0).trim());
         f.setDriverId(parts.get(1).trim());
         f.setRating(parseIntSafe(parts.get(2).trim()));
+        f.setCategory(parts.get(3).trim());
         // Strip surrounding quotes from comment
         String comment = parts.get(4).trim();
         if (comment.startsWith("\"") && comment.endsWith("\""))
             comment = comment.substring(1, comment.length() - 1);
+        comment = comment.replace("\"\"", "\"");
         f.setComments(comment);
         try { f.setSubmittedAt(LocalDateTime.parse(parts.get(5).trim())); }
         catch (Exception e) { f.setSubmittedAt(LocalDateTime.now()); }

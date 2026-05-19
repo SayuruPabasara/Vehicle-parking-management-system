@@ -165,7 +165,6 @@ function renderDriverTable() {
         `<td>${escapeHtml(d.joined || '—')}</td>` +
         `<td>${statusBadge(d.status)}</td>` +
         '<td><' + 'div class="td-actions">' +
-        `<button type="button" class="btn btn-outline btn-sm" disabled title="Coming soon">Edit</button>` +
         `<button type="button" class="btn btn-danger btn-sm drv-delete" data-drv-id="${idEsc}" data-drv-name="${nameEsc}">Delete</button>` +
         '</div></td>' +
         '</tr>'

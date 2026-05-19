@@ -77,11 +77,18 @@ public class UserRepository {
 
     /** Count registered drivers (users.csv rows with role DRIVER). */
     public int countDrivers() {
-        int n = 0;
+        return findAllDrivers().size();
+    }
+
+    /** All accounts with role DRIVER (from users.csv and admins.csv). */
+    public List<Driver> findAllDrivers() {
+        List<Driver> drivers = new ArrayList<>();
         for (User u : findAll()) {
-            if ("DRIVER".equalsIgnoreCase(u.getRole())) n++;
+            if (u instanceof Driver d) {
+                drivers.add(d);
+            }
         }
-        return n;
+        return drivers;
     }
 
     /** Find a user by their unique ID. */
@@ -196,5 +203,43 @@ public class UserRepository {
             throw new RuntimeException("Failed to rewrite users.csv: " + e.getMessage(), e);
         }
     }
-    
+
+    /**
+     * Remove a driver from users.csv only (does not affect admins.csv).
+     */
+    public boolean deleteDriverById(String id) {
+        File file = new File(filePath);
+        if (!file.exists()) return false;
+
+        List<String> kept = new ArrayList<>();
+        boolean removed = false;
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String trimmed = line.strip();
+                if (trimmed.isEmpty() || trimmed.startsWith("#")) {
+                    kept.add(line);
+                    continue;
+                }
+                User user = parseLine(trimmed);
+                if (user instanceof Driver d && d.getId().equals(id)) {
+                    removed = true;
+                    continue;
+                }
+                kept.add(line);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read users.csv: " + e.getMessage(), e);
+        }
+
+        if (!removed) return false;
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(filePath, false))) {
+            for (String row : kept) pw.println(row);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to rewrite users.csv: " + e.getMessage(), e);
+        }
+        return true;
+    }
+
 }

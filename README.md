@@ -1,13 +1,6 @@
-
-
-
 # Vehicle Parking Management System
 
 A robust, Spring Boot-based solution designed to streamline vehicle parking operations, slot allocation, and administrative oversight. This system leverages custom data structures and a file-based persistence layer to provide a lightweight yet powerful management experience.
-
-
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/SayuruPabasara/Vehicle-parking-management-system)
-![Maven Central Version](https://img.shields.io/maven-central/v/org.apache.maven.plugins/maven-compiler-plugin)
 
 ## 🚀 Features
 
@@ -27,15 +20,10 @@ A robust, Spring Boot-based solution designed to streamline vehicle parking oper
 ## 🛠️ Technical Architecture
 
 ### Core Technologies
-*   **Framework:** Spring Boot 3.x 
+*   **Framework:** Spring Boot 3.x
 *   **Security:** Spring Security with BCrypt password hashing and custom CSRF protection.
 *   **Persistence:** CSV-based flat-file database (no external SQL/NoSQL dependency required).
 *   **Build Tool:** Maven (Wrapper included).
-<br></br>
-![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
-![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
-![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
-![Cursor](https://img.shields.io/badge/Cursor-%23000000?style=for-the-badge&logo=Cursor&logoColor=white)
 
 ### Custom Data Structures & Algorithms
 *   **LIFO Slot Allocation:** Utilizes a custom `SlotStack` implementation to manage available slots, ensuring the most recently released slots are prioritized for new arrivals.

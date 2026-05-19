@@ -53,6 +53,17 @@ public class VehicleRepository {
         return result;
     }
 
+    /** Count vehicles per owner (driver) ID. */
+    public Map<String, Integer> countByOwnerId() {
+        Map<String, Integer> counts = new HashMap<>();
+        for (Vehicle v : findAll()) {
+            String ownerId = v.getOwnerId();
+            if (ownerId == null || ownerId.isBlank()) continue;
+            counts.merge(ownerId, 1, Integer::sum);
+        }
+        return counts;
+    }
+
     // ── Write operations ──────────────────────────────────────────────────────
 
     public void save(Vehicle vehicle) {
@@ -68,6 +79,16 @@ public class VehicleRepository {
         List<Vehicle> all = findAll();
         boolean removed = all.removeIf(v -> v.getId().equals(id));
         if (removed) rewriteAll(all);
+        return removed;
+    }
+
+    /** Remove all vehicles owned by a driver. Returns number of rows removed. */
+    public int deleteByOwnerId(String ownerId) {
+        List<Vehicle> all = findAll();
+        int before = all.size();
+        all.removeIf(v -> ownerId != null && ownerId.equals(v.getOwnerId()));
+        int removed = before - all.size();
+        if (removed > 0) rewriteAll(all);
         return removed;
     }
 

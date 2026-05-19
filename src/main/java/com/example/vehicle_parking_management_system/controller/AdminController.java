@@ -264,8 +264,7 @@ public class AdminController {
     @GetMapping("/admin/logs/data")
     public ResponseEntity<?> getActivityLogs(HttpSession session) {
         if (!isAdmin(session)) return forbidden();
-        List<String> logs = adminService.getActivityLog(activityLogPath);
-        // Return the most recent 10 events for the dashboard
-        return ResponseEntity.ok(logs.stream().limit(10).toList());
+        
+        return ResponseEntity.ok(adminService.getRecentActivityForDashboard(20));
     }
 }
