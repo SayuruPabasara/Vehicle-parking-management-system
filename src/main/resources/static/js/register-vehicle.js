@@ -59,7 +59,6 @@ async function loadMyVehicles() {
                     </div>
                 </div>
                 <div style="display:flex;gap:8px;align-items:center;">
-                    <span class="badge badge-success">Active</span>
                     <button class="btn btn-danger btn-sm" onclick="removeVehicle('${v.id}')">Remove</button>
                 </div>
             </div>
