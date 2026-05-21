@@ -53,6 +53,13 @@ let searchQuery = '';
 
 document.addEventListener('DOMContentLoaded', () => {
   loadFeedbackData();
+  const modifyForm = document.getElementById('modifyFeedbackForm');
+  if (modifyForm) {
+    modifyForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveModifyFeedback();
+    });
+  }
 });
 
 async function loadFeedbackData() {
@@ -67,6 +74,7 @@ async function loadFeedbackData() {
     const data = await res.json();
     applyStats(data.stats || {});
     feedbackRows = data.rows || [];
+    populateModifyIdSelect();
     renderFeedbackTable();
   } catch (e) {
     console.error(e);
@@ -166,6 +174,96 @@ function renderFeedbackTable() {
       );
     })
     .join('');
+}
+
+function toggleModifyFeedback() {
+  const panel = document.getElementById('modifyFeedbackPanel');
+  if (!panel) return;
+  const hidden = panel.style.display === 'none' || panel.style.display === '';
+  panel.style.display = hidden ? 'block' : 'none';
+  const msg = document.getElementById('modifyFeedbackMsg');
+  if (msg) {
+    msg.style.display = 'none';
+    msg.textContent = '';
+  }
+  if (hidden) populateModifyIdSelect();
+}
+
+function showModifyMsg(text, isError) {
+  const msg = document.getElementById('modifyFeedbackMsg');
+  if (!msg) return;
+  msg.textContent = text;
+  msg.className = 'form-msg ' + (isError ? 'error' : 'success');
+  msg.style.display = 'block';
+}
+
+function populateModifyIdSelect() {
+  const sel = document.getElementById('modify-feedback-id');
+  if (!sel) return;
+  const current = sel.value;
+  sel.innerHTML =
+    '<option value="">— Select feedback ID —</option>' +
+    feedbackRows
+      .map((r) => {
+        const label = escapeHtml(r.id) + ' — ' + escapeHtml(r.driverName || '');
+        return `<option value="${escapeAttr(r.id)}">${label}</option>`;
+      })
+      .join('');
+  if (current && feedbackRows.some((r) => r.id === current)) {
+    sel.value = current;
+    onModifyFeedbackIdChange();
+  }
+}
+
+function onModifyFeedbackIdChange() {
+  const sel = document.getElementById('modify-feedback-id');
+  const ta = document.getElementById('modify-feedback-comment');
+  if (!sel || !ta) return;
+  const row = feedbackRows.find((r) => r.id === sel.value);
+  ta.value = row ? row.comment || '' : '';
+}
+
+async function saveModifyFeedback() {
+  const sel = document.getElementById('modify-feedback-id');
+  const ta = document.getElementById('modify-feedback-comment');
+  const btn = document.getElementById('modify-feedback-submit');
+  if (!sel || !ta) return;
+
+  const id = sel.value.trim();
+  const comment = ta.value.trim();
+  if (!id) {
+    showModifyMsg('Please select a feedback ID.', true);
+    return;
+  }
+  if (!comment) {
+    showModifyMsg('Comment cannot be empty.', true);
+    return;
+  }
+
+  if (btn) btn.disabled = true;
+  try {
+    const body = new URLSearchParams({ comment });
+    const res = await fetch('/admin/feedback/update/' + encodeURIComponent(id), {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.success) {
+      showModifyMsg(data.message || 'Feedback updated.', false);
+      await loadFeedbackData();
+      sel.value = id;
+      onModifyFeedbackIdChange();
+    } else {
+      showModifyMsg(data.message || 'Could not update feedback.', true);
+    }
+  } catch (e) {
+    console.error(e);
+    showModifyMsg('Network error.', true);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
 }
 
 async function deleteFeedback(id) {

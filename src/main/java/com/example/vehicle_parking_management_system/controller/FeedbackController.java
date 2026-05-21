@@ -110,11 +110,28 @@ public class FeedbackController {
 
     /**
      * POST /admin/feedback/update/{id}
-     * Body params: comment (optional), status (PENDING|APPROVED|REJECTED)
+     * Body params: comment (required for moderation edit)
      */
-    
+    @PostMapping("/admin/feedback/update/{id}")
+    public ResponseEntity<?> updateFeedback(@PathVariable String id,
+                                            @RequestParam String comment,
+                                            HttpSession session) {
+        if (!isAdmin(session)) return adminForbidden();
 
+        String adminId = (String) session.getAttribute("userId");
+        if (comment == null || comment.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Comment cannot be empty."
+            ));
+        }
 
+        boolean updated = feedbackService.updateFeedback(id, comment.trim(), adminId);
+        return ResponseEntity.ok(Map.of(
+                "success", updated,
+                "message", updated ? "Feedback updated." : "Feedback not found."
+        ));
+    }
 
 
 
