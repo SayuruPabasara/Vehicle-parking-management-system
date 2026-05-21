@@ -22,16 +22,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-/**
- * SlotService — business logic for Component 03 (Parking Slot Management).
- *
- * Data Structures used:
- *   - SlotStack: tracks available slots. pop() on allocate, push() on release.
- *   - QuickSort: sorts available slots before presenting the map view.
- *
- * Thread safety: allocateSlot / releaseSlot are synchronized to prevent
- * double-allocation under concurrent requests.
- */
+
 @Service
 public class SlotService {
 
@@ -48,7 +39,6 @@ public class SlotService {
     @Value("${parknow.data.activity-log:default_activity.log}")
     private String activityLogPath;
 
-    /** In-memory stack of currently available slots. */
     private final SlotStack availableStack = new SlotStack();
 
     public SlotService(SlotRepository slotRepository,
@@ -61,17 +51,12 @@ public class SlotService {
         this.activityLogger = activityLogger;
     }
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
 
-    /**
-     * Load all currently AVAILABLE slots into the stack on startup.
-     * SlotRepository.seedIfEmpty() runs before this via @PostConstruct ordering.
-     */
     @PostConstruct
     public void initStack() {
         availableStack.clear();
         List<ParkingSlot> available = slotRepository.findByStatus(ParkingSlot.SlotStatus.AVAILABLE);
-        // Push in reverse sorted order so pop() returns the lowest-numbered slot first
+
         available.sort(Comparator.comparing(ParkingSlot::getSlotNumber).reversed());
         for (ParkingSlot slot : available) {
             availableStack.push(slot);
@@ -80,21 +65,16 @@ public class SlotService {
                 + availableStack.size() + " available slots.");
     }
 
-    // ── Query ─────────────────────────────────────────────────────────────────
 
-    /** Return all slots (any status) — used to render the full slot map. */
+
     public List<ParkingSlot> getAllSlots() {
         List<ParkingSlot> all = slotRepository.findAll();
-        // Use QuickSort to ensure the map view is consistently ordered
-        // regardless of the underlying CSV storage order.
+
         QuickSort.sort(all);
         return all;
     }
 
-    /**
-     * Return available slots sorted by slotNumber (QuickSort).
-     * Used to populate the booking dropdown / map.
-     */
+
     public List<ParkingSlot> getAvailableSlots() {
         List<ParkingSlot> available = slotRepository.findByStatus(ParkingSlot.SlotStatus.AVAILABLE);
         QuickSort.sort(available);
@@ -109,29 +89,20 @@ public class SlotService {
         return availableStack.size();
     }
 
-    // ── Allocation (pop from stack) ────────────────────────────────────────────
 
-    /**
-     * Allocate a specific slot by ID.
-     * Called by ReservationService.createBooking().
-     *
-     * @param slotId         the ID of the slot to allocate
-     * @param vehicleId      the vehicle that will occupy it
-     * @param actorId        driverId performing the action (for logging)
-     * @throws IllegalStateException if the slot is not currently AVAILABLE
-     */
+
+
     public synchronized ParkingSlot allocateSlot(String slotId,
                                                   String vehicleId,
                                                   String actorId) {
         ParkingSlot slot;
 
-        // Requirement: When a booking is made, pop() the top slot.
-        // If the frontend requests 'auto' allocation, we pop from the Stack.
+
         if (slotId == null || slotId.isBlank() || "auto".equalsIgnoreCase(slotId)) {
             slot = availableStack.pop();
             if (slot == null) throw new IllegalStateException("No available parking slots.");
         } else {
-            // Otherwise, allocate specific selection and remove from stack to maintain LIFO sync
+
             slot = slotRepository.findById(slotId)
                     .orElseThrow(() -> new NoSuchElementException("Slot not found: " + slotId));
 
@@ -143,13 +114,12 @@ public class SlotService {
             availableStack.remove(slotId);
         }
 
-        // Update slot state
+
         slot.setStatus(ParkingSlot.SlotStatus.OCCUPIED);
         slot.setCurrentVehicleId(vehicleId);
         slotRepository.update(slot);
 
-        // In a strictly LIFO system where users don't pick IDs, we would use availableStack.pop().
-        // Since the UI allows picking a specific slot, we remove that specific ID from the stack.
+
         boolean removed = availableStack.remove(slotId);
         if (!removed) {
             System.err.println("[SlotService] Warning: Slot " + slotId + " was not found in the availability stack.");
@@ -160,13 +130,7 @@ public class SlotService {
         return slot;
     }
 
-    /**
-     * Release a slot back to available.
-     * Called by ReservationService.checkOut().
-     *
-     * @param slotId   the slot to release
-     * @param actorId  driverId performing the action (for logging)
-     */
+
     public synchronized ParkingSlot releaseSlot(String slotId, String actorId) {
         ParkingSlot slot = slotRepository.findById(slotId)
                 .orElseThrow(() -> new NoSuchElementException("Slot not found: " + slotId));
@@ -180,7 +144,7 @@ public class SlotService {
         slot.setCurrentVehicleId(null);
         slotRepository.update(slot);
 
-        // Push back onto the available stack
+
         availableStack.push(slot);
 
         activityLogger.log(actorId, "DRIVER", "SLOT_RELEASED",
@@ -188,12 +152,7 @@ public class SlotService {
         return slot;
     }
 
-    // ── Admin operations ──────────────────────────────────────────────────────
 
-    /**
-     * Admin updates slot details: type reclassification, rate change, or
-     * manual status override (e.g. MAINTENANCE).
-     */
     public boolean updateSlot(String slotId, ParkingSlot.SlotStatus newStatus,
                                double newRate, String adminId) {
         Optional<ParkingSlot> opt = slotRepository.findById(slotId);
@@ -209,7 +168,7 @@ public class SlotService {
         }
         slotRepository.update(slot);
 
-        // Sync stack: if newly available, push; if no longer available, remove
+
         if (oldStatus != ParkingSlot.SlotStatus.AVAILABLE
                 && newStatus == ParkingSlot.SlotStatus.AVAILABLE) {
             availableStack.push(slot);
@@ -224,10 +183,7 @@ public class SlotService {
         return true;
     }
 
-    /**
-     * Admin slot-management page: summary stats plus slot rows
-     * (vehicle plates from vehicles.csv; last updated from activity log and reservations).
-     */
+
     public Map<String, Object> getSlotManagementData() {
         List<ParkingSlot> slots = getAllSlots();
         Map<String, String> plateByVehicleId = new HashMap<>();
