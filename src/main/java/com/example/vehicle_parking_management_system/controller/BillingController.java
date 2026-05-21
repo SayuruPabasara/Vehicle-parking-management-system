@@ -26,9 +26,7 @@ public class BillingController {
         return ResponseEntity.ok(reservationService.getDriverBillingSummary(userId));
     }
 
-    /**
-     * Driver confirms cash payment for completed sessions with an outstanding fee.
-     */
+
     @PostMapping("/confirm-cash")
     public ResponseEntity<?> confirmCashPayment(HttpSession session) {
         String userId = (String) session.getAttribute("userId");
@@ -38,9 +36,7 @@ public class BillingController {
         return ResponseEntity.ok(reservationService.confirmDriverCashPayments(userId));
     }
 
-    /**
-     * Card / online payment placeholder (not integrated).
-     */
+
     @PostMapping("/pay")
     public ResponseEntity<?> processPayment(HttpSession session) {
         String userId = (String) session.getAttribute("userId");
