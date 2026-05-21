@@ -57,6 +57,8 @@ function selectPay(type) {
 
 document.addEventListener('DOMContentLoaded', () => {
   fetchBillingDetails();
+  // Refresh so completed sessions appear after scheduled end time
+  setInterval(fetchBillingDetails, 45000);
 });
 
 async function fetchBillingDetails() {

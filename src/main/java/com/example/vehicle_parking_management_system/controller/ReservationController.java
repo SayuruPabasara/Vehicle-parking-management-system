@@ -53,8 +53,13 @@ public class ReservationController {
         if (driverId == null) return unauthorised();
 
         try {
-            LocalDateTime start = LocalDateTime.parse(startTime);
-            LocalDateTime end   = LocalDateTime.parse(endTime);
+            LocalDateTime start = parseDateTimeParam(startTime);
+            LocalDateTime end   = parseDateTimeParam(endTime);
+            if (!end.isAfter(start)) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "success", false,
+                        "message", "End time must be after start time."));
+            }
 
             Reservation reservation = reservationService.createBooking(
                     driverId, slotId, vehicleId, start, end);
@@ -79,14 +84,17 @@ public class ReservationController {
         if (driverId == null) return unauthorised();
 
         List<Reservation> active = reservationService.getActiveSessions(driverId);
-        return ResponseEntity.ok(active.stream().map(r -> Map.of(
-                "id",          r.getId(),
-                "slotId",      r.getSlotId(),
-                "vehicleId",   r.getVehicleId(),
-                "startTime",   r.getStartTime().toString(),
-                "runningFee",  reservationService.getRunningFee(r.getId()),
-                "status",      r.getStatus().name()
-        )).toList());
+        return ResponseEntity.ok(active.stream().map(r -> {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("id", r.getId());
+            m.put("slotId", r.getSlotId());
+            m.put("vehicleId", r.getVehicleId());
+            m.put("startTime", r.getStartTime() != null ? r.getStartTime().toString() : "");
+            m.put("endTime", r.getEndTime() != null ? r.getEndTime().toString() : "");
+            m.put("runningFee", reservationService.getRunningFee(r.getId()));
+            m.put("status", r.getStatus().name());
+            return m;
+        }).toList());
     }
 
 
@@ -196,6 +204,17 @@ public class ReservationController {
     private ResponseEntity<Map<String, Object>> unauthorised() {
         return ResponseEntity.status(401).body(Map.of(
                 "success", false, "message", "Authentication required."));
+    }
+
+    private static LocalDateTime parseDateTimeParam(String value) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("Date and time are required.");
+        }
+        String v = value.trim().replace(' ', 'T');
+        if (v.length() == 16) {
+            v = v + ":00";
+        }
+        return LocalDateTime.parse(v);
     }
 
     private Map<String, Object> toMap(Reservation r) {

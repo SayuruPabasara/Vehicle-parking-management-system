@@ -45,14 +45,16 @@ let selectedRows = new Set();
 
 document.addEventListener('DOMContentLoaded', () => {
   loadReservations();
+  // Reload from server so sessions auto-complete when end time passes
+  setInterval(() => loadReservations(true), 45000);
 });
 
-async function loadReservations() {
+async function loadReservations(quiet) {
   try {
     const res = await fetch('/admin/reservations/data', { credentials: 'same-origin' });
     if (res.status === 403) {
       reservations = [];
-      showToast('🔒', 'Admin session required.');
+      if (!quiet) showToast('🔒', 'Admin session required.');
       renderAll();
       return;
     }
@@ -62,7 +64,7 @@ async function loadReservations() {
   } catch (e) {
     console.error(e);
     reservations = [];
-    showToast('⚠️', 'Could not load reservations.');
+    if (!quiet) showToast('⚠️', 'Could not load reservations.');
     renderAll();
   }
 }
@@ -70,7 +72,7 @@ async function loadReservations() {
 function durString(r) {
   const start = new Date(r.checkIn);
   const end = r.checkOut ? new Date(r.checkOut) : new Date();
-  const hrs = (end - start) / 3600000;
+  const hrs = Math.max(0, (end - start) / 3600000);
   const h = Math.floor(hrs);
   const m = Math.round((hrs - h) * 60);
   return h + 'h ' + String(m).padStart(2, '0') + 'm';

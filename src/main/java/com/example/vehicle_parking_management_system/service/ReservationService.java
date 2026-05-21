@@ -39,7 +39,58 @@ public class ReservationService {
         this.activityLogger        = activityLogger;
     }
 
+    /**
+     * Completes ACTIVE reservations whose scheduled end time has passed.
+     * Releases slots and persists final fees to the database.
+     */
+    public int expireOverdueActiveSessions() {
+        LocalDateTime now = LocalDateTime.now();
+        int expired = 0;
+        for (Reservation r : new ArrayList<>(reservationRepository.findAllActive())) {
+            if (r.getEndTime() != null && !r.getEndTime().isAfter(now)) {
+                if (completeSessionAtScheduledEnd(r)) {
+                    expired++;
+                }
+            }
+        }
+        return expired;
+    }
+
+    private boolean completeSessionAtScheduledEnd(Reservation reservation) {
+        if (reservation.getStatus() != Reservation.ReservationStatus.ACTIVE) {
+            return false;
+        }
+        LocalDateTime endTime = reservation.getEndTime();
+        if (endTime == null) {
+            return false;
+        }
+
+        reservation.setStatus(Reservation.ReservationStatus.COMPLETED);
+
+        double rate = slotService.findById(reservation.getSlotId())
+                .map(ParkingSlot::getHourlyRate)
+                .orElse(150.0);
+        double fee = FeeCalculator.calculate(reservation.getStartTime(), endTime, rate);
+        reservation.setFee(fee);
+        reservation.setPaymentStatus(Reservation.PaymentStatus.UNPAID);
+
+        if (!reservationRepository.update(reservation)) {
+            return false;
+        }
+
+        try {
+            slotService.releaseSlot(reservation.getSlotId(), reservation.getDriverId());
+        } catch (RuntimeException e) {
+            System.err.println("[ReservationService] Slot release on auto-complete: " + e.getMessage());
+        }
+
+        activityLogger.log(reservation.getDriverId(), "DRIVER", "BOOKING_AUTO_COMPLETED",
+                "Reservation: " + reservation.getId() + " | Fee: LKR " + fee);
+        return true;
+    }
+
     public Reservation createBooking(String driverId, String slotId, String vehicleId, LocalDateTime startTime, LocalDateTime endTime) {
+        expireOverdueActiveSessions();
 
         boolean slotAlreadyBooked = reservationRepository.findAllActive().stream()
                 .anyMatch(r -> r.getSlotId().equals(slotId));
@@ -172,6 +223,7 @@ public class ReservationService {
     }
 
     public Map<String, Object> getDriverBillingSummary(String driverId) {
+        expireOverdueActiveSessions();
         List<Reservation> list = new ArrayList<>(reservationRepository.findByDriverId(driverId));
         list.sort(Comparator.comparing(Reservation::getStartTime, Comparator.nullsLast(Comparator.naturalOrder())).reversed());
 
@@ -233,6 +285,7 @@ public class ReservationService {
 
 
     public List<Map<String, Object>> getAdminReservationRows() {
+        expireOverdueActiveSessions();
         List<Reservation> all = new ArrayList<>(reservationRepository.findAll());
         all.sort(Comparator.comparing(Reservation::getStartTime, Comparator.nullsLast(Comparator.naturalOrder())).reversed());
 
@@ -265,7 +318,9 @@ public class ReservationService {
             m.put("plate", plate);
             m.put("slot", slotLabel);
             m.put("checkIn", r.getStartTime() != null ? r.getStartTime().toString() : "");
-            m.put("checkOut", r.getEndTime() != null ? r.getEndTime().toString() : "");
+            m.put("checkOut", r.getStatus() == Reservation.ReservationStatus.COMPLETED && r.getEndTime() != null
+                    ? r.getEndTime().toString() : "");
+            m.put("scheduledEnd", r.getEndTime() != null ? r.getEndTime().toString() : "");
             m.put("status", r.getStatus().name());
             m.put("fee", r.getFee());
             m.put("paymentStatus", r.getPaymentStatus().name());
@@ -284,10 +339,12 @@ public class ReservationService {
     }
 
     public List<Reservation> getActiveSessions(String driverId) {
+        expireOverdueActiveSessions();
         return reservationRepository.findActiveByDriver(driverId);
     }
 
     public List<Reservation> getAllActiveSessions() {
+        expireOverdueActiveSessions();
         return reservationRepository.findAllActive();
     }
 

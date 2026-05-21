@@ -1,6 +1,7 @@
 package com.example.vehicle_parking_management_system.controller;
 
 import com.example.vehicle_parking_management_system.model.ParkingSlot;
+import com.example.vehicle_parking_management_system.service.ReservationService;
 import com.example.vehicle_parking_management_system.service.SlotService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,11 @@ import java.util.Map;
 public class SlotController {
 
     private final SlotService slotService;
+    private final ReservationService reservationService;
 
-    public SlotController(SlotService slotService) {
+    public SlotController(SlotService slotService, ReservationService reservationService) {
         this.slotService = slotService;
+        this.reservationService = reservationService;
     }
 
 
@@ -41,6 +44,7 @@ public class SlotController {
     public ResponseEntity<?> getAvailableSlots(HttpSession session) {
         if (session.getAttribute("userId") == null) return unauthorised();
 
+        reservationService.expireOverdueActiveSessions();
         List<ParkingSlot> available = slotService.getAvailableSlots();
         return ResponseEntity.ok(Map.of(
                 "count",  available.size(),

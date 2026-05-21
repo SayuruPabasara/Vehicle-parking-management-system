@@ -22,7 +22,7 @@ public class SecurityConfig {
                                                 "/driver/dashboard","/admin/dashboard", "/driver/billing","/submit-feedback","/admin/logs/data",
                                                 "/admin/slots","/admin/slots/**","/admin/drivers","/admin/drivers/**","/admin/admins","/admin/admins/**",
                                                 "/admin/reservations","/admin/reservations/**","/admin/vehicles","/admin/vehicles/**","/admin/feedback","/admin/feedback/**",
-                                                "/driver/vehicles" ,"/register-vehicle","/reservation" ,"/api/my-vehicles/**","/driver/profile",
+                                                "/driver/vehicles" ,"/register-vehicle","/reservation" ,"/api/my-vehicles/**","/driver/profile","/api/driver/profile",
                                                 "/feedback", "/api/billing/**",
                                                 "/slots/available", "/booking/**",
                                                 "/h2-console/**", "/css/**", "/js/**").permitAll()
@@ -38,7 +38,7 @@ public class SecurityConfig {
             // Disable CSRF for H2 console, register, login, and vehicle registration (for AJAX POSTs)
             // In production, use a CSRF token instead of ignoring these endpoints.
             .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**", "/register", "/login", "/logout", "/slot-map", "/auth/login",
-                                                    "/register-vehicle", "/api/my-vehicles/**","/reservation","/driver/profile","/feedback", "/api/billing/**",
+                                                    "/register-vehicle", "/api/my-vehicles/**","/reservation","/driver/profile","/api/driver/profile","/feedback", "/api/billing/**",
                                                 "/booking/**",
                                                 "/admin/slots","/admin/slots/**","/admin/drivers","/admin/drivers/**","/admin/admins","/admin/admins/**",
                                                 "/admin/reservations","/admin/reservations/**","/admin/vehicles","/admin/vehicles/**","/admin/feedback","/admin/feedback/**",

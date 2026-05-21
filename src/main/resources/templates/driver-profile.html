@@ -47,14 +47,14 @@
     <main class="main-content">
       <!-- Profile Hero -->
       <div class="profile-hero">
-        <div class="profile-avatar-xl">JD</div>
+        <div class="profile-avatar-xl" id="profile-avatar-xl">—</div>
         <div style="position:relative;z-index:1;">
-          <div class="profile-hero-name">John Doe</div>
-          <div class="profile-hero-meta">@johndoe · john@example.com · +94 77 123 4567</div>
+          <div class="profile-hero-name" id="profile-hero-name">Loading…</div>
+          <div class="profile-hero-meta" id="profile-hero-meta">—</div>
           <div class="profile-hero-badges">
             <span class="profile-pill pp-teal"><span class="live-dot" style="background:var(--teal);"></span> Active Driver</span>
-            <span class="profile-pill pp-gold">⭐ 4.9 Rating</span>
-            <span class="profile-pill pp-teal">24 Bookings</span>
+            <span class="profile-pill pp-gold" id="profile-rating-pill">⭐ — Rating</span>
+            <span class="profile-pill pp-teal" id="profile-bookings-pill">0 Bookings</span>
           </div>
         </div>
         <div style="margin-left:auto;position:relative;z-index:1;">
@@ -66,26 +66,27 @@
         <!-- Personal Info -->
         <div class="card">
           <div class="section-title" style="margin-bottom:20px;">Personal Information</div>
+          <p id="profile-msg" class="form-msg" style="display:none;margin-bottom:12px;"></p>
           <div class="gap-16" id="profile-fields">
             <div class="form-group">
               <label class="form-label">Full Name</label>
-              <input class="form-input" id="pf-name" value="John Doe" disabled>
+              <input class="form-input" id="pf-name" value="" disabled>
             </div>
             <div class="form-group">
               <label class="form-label">Username</label>
-              <input class="form-input" id="pf-user" value="johndoe" disabled>
+              <input class="form-input" id="pf-user" value="" disabled>
             </div>
             <div class="form-group">
               <label class="form-label">Email Address</label>
-              <input class="form-input" id="pf-email" value="john@example.com" disabled>
+              <input class="form-input" id="pf-email" type="email" value="" disabled>
             </div>
             <div class="form-group">
               <label class="form-label">Phone Number</label>
-              <input class="form-input" id="pf-phone" value="+94 77 123 4567" disabled>
+              <input class="form-input" id="pf-phone" type="tel" value="" disabled>
             </div>
-            <div id="profile-actions" style="display:none;gap:10px;display:none;">
-              <button class="btn btn-teal" onclick="saveProfile()">Save Changes</button>
-              <button class="btn btn-outline" onclick="cancelEdit()">Cancel</button>
+            <div id="profile-actions" style="display:none;gap:10px;">
+              <button type="button" class="btn btn-teal" id="profile-save-btn" onclick="saveProfile()">Save Changes</button>
+              <button type="button" class="btn btn-outline" onclick="cancelEdit()">Cancel</button>
             </div>
           </div>
         </div>

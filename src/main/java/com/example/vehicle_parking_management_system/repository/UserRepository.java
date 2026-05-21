@@ -162,6 +162,9 @@ public class UserRepository {
 
 
     public boolean update(User updated) {
+        if (updated instanceof Driver d) {
+            return updateDriver(d);
+        }
         List<User> all = findAll();
         boolean found = false;
         for (int i = 0; i < all.size(); i++) {
@@ -173,6 +176,43 @@ public class UserRepository {
         }
         if (found) rewriteAll(all);
         return found;
+    }
+
+    /** Updates a driver row in users.csv only (does not touch admins.csv). */
+    public boolean updateDriver(Driver updated) {
+        File file = new File(filePath);
+        if (!file.exists()) return false;
+
+        List<String> kept = new ArrayList<>();
+        boolean found = false;
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String trimmed = line.strip();
+                if (trimmed.isEmpty() || trimmed.startsWith("#")) {
+                    kept.add(line);
+                    continue;
+                }
+                User user = parseLine(trimmed);
+                if (user instanceof Driver d && d.getId().equals(updated.getId())) {
+                    kept.add(updated.toCsvRow());
+                    found = true;
+                } else {
+                    kept.add(line);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read users.csv: " + e.getMessage(), e);
+        }
+
+        if (!found) return false;
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(filePath, false))) {
+            for (String row : kept) pw.println(row);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to rewrite users.csv: " + e.getMessage(), e);
+        }
+        return true;
     }
 
     private void rewriteAll(List<User> users) {

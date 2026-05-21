@@ -29,6 +29,45 @@ function showPage(pageId){
   }
 }
 
+/** Format a Date for <input type="datetime-local"> in local timezone. */
+function toLocalDatetimeLocalValue(d) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return (
+    d.getFullYear() +
+    '-' +
+    pad(d.getMonth() + 1) +
+    '-' +
+    pad(d.getDate()) +
+    'T' +
+    pad(d.getHours()) +
+    ':' +
+    pad(d.getMinutes())
+  );
+}
+
+function setDefaultBookingTimes() {
+  const now = new Date();
+  const later = new Date(now.getTime() + 3 * 3600000);
+  const bs = document.getElementById('bk-start');
+  const be = document.getElementById('bk-end');
+  if (bs) bs.value = toLocalDatetimeLocalValue(now);
+  if (be) be.value = toLocalDatetimeLocalValue(later);
+  calcFee();
+}
+
+function formatSummaryDateTime(value) {
+  if (!value) return '—';
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return value;
+  return d.toLocaleString(undefined, {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 // ========== BOOKING LOGIC ==========
 async function loadAvailableSlots() {
   const select = document.getElementById('bk-slot');
@@ -45,7 +84,7 @@ async function loadAvailableSlots() {
     const data = await response.json();
     select.innerHTML = '';
     if (data.slots && data.slots.length > 0) {
-      data.slots.forEach(slot => {
+      data.slots.forEach((slot) => {
         const opt = document.createElement('option');
         opt.value = slot.id;
         opt.textContent = `${slot.slotNumber} — LKR ${slot.hourlyRate}/hr`;
@@ -76,10 +115,11 @@ async function loadMyVehicles() {
     const vehicles = await response.json();
     select.innerHTML = '';
     if (!Array.isArray(vehicles) || vehicles.length === 0) {
-      select.innerHTML = '<option value="">No vehicles registered — add one under My Vehicles</option>';
+      select.innerHTML =
+        '<option value="">No vehicles registered — add one under My Vehicles</option>';
       return;
     }
-    vehicles.forEach(v => {
+    vehicles.forEach((v) => {
       const opt = document.createElement('option');
       opt.value = v.id;
       opt.textContent = `${v.plateNumber} — ${v.type} · ${v.color}`;
@@ -98,76 +138,102 @@ function updateSummary() {
 
   if (slotSelect && slotSelect.options[slotSelect.selectedIndex]) {
     const slotText = slotSelect.options[slotSelect.selectedIndex].text;
-    document.getElementById('s-slot').textContent = slotText.split(' — ')[0];
-    
-    // Extract rate from option text for display
+    const slotEl = document.getElementById('s-slot');
+    if (slotEl) slotEl.textContent = slotText.split(' — ')[0];
+
     const rateMatch = slotText.match(/LKR (\d+)/);
     if (rateMatch) {
-        document.getElementById('s-rate').textContent = `LKR ${rateMatch[1]} / hr`;
+      const rateEl = document.getElementById('s-rate');
+      if (rateEl) rateEl.textContent = `LKR ${rateMatch[1]} / hr`;
     }
   }
 
   if (vehSelect && vehSelect.options[vehSelect.selectedIndex]) {
     const vehText = vehSelect.options[vehSelect.selectedIndex].text;
-    document.getElementById('s-veh').textContent = vehText.split(' — ')[0];
+    const vehEl = document.getElementById('s-veh');
+    if (vehEl) vehEl.textContent = vehText.split(' — ')[0];
+  }
+
+  const startVal = document.getElementById('bk-start')?.value;
+  const endVal = document.getElementById('bk-end')?.value;
+  const sStart = document.getElementById('s-start');
+  const sEnd = document.getElementById('s-end');
+  const sDur = document.getElementById('s-dur');
+  if (sStart) sStart.textContent = formatSummaryDateTime(startVal);
+  if (sEnd) sEnd.textContent = formatSummaryDateTime(endVal);
+  if (sDur && startVal && endVal) {
+    const diff = (new Date(endVal) - new Date(startVal)) / 3600000;
+    if (diff > 0) sDur.textContent = `${diff.toFixed(1)} hours`;
+    else sDur.textContent = '—';
   }
 }
 
 function calcFee() {
-  const s = document.getElementById('bk-start').value;
-  const e = document.getElementById('bk-end').value;
+  const s = document.getElementById('bk-start')?.value;
+  const e = document.getElementById('bk-end')?.value;
   const slotSelect = document.getElementById('bk-slot');
 
-  // Get dynamic rate from selected slot text, fallback to 150
   let hourlyRate = 150;
   if (slotSelect && slotSelect.options[slotSelect.selectedIndex]) {
     const match = slotSelect.options[slotSelect.selectedIndex].text.match(/LKR (\d+)/);
-    if (match) hourlyRate = parseInt(match[1]);
+    if (match) hourlyRate = parseInt(match[1], 10);
   }
+
+  const feeDisplay = document.getElementById('fee-display');
+  const feeHours = document.getElementById('fee-hours');
+  const sTotal = document.getElementById('s-total');
 
   if (s && e) {
     const diff = (new Date(e) - new Date(s)) / 3600000;
     if (diff > 0) {
       const lkr = Math.round(diff * hourlyRate);
       const fee = 'LKR ' + lkr.toLocaleString();
-      document.getElementById('fee-display').textContent = fee;
-      document.getElementById('fee-hours').textContent = `${diff.toFixed(1)} hours × LKR ${hourlyRate}/hr`;
-      document.getElementById('s-total').textContent = fee;
+      if (feeDisplay) feeDisplay.textContent = fee;
+      if (feeHours) feeHours.textContent = `${diff.toFixed(1)} hours × LKR ${hourlyRate}/hr`;
+      if (sTotal) sTotal.textContent = fee;
+    } else {
+      if (feeDisplay) feeDisplay.textContent = 'LKR 0';
+      if (feeHours) feeHours.textContent = 'End time must be after start time';
+      if (sTotal) sTotal.textContent = 'LKR 0';
     }
   }
   updateSummary();
 }
+
 function selectPay(type) {
-  document.getElementById('pm-cash').classList.toggle('selected', type==='cash');
-  document.getElementById('pm-card').classList.toggle('selected', type==='card');
-  
+  const cash = document.getElementById('pm-cash');
+  const card = document.getElementById('pm-card');
+  if (cash) cash.classList.toggle('selected', type === 'cash');
+  if (card) card.classList.toggle('selected', type === 'card');
+
   const cardFields = document.getElementById('card-fields');
-  if (cardFields) cardFields.style.display = type==='card' ? 'block' : 'none';
-  
+  if (cardFields) cardFields.style.display = type === 'card' ? 'block' : 'none';
+
   const payDisplay = document.getElementById('s-pay');
   if (payDisplay) payDisplay.textContent = type === 'card' ? '💳 Card' : '💵 Cash';
 }
 
 function resetBooking() {
-  document.getElementById('bk-start').value = '';
-  document.getElementById('bk-end').value = '';
-  document.getElementById('fee-display').textContent = 'LKR 0';
-  document.getElementById('fee-hours').textContent = 'Select times to calculate';
-  document.getElementById('s-total').textContent = 'LKR 0';
-  document.getElementById('s-start').textContent = '—';
-  document.getElementById('s-end').textContent = '—';
-  document.getElementById('s-dur').textContent = '—';
+  setDefaultBookingTimes();
+  const sTotal = document.getElementById('s-total');
+  if (sTotal) sTotal.textContent = document.getElementById('fee-display')?.textContent || 'LKR 0';
   selectPay('cash');
+  updateSummary();
 }
 
 async function confirmBooking() {
-  const slotId = document.getElementById('bk-slot').value;
-  const vehicleId = document.getElementById('bk-veh').value;
-  const startTime = document.getElementById('bk-start').value;
-  const endTime = document.getElementById('bk-end').value;
+  const slotId = document.getElementById('bk-slot')?.value;
+  const vehicleId = document.getElementById('bk-veh')?.value;
+  const startTime = document.getElementById('bk-start')?.value;
+  const endTime = document.getElementById('bk-end')?.value;
 
   if (!slotId || !vehicleId || !startTime || !endTime) {
-    alert("Please fill in all booking details (slot, vehicle, and times).");
+    alert('Please fill in all booking details (slot, vehicle, and times).');
+    return;
+  }
+
+  if (new Date(endTime) <= new Date(startTime)) {
+    alert('End time must be after start time.');
     return;
   }
 
@@ -177,36 +243,30 @@ async function confirmBooking() {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       credentials: 'same-origin',
-      body: params.toString()
+      body: params.toString(),
     });
 
     const data = await response.json();
     if (data.success) {
-      alert("✅ " + data.message + " (ID: " + data.reservationId + ")");
-      window.location.href = "/driver/dashboard";
+      alert('✅ ' + data.message + ' (ID: ' + data.reservationId + ')');
+      window.location.href = '/driver/dashboard';
     } else {
-      alert("❌ Booking failed: " + data.message);
+      alert('❌ Booking failed: ' + data.message);
     }
   } catch (error) {
-    console.error("Error creating booking:", error);
-    alert("An unexpected error occurred while processing your booking.");
+    console.error('Error creating booking:', error);
+    alert('An unexpected error occurred while processing your booking.');
   }
 }
 
-// Set default booking times
 document.addEventListener('DOMContentLoaded', async () => {
-  const now = new Date();
-  const later = new Date(now.getTime() + 3*3600000);
-  const fmt = d => d.toISOString().slice(0,16);
-  const bs = document.getElementById('bk-start');
-  const be = document.getElementById('bk-end');
-  if (bs && be) { bs.value = fmt(now); be.value = fmt(later); }
+  setDefaultBookingTimes();
 
   await Promise.all([loadAvailableSlots(), loadMyVehicles()]);
 
   const pref = sessionStorage.getItem('prefSlotId');
   const sel = document.getElementById('bk-slot');
-  if (pref && sel && [...sel.options].some(o => o.value === pref)) {
+  if (pref && sel && [...sel.options].some((o) => o.value === pref)) {
     sel.value = pref;
     sessionStorage.removeItem('prefSlotId');
     calcFee();
@@ -218,7 +278,7 @@ async function logout() {
   try {
     const response = await fetch('/logout', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
     const data = await response.json().catch(() => ({}));
     sessionStorage.clear();

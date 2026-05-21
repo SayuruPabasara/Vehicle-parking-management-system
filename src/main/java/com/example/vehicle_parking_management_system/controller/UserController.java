@@ -87,4 +87,50 @@ public class UserController {
                 "redirect", "/login"
         ));
     }
+
+    @GetMapping("/api/driver/profile")
+    public ResponseEntity<?> getDriverProfile(HttpSession session) {
+        String driverId = (String) session.getAttribute("userId");
+        if (driverId == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Authentication required."));
+        }
+        if (!"DRIVER".equals(session.getAttribute("userRole"))) {
+            return ResponseEntity.status(403).body(Map.of("success", false, "message", "Driver access required."));
+        }
+
+        return userService.getDriverProfile(driverId)
+                .map(profile -> ResponseEntity.ok(Map.of("success", true, "profile", profile)))
+                .orElseGet(() -> ResponseEntity.status(404).body(Map.of(
+                        "success", false, "message", "Driver profile not found."
+                )));
+    }
+
+    @PostMapping("/api/driver/profile")
+    public ResponseEntity<?> updateDriverProfile(@RequestParam String fullName,
+                                                 @RequestParam String userName,
+                                                 @RequestParam String email,
+                                                 @RequestParam(required = false) String phone,
+                                                 HttpSession session) {
+        String driverId = (String) session.getAttribute("userId");
+        if (driverId == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Authentication required."));
+        }
+        if (!"DRIVER".equals(session.getAttribute("userRole"))) {
+            return ResponseEntity.status(403).body(Map.of("success", false, "message", "Driver access required."));
+        }
+
+        try {
+            var driver = userService.updateDriverProfile(driverId, fullName, userName, email, phone);
+            session.setAttribute("userName", driver.getUserName());
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Profile updated successfully."
+            ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", e.getMessage()
+            ));
+        }
+    }
 }

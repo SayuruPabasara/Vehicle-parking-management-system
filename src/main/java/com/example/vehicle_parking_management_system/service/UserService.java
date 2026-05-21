@@ -1,6 +1,7 @@
 package com.example.vehicle_parking_management_system.service;
 
 import com.example.vehicle_parking_management_system.model.Driver;
+import com.example.vehicle_parking_management_system.model.Feedback;
 import com.example.vehicle_parking_management_system.model.Reservation;
 import com.example.vehicle_parking_management_system.model.User;
 import com.example.vehicle_parking_management_system.repository.FeedbackRepository;
@@ -205,6 +206,91 @@ public class UserService {
         return count;
     }
 
+
+    public Optional<Map<String, Object>> getDriverProfile(String driverId) {
+        Optional<User> userOpt = userRepository.findById(driverId);
+        if (userOpt.isEmpty() || !(userOpt.get() instanceof Driver driver)) {
+            return Optional.empty();
+        }
+
+        int bookingCount = reservationRepository.findByDriverId(driverId).size();
+        List<Feedback> feedbackList = feedbackRepository.findByDriverId(driverId);
+        double avgRating = 0;
+        if (!feedbackList.isEmpty()) {
+            avgRating = feedbackList.stream().mapToInt(Feedback::getRating).average().orElse(0);
+        }
+
+        String initials = initialsFrom(driver.getFullName(), driver.getUserName());
+        String phone = driver.getPhone() == null || driver.getPhone().isBlank() ? "" : driver.getPhone();
+
+        Map<String, Object> profile = new LinkedHashMap<>();
+        profile.put("id", driver.getId());
+        profile.put("fullName", driver.getFullName());
+        profile.put("userName", driver.getUserName());
+        profile.put("email", driver.getEmail());
+        profile.put("phone", phone);
+        profile.put("initials", initials);
+        profile.put("bookingCount", bookingCount);
+        profile.put("averageRating", avgRating > 0 ? String.format(Locale.ENGLISH, "%.1f", avgRating) : null);
+        profile.put("vehicleCount", driver.getVehicleCount());
+        return Optional.of(profile);
+    }
+
+    public Driver updateDriverProfile(String driverId, String fullName, String userName,
+                                      String email, String phone) {
+        if (fullName == null || fullName.isBlank()) {
+            throw new IllegalArgumentException("Full name is required.");
+        }
+        if (userName == null || userName.isBlank()) {
+            throw new IllegalArgumentException("Username is required.");
+        }
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email is required.");
+        }
+
+        Optional<User> userOpt = userRepository.findById(driverId);
+        if (userOpt.isEmpty() || !(userOpt.get() instanceof Driver driver)) {
+            throw new IllegalArgumentException("Driver account not found.");
+        }
+
+        String emailNorm = email.trim();
+        Optional<User> emailOwner = userRepository.findByEmail(emailNorm);
+        if (emailOwner.isPresent() && !emailOwner.get().getId().equals(driverId)) {
+            throw new IllegalArgumentException("Email already registered: " + emailNorm);
+        }
+
+        String userNorm = userName.trim();
+        for (User u : userRepository.findAll()) {
+            if (u.getUserName().equalsIgnoreCase(userNorm) && !u.getId().equals(driverId)) {
+                throw new IllegalArgumentException("Username already taken: " + userNorm);
+            }
+        }
+
+        driver.setFullName(fullName.trim());
+        driver.setUserName(userNorm);
+        driver.setEmail(emailNorm);
+        driver.setPhone(phone == null ? "" : phone.trim());
+
+        if (!userRepository.updateDriver(driver)) {
+            throw new IllegalArgumentException("Failed to save profile.");
+        }
+
+        activityLogger.log(driverId, "DRIVER", "PROFILE_UPDATED", emailNorm);
+        return driver;
+    }
+
+    private static String initialsFrom(String fullName, String userName) {
+        String source = (fullName != null && !fullName.isBlank()) ? fullName : userName;
+        if (source == null || source.isBlank()) return "??";
+        String[] parts = source.trim().split("\\s+");
+        if (parts.length >= 2) {
+            return ("" + parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase(Locale.ENGLISH);
+        }
+        String s = parts[0];
+        return s.length() >= 2
+                ? s.substring(0, 2).toUpperCase(Locale.ENGLISH)
+                : s.toUpperCase(Locale.ENGLISH);
+    }
 
     public boolean deleteDriver(String driverId, String adminId) {
         Optional<User> userOpt = userRepository.findById(driverId);
