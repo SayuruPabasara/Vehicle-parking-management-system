@@ -44,7 +44,6 @@ public class VehicleController {
         return ResponseEntity.status(404).body(Map.of("success", false, "message", "Vehicle not found"));
     }
 
-    //register vehicle
     @PostMapping("/register-vehicle")
     public ResponseEntity<?> registerVehicle(@RequestParam String plate,
                                              @RequestParam String color,
