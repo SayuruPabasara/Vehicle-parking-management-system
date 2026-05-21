@@ -8,18 +8,14 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-/**
- * ReservationRepository — reads and writes reservations.csv.
- *
- * CSV format: id,driverId,slotId,vehicleId,status,startTime,endTime,fee,paymentStatus
- */
+
 @Repository
 public class ReservationRepository {
 
     @Value("${parknow.data.reservations}")
     private String filePath;
 
-    // ── Read operations ───────────────────────────────────────────────────────
+
 
     public List<Reservation> findAll() {
         List<Reservation> reservations = new ArrayList<>();
@@ -79,7 +75,7 @@ public class ReservationRepository {
         return result;
     }
 
-    // ── Write operations ──────────────────────────────────────────────────────
+
 
     public void save(Reservation reservation) {
         ensureFileExists();
@@ -104,7 +100,6 @@ public class ReservationRepository {
         return found;
     }
 
-    /** Remove all reservations for a driver. Returns reservations removed (for slot cleanup). */
     public List<Reservation> deleteByDriverId(String driverId) {
         List<Reservation> all = findAll();
         List<Reservation> removed = new ArrayList<>();
@@ -119,7 +114,7 @@ public class ReservationRepository {
         return removed;
     }
 
-    // ── Internal helpers ──────────────────────────────────────────────────────
+
 
     private void rewriteAll(List<Reservation> reservations) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(filePath, false))) {
@@ -139,9 +134,7 @@ public class ReservationRepository {
         }
     }
 
-    /**
-     * Parse: id,driverId,slotId,vehicleId,status,startTime,endTime,fee[,paymentStatus]
-     */
+
     private Reservation parseLine(String line) {
         String[] p = line.split(",", -1);
         if (p.length < 8) return null;
