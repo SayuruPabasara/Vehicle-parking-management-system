@@ -17,7 +17,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-//business logic for Reservation & Booking.
+
 @Service
 public class ReservationService {
 
@@ -106,9 +106,7 @@ public class ReservationService {
         return reservation;
     }
 
-    /**
-     * Admin marks reservation(s) as paid. Only UNPAID rows are updated.
-     */
+
     public int confirmPaymentsPaid(List<String> reservationIds, String adminId) {
         if (reservationIds == null || reservationIds.isEmpty()) return 0;
         int updated = 0;
@@ -128,9 +126,7 @@ public class ReservationService {
         return updated;
     }
     
-    /**
-     * Driver confirms cash payment (e.g. at exit): marks completed, unpaid reservations with a fee as PAID.
-     */
+
     public Map<String, Object> confirmDriverCashPayments(String driverId) {
         List<Reservation> list = reservationRepository.findByDriverId(driverId);
         int updated = 0;
@@ -154,9 +150,7 @@ public class ReservationService {
         return out;
     }
 
-    /**
-     * Admin marks completed reservation(s) as unpaid (correction).
-     */
+
     public int markPaymentsUnpaid(List<String> reservationIds, String adminId) {
         if (reservationIds == null || reservationIds.isEmpty()) return 0;
         int updated = 0;
@@ -177,7 +171,6 @@ public class ReservationService {
         return updated;
     }
 
-    /** Billing overview + history rows for the driver billing page. */
     public Map<String, Object> getDriverBillingSummary(String driverId) {
         List<Reservation> list = new ArrayList<>(reservationRepository.findByDriverId(driverId));
         list.sort(Comparator.comparing(Reservation::getStartTime, Comparator.nullsLast(Comparator.naturalOrder())).reversed());
@@ -238,7 +231,7 @@ public class ReservationService {
         return out;
     }
 
-    /** Admin reservation table: joined labels + UI filter status. */
+
     public List<Map<String, Object>> getAdminReservationRows() {
         List<Reservation> all = new ArrayList<>(reservationRepository.findAll());
         all.sort(Comparator.comparing(Reservation::getStartTime, Comparator.nullsLast(Comparator.naturalOrder())).reversed());
