@@ -14,28 +14,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * ActivityLogger — shared utility for system-wide event logging.
- *
- * Appends one CSV row per event to activity-log.csv.
- * Any component can call ActivityLogger.log() to record an action.
- *
- * CSV format: timestamp,actorId,actorRole,action,detail
- */
+
 @Component
 public class ActivityLogger {
 
     @Value("${parknow.data.activity-log:default_activity.log}")
     private String logPath;
 
-    /**
-     * Log a system event.
-     *
-     * @param actorId   ID of the user performing the action (or "SYSTEM")
-     * @param actorRole Role of the actor (DRIVER / ADMIN / SYSTEM)
-     * @param action    Short action name, e.g. "USER_LOGIN", "SLOT_ALLOCATED"
-     * @param detail    Optional human-readable detail string
-     */
     public synchronized void log(String actorId, String actorRole,
                                  String action, String detail) {
         String row = String.join(",",
@@ -48,22 +33,18 @@ public class ActivityLogger {
         try (PrintWriter pw = new PrintWriter(new FileWriter(logPath, true))) {
             pw.println(row);
         } catch (IOException e) {
-            // Logger failure must not break the calling operation
+
             System.err.println("[ActivityLogger] Failed to write log entry: " + e.getMessage());
         }
     }
 
-    /** Convenience overload with no detail. */
     public void log(String actorId, String actorRole, String action) {
         log(actorId, actorRole, action, null);
     }
     
-    /** One parsed row from the activity log file. */
     public record LogEntry(String timestamp, String actorId, String actorRole, String action, String detail) {}
 
-    /**
-     * Read the most recent log entries (newest first).
-     */
+
     public List<LogEntry> readRecent(int limit) {
         List<LogEntry> all = readAll();
         Collections.reverse(all);
@@ -71,7 +52,6 @@ public class ActivityLogger {
         return new ArrayList<>(all.subList(0, limit));
     }
 
-    /** Read all entries in file order (oldest first). */
     public List<LogEntry> readAll() {
         List<LogEntry> entries = new ArrayList<>();
         File file = new File(logPath);
@@ -90,9 +70,7 @@ public class ActivityLogger {
         return entries;
     }
 
-    /**
-     * Parse: timestamp,actorId,actorRole,action,"detail"
-     */
+
     static LogEntry parseLine(String line) {
         String[] parts = line.split(",", 5);
         if (parts.length < 4) return null;
