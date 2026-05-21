@@ -17,12 +17,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-/**
- * AdminService — business logic for Component 05 (Admin Management).
- *
- * Abstraction: exposes getSystemSummary() which aggregates data from
- * multiple repositories without the controller needing to know the details.
- */
+
 @Service
 public class AdminService {
 
@@ -54,14 +49,7 @@ public class AdminService {
         this.activityLogger     = activityLogger;
     }
 
-    // ── Admin account management ──────────────────────────────────────────────
 
-    /**
-     * Register a new admin account. Only SUPER admins should be able to call this.
-     *
-     * @param createdById  ID of the SUPER admin creating this account
-     * @throws IllegalArgumentException if email already exists
-     */
     public Admin registerAdmin(String fullName, String username, String email, String phone,String password,
                                 Admin.AdminLevel level, String createdById) {
         if (adminRepository.findByEmail(email).isPresent()) {
@@ -85,9 +73,7 @@ public class AdminService {
         return admin;
     }
 
-    /**
-     * Authenticate an admin by email and raw password.
-     */
+
     public Optional<Admin> login(String email, String rawPassword) {
         Optional<Admin> opt = adminRepository.findByEmail(email);
         if (opt.isEmpty()) return Optional.empty();
@@ -102,12 +88,7 @@ public class AdminService {
         return Optional.of(admin);
     }
 
-    /**
-     * Delete an admin account. SUPER admin cannot delete their own account.
-     *
-     * @param targetId   the admin ID to delete
-     * @param requesterId the admin requesting the deletion
-     */
+
     public boolean deleteAdmin(String targetId, String requesterId) {
         if (targetId.equals(requesterId)) {
             throw new IllegalArgumentException("An admin cannot delete their own account.");
@@ -131,12 +112,7 @@ public class AdminService {
         return adminRepository.findByEmail(email);
     }
 
-    // ── Dashboard aggregation ─────────────────────────────────────────────────
 
-    /**
-     * Produce a summary map for the admin dashboard.
-     * Reads across all components without writing to their CSV files.
-     */
     public Map<String, Object> getSystemSummary() {
         Map<String, Object> summary = new LinkedHashMap<>();
 
@@ -189,18 +165,12 @@ public class AdminService {
         return String.valueOf(lkr);
     }
 
-    // ── Driver oversight ──────────────────────────────────────────────────────
+
 
     
 
 
 
-
-    // ── Activity log reading ──────────────────────────────────────────────────
-
-    /**
-     * Recent activity rows for the admin dashboard (from ActivityLogger).
-     */
     public List<Map<String, Object>> getRecentActivityForDashboard(int limit) {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM d, yyyy · HH:mm", Locale.ENGLISH);
         List<Map<String, Object>> rows = new ArrayList<>();
@@ -228,9 +198,7 @@ public class AdminService {
         return rows;
     }
 
-    /**
-     * Read raw log lines (newest first) — legacy helper.
-     */
+
     public List<String> getActivityLog(String logFilePath) {
         List<ActivityLogger.LogEntry> entries = activityLogger.readRecent(Integer.MAX_VALUE);
         List<String> lines = new ArrayList<>();
