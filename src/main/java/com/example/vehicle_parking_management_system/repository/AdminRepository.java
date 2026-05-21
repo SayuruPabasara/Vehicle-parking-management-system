@@ -10,36 +10,16 @@ import jakarta.annotation.PostConstruct;
 import java.io.*;
 import java.util.*;
 
-/**
- * AdminRepository — reads and writes admins.csv.
- *
- * CSV format: id,fullName,userName,email,phone,password,role,adminLevel,createdBy
- *
- * On first run, seeds one SUPER admin account so the system is always accessible.
- */
+
 @Repository
 public class AdminRepository {
 
     @Value("${parknow.data.admins}")
     private String filePath;
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
-
-    /**
-     * Seed a default SUPER admin if no admins exist.
-     * Password hash is BCrypt of "admin123" — change immediately in production.
-     */
-   
-    
-    
 
 
 
-
-
-
-
-    // ── Read operations ───────────────────────────────────────────────────────
 
     public List<Admin> findAll() {
         List<Admin> admins = new ArrayList<>();
@@ -70,7 +50,7 @@ public class AdminRepository {
                 .findFirst();
     }
 
-    // ── Write operations ──────────────────────────────────────────────────────
+
 
     public void save(Admin admin) {
         ensureFileExists();
@@ -102,7 +82,7 @@ public class AdminRepository {
         return found;
     }
 
-    // ── Internal helpers ──────────────────────────────────────────────────────
+
 
     private void rewriteAll(List<Admin> admins) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(filePath, false))) {
@@ -122,7 +102,6 @@ public class AdminRepository {
         }
     }
 
-    /** Parse: id,fullName,userName,email,phone,password,role,adminLevel,createdBy */
     private Admin parseLine(String line) {
         String[] p = line.split(",", -1);
         if (p.length < 9) return null;
