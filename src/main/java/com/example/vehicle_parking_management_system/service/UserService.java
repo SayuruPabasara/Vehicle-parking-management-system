@@ -23,12 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-/**
- * UserService — business logic for User Management
- *
- * Abstraction: exposes high-level operations; callers don't need to know
- * how passwords are hashed or how the CSV is structured.
- */
+
 @Service
 public class UserService {
 
@@ -60,10 +55,10 @@ public class UserService {
         this.activityLogger        = activityLogger;
     }
 
-    // register a driver
+
     public Driver register(String fullName, String userName, String email, String phone, String password) {
         
-        //check if already registered
+
         if (userRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("Email already registered: " + email);
         }
@@ -87,18 +82,18 @@ public class UserService {
         return driver;
     }
 
-    // authenticate user by email and password
+
     public Optional<User> login(String email,String password){
 
         Optional<User> userOpt = userRepository.findByEmail(email);
 
-        //not found
+
         if (userOpt.isEmpty()) 
             return Optional.empty();
 
         User user = userOpt.get();
 
-        //password doesn't match
+
         if (!passwordEncoder.matches(password, user.getPassword())) {
 
             activityLogger.log(user.getId(), user.getRole(), "LOGIN_FAILED","Bad password for " + email);
@@ -111,7 +106,6 @@ public class UserService {
         return Optional.of(user);
     }
 
-    /** Increment vehicle count for a driver (called by VehicleService). */
     public void incrementVehicleCount(String driverId) {
         userRepository.findById(driverId).ifPresent(user -> {
             if (user instanceof Driver d) {
@@ -121,10 +115,7 @@ public class UserService {
         });
     }
 
-    /**
-     * Admin driver-management page: summary stats plus driver rows
-     * (vehicle counts from vehicles.csv; join dates from activity log when available).
-     */
+
     public Map<String, Object> getDriverManagementData() {
         List<Driver> drivers = userRepository.findAllDrivers();
         Map<String, Integer> vehicleCounts = vehicleRepository.countByOwnerId();
@@ -214,10 +205,7 @@ public class UserService {
         return count;
     }
 
-    /**
-     * Admin deletes a driver and related data (vehicles, reservations, feedback).
-     * Active reservations release their parking slots first.
-     */
+
     public boolean deleteDriver(String driverId, String adminId) {
         Optional<User> userOpt = userRepository.findById(driverId);
         if (userOpt.isEmpty() || !(userOpt.get() instanceof Driver driver)) {
