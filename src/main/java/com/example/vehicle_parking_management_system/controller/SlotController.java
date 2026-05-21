@@ -12,15 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * SlotController — HTTP endpoints for Component 03 (Parking Slot Management).
- *
- * GET  /slots                  All slots (any status) — for full map render
- * GET  /slots/available        Sorted available slots — for booking dropdown
- * POST /slots/allocate/{id}    Mark slot as OCCUPIED (called internally or by Booking UI)
- * POST /slots/release/{id}     Mark slot as AVAILABLE
- * POST /slots/edit/{id}        Admin updates slot rate or status
- */
+
 @RestController
 public class SlotController {
 
@@ -30,23 +22,13 @@ public class SlotController {
         this.slotService = slotService;
     }
 
-    // ── Public map view ───────────────────────────────────────────────────────
 
-    /**
-     * GET /api/slots/map
-     * All slots grouped into Sections A, B, C (10 each) — no login required
-     * so the public slot-map page can reflect slots.csv.
-     */
     @GetMapping("/api/slots/map")
     public ResponseEntity<Map<String, List<Map<String, Object>>>> getSlotsForMap() {
         return ResponseEntity.ok(groupSlots(slotService.getAllSlots()));
     }
 
-    /**
-     * GET /slots
-     * Returns all slots with their current status.
-     * Accessible to any authenticated user (driver or admin).
-     */
+
     @GetMapping("/slots")
     public ResponseEntity<?> getAllSlots(HttpSession session) {
         if (session.getAttribute("userId") == null) return unauthorised();
@@ -54,11 +36,7 @@ public class SlotController {
         return ResponseEntity.ok(groupSlots(slotService.getAllSlots()));
     }
 
-    /**
-     * GET /slots/available
-     * Returns QuickSort-ordered list of AVAILABLE slots only.
-     * Used to populate the booking form dropdown.
-     */
+
     @GetMapping("/slots/available")
     public ResponseEntity<?> getAvailableSlots(HttpSession session) {
         if (session.getAttribute("userId") == null) return unauthorised();
@@ -70,13 +48,7 @@ public class SlotController {
         ));
     }
 
-    // ── Slot state transitions ────────────────────────────────────────────────
 
-    /**
-     * POST /slots/allocate/{slotId}?vehicleId=XYZ
-     * Allocates a slot. Normally called via ReservationController,
-     * but exposed here for direct testing/integration.
-     */
     @PostMapping("/slots/allocate/{slotId}")
     public ResponseEntity<?> allocateSlot(@PathVariable String slotId,
                                           @RequestParam String vehicleId,
@@ -99,10 +71,7 @@ public class SlotController {
         }
     }
 
-    /**
-     * POST /slots/release/{slotId}
-     * Releases a slot. Normally called via ReservationController on checkout.
-     */
+
     @PostMapping("/slots/release/{slotId}")
     public ResponseEntity<?> releaseSlot(@PathVariable String slotId,
                                          HttpSession session) {
@@ -124,13 +93,7 @@ public class SlotController {
         }
     }
 
-    // ── Admin slot management ─────────────────────────────────────────────────
 
-    /**
-     * POST /slots/edit/{slotId}
-     * Admin can update a slot's hourly rate and/or status.
-     * Body params: status (AVAILABLE|OCCUPIED|MAINTENANCE), hourlyRate
-     */
     @PostMapping("/slots/edit/{slotId}")
     public ResponseEntity<?> editSlot(@PathVariable String slotId,
                                       @RequestParam String status,
@@ -158,7 +121,7 @@ public class SlotController {
         }
     }
 
-    // ── Internal helpers ──────────────────────────────────────────────────────
+
 
     private ResponseEntity<Map<String, Object>> unauthorised() {
         return ResponseEntity.status(401).body(Map.of(
@@ -177,10 +140,7 @@ public class SlotController {
         );
     }
 
-    /**
-     * Groups 30 slots into Section A (1–10), B (11–20), C (21–30).
-     * Uses slotNumber prefix A-/B-/C- when present; otherwise derives section from SLT-xx id order.
-     */
+
     private Map<String, List<Map<String, Object>>> groupSlots(List<ParkingSlot> all) {
         Map<String, List<Map<String, Object>>> grouped = new LinkedHashMap<>();
         grouped.put("Section A", new ArrayList<>());
@@ -215,7 +175,6 @@ public class SlotController {
         return "Section C";
     }
 
-    /** Parse 1–30 from id or slotNumber like SLT-07 / SLT-7. */
     private static int ordinalFromSlot(ParkingSlot s) {
         int fromId = parseSltOrdinal(s.getId());
         if (fromId > 0) return fromId;
