@@ -8,19 +8,14 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-/**
- * FeedbackRepository — reads and writes feedback.csv.
- *
- * CSV format: id,driverId,reservationId,rating,category,comment,submittedAt,status
- * Note: comment is wrapped in double-quotes to handle embedded commas.
- */
+
 @Repository
 public class FeedbackRepository {
 
     @Value("${parknow.data.feedback}")
     private String filePath;
 
-    // ── Read operations ───────────────────────────────────────────────────────
+
 
     public List<Feedback> findAll() {
         List<Feedback> feedbacks = new ArrayList<>();
@@ -55,9 +50,8 @@ public class FeedbackRepository {
 
     
 
-    // ── Write operations ──────────────────────────────────────────────────────
 
-    //save new feedback
+
     public void save(Feedback feedback) {
         ensureFileExists();
         try (PrintWriter pw = new PrintWriter(new FileWriter(filePath, true))) {
@@ -67,7 +61,7 @@ public class FeedbackRepository {
         }
     }
 
-    // Update an existing feedback entry. Returns true if successful, false if not found.
+
     public boolean update(Feedback updated) {
         List<Feedback> all = findAll();
         boolean found = false;
@@ -82,7 +76,7 @@ public class FeedbackRepository {
         return found;
     }
 
-    // Delete a feedback entry by ID. Returns true if successful, false if not found.
+
     public boolean deleteById(String id) {
         List<Feedback> all = findAll();
         boolean removed = all.removeIf(f -> f.getId().equals(id));
@@ -90,7 +84,6 @@ public class FeedbackRepository {
         return removed;
     }
 
-    /** Remove all feedback submitted by a driver. Returns number of rows removed. */
     public int deleteByDriverId(String driverId) {
         List<Feedback> all = findAll();
         int before = all.size();
@@ -100,7 +93,7 @@ public class FeedbackRepository {
         return removed;
     }
 
-    // ── Internal helpers ──────────────────────────────────────────────────────
+
 
     private void rewriteAll(List<Feedback> feedbacks) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(filePath, false))) {
@@ -120,14 +113,10 @@ public class FeedbackRepository {
         }
     }
 
-    /**
-     * Parse: id,driverId,reservationId,rating,category,"comment",submittedAt,status
-     * Uses a simple quoted-field parser for the comment column.
-     */
+
     private Feedback parseLine(String line) {
-        // Split respecting quoted comment field
+
         List<String> parts = splitCsvLine(line);
-        // id,driverId,rating,category,"comment",submittedAt
         if (parts.size() < 6) return null;
         
         Feedback f = new Feedback();
@@ -135,7 +124,7 @@ public class FeedbackRepository {
         f.setDriverId(parts.get(1).trim());
         f.setRating(parseIntSafe(parts.get(2).trim()));
         f.setCategory(parts.get(3).trim());
-        // Strip surrounding quotes from comment
+
         String comment = parts.get(4).trim();
         if (comment.startsWith("\"") && comment.endsWith("\""))
             comment = comment.substring(1, comment.length() - 1);
@@ -146,7 +135,6 @@ public class FeedbackRepository {
         return f;
     }
 
-    /** Simple CSV splitter that respects double-quoted fields. */
     private List<String> splitCsvLine(String line) {
         List<String> result = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
