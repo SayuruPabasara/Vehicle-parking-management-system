@@ -19,7 +19,6 @@ public class FeedbackController {
         this.feedbackService = feedbackService;
     }
 
-    // ── Driver: submit feedback ───────────────────────────────────────────────
 
 
     @GetMapping("/feedback/submit")
@@ -67,16 +66,6 @@ public class FeedbackController {
 
 
 
-    // ── Driver: view own feedback ─────────────────────────────────────────────
-
-
-    
-
-
-
-
-
-    // ── Admin: view all feedback ──────────────────────────────────────────────
 
 
     @GetMapping("/admin/feedback/data")
@@ -85,7 +74,7 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbackService.getAdminFeedbackManagementData());
     }
     
-    // ── Admin: moderate ───────────────────────────────────────────────────────
+
 
 
     @PostMapping("/admin/feedback/update/{id}")
@@ -125,7 +114,7 @@ public class FeedbackController {
         ));
     }
 
-    // ── Internal helpers ──────────────────────────────────────────────────────
+
 
     private boolean isAdmin(HttpSession session) {
         return "ADMIN".equals(session.getAttribute("userRole"))
