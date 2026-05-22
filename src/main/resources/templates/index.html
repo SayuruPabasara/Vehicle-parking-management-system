@@ -27,83 +27,89 @@
   </nav>
 
     <!-- Hero -->
-  <section class="hero">
-    <div class="hero-bg-circle hero-bg-c1"></div>
-    <div class="hero-bg-circle hero-bg-c2"></div>
-    <div class="hero-grid-overlay"></div>
-    <div class="hero-diagonal"></div>
+  <section class="hero" style="position: relative; padding: 40px 56px 80px; display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 68px); overflow: hidden; background: #0b1d22;">
+    <!-- Abstract gradient blobs for glassmorphism background -->
+    <div style="position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(43,187,216,0.3) 0%, transparent 70%); top: -100px; left: -100px; filter: blur(60px); pointer-events: none;"></div>
+    <div style="position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(252,210,113,0.2) 0%, transparent 70%); bottom: -50px; right: -50px; filter: blur(60px); pointer-events: none;"></div>
+    <div style="position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(247,141,63,0.2) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); filter: blur(80px); pointer-events: none;"></div>
 
-	<div class="hero-content">
-		
-		<div class="row-container">
-			<div class="left-box">
-				<h1>
-			Smart <span class="h-gold">Parking</span><br>
-			for the <span class="h-teal">Modern</span><br>
-			<span class="h-orange">Driver.</span>
-		  </h1>
-			</div>
+    <div class="hero-content" style="position: relative; z-index: 10; max-width: 1200px; width: 100%; display: flex; flex-direction: column; gap: 30px; top: 0;">
+        
+        <!-- Glassmorphism Main Card -->
+        <div style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 32px; padding: 30px; display: flex; align-items: center; justify-content: space-between; gap: 40px; box-shadow: 0 24px 64px rgba(0,0,0,0.2); flex-wrap: wrap;">
+            
+            <div style="flex: 1; min-width: 300px;">
+                <div class="hero-pill" style="margin-bottom: 24px; background: rgba(43,187,216,0.1); border: 1px solid rgba(43,187,216,0.2); color: var(--teal); padding: 8px 20px; border-radius: 99px; display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.85rem; backdrop-filter: blur(10px);">
+                    <span class="live-dot" style="width: 8px; height: 8px; background: var(--teal); border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span> Next-Gen Parking System
+                </div>
+                <h1 style="font-family: var(--font-display); font-weight: 800; font-size: clamp(3rem, 5vw, 4.5rem); line-height: 1.1; color: #fff; letter-spacing: -0.02em; margin-bottom: 24px;">
+                    Smart <span style="background: linear-gradient(135deg, var(--gold), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Parking</span><br>
+                    for the <span style="color: var(--teal);">Modern</span><br>
+                    Driver.
+                </h1>
+                <p style="font-size: 1.1rem; color: rgba(255,255,255,0.7); line-height: 1.8; margin-bottom: 40px; max-width: 480px;">
+                    Reserve your parking slot in seconds. Real-time availability, instant booking, and seamless payments — beautifully unified in one place.
+                </p>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    <button class="btn btn-gold btn-xl" onclick="showPage('pg-login')" style="box-shadow: 0 8px 24px rgba(252,210,113,0.3);">Reserve a Slot</button>
+                    <button class="btn btn-outline-white btn-xl" onclick="showPage('pg-about')">Learn More</button>
+                </div>
+            </div>
 
-			<div class="right-box">
-				<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module"></script>
-			<dotlottie-wc src="https://lottie.host/2f82168e-a0a6-4726-a108-0ad70dd84a2f/gQ2BBXCdm6.lottie" style="width: 300px;height: 300px" autoplay loop></dotlottie-wc>
+            <div style="flex: 1; display: flex; justify-content: center; align-items: center; position: relative; min-width: 300px;">
+                <div style="position: absolute; inset: 0; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%); pointer-events: none;"></div>
+                <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module"></script>
+                <dotlottie-wc src="https://lottie.host/2f82168e-a0a6-4726-a108-0ad70dd84a2f/gQ2BBXCdm6.lottie" style="width: 100%; max-width: 400px; height: auto; aspect-ratio: 1/1; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));" autoplay loop></dotlottie-wc>
+            </div>
+            
+        </div>
 
-			</div>
-		</div>  
-		  
-		</div>
-		  <p class="hero-desc">
-			Reserve your parking slot in seconds. Real-time availability, instant booking, and seamless payments — all from one place.
-		  </p>
-
-		  <div class="hero-btns">
-			<button class="btn btn-gold btn-xl" onclick="showPage('pg-login')">Reserve a Slot</button>
-		  </div>
-		  
-	</div>
-		
-		<!-- Stats -->
-	  <div class="hero-stats-panel">
-		<div class="hero-stats-row">
-		  <div class="hero-stat">
-			<div class="hero-stat-label">Total Capacity</div>
-			<div class="hero-stat-val" id="stat-total-capacity" data-stat-animate="int">—</div>
-			<div class="hero-stat-sub">Parking slots</div>
-		  </div>
-		  <div class="hero-stat">
-			<div class="hero-stat-label">Occupied</div>
-			<div class="hero-stat-val v-orange" id="stat-occupied" data-stat-animate="int">—</div>
-			<div class="hero-stat-sub" id="stat-utilization-sub">— utilization</div>
-		  </div>
-		  <div class="hero-stat">
-			<div class="hero-stat-label">Available</div>
-			<div class="hero-stat-val v-teal" id="stat-available" data-stat-animate="int">—</div>
-			<div class="hero-stat-sub" id="stat-free-sub">— free</div>
-		  </div>
-		  <div class="hero-stat">
-			<div class="hero-stat2-icon">👤</div>
-			<div>
-			  <div class="hero-stat-val" id="stat-happy-clients" data-stat-animate="int">—</div>
-			  <div class="hero-stat-label">Registered Drivers</div>
-			</div>
-		  </div>
-		  <div class="hero-stat">
-			<div class="hero-stat2-icon">📅</div>
-			<div>
-			  <div class="hero-stat-val" id="stat-total-reservations" data-stat-animate="int">—</div>
-			  <div class="hero-stat-label">Total Reservations</div>
-			</div>
-		  </div>
-		  <div class="hero-stat">
-			<div class="hero-stat2-icon">⭐</div>
-			<div>
-			  <div class="hero-stat-val" id="stat-avg-rating" style="color:var(--gold);" data-stat-animate="text">—</div>
-			  <div class="hero-stat-label">Avg. Rating</div>
-			</div>
-		  </div>
-		</div>
-	
-		</div>
+        <!-- Glassmorphism Stats -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+            <div style="background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;">Total Capacity</div>
+                    <div id="stat-total-capacity" style="font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: #fff; line-height: 1;">—</div>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">🅿️</div>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;">Occupied</div>
+                    <div id="stat-occupied" style="font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--orange); line-height: 1;">—</div>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(247,141,63,0.1); border: 1px solid rgba(247,141,63,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">🚗</div>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                     <div style="font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;">Available</div>
+                    <div id="stat-available" style="font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--teal); line-height: 1;">—</div>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(43,187,216,0.1); border: 1px solid rgba(43,187,216,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">✨</div>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;">Drivers</div>
+                    <div id="stat-happy-clients" style="font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: #fff; line-height: 1;">—</div>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">👤</div>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;">Reservations</div>
+                    <div id="stat-total-reservations" style="font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: #fff; line-height: 1;">—</div>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">📅</div>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;">Avg. Rating</div>
+                    <div id="stat-avg-rating" style="font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--gold); line-height: 1;">—</div>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(252,210,113,0.1); border: 1px solid rgba(252,210,113,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--gold);">⭐</div>
+            </div>
+        </div>
+    </div>
 </section>
 
   <!-- Pricing Section -->
