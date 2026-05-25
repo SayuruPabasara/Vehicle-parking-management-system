@@ -45,12 +45,14 @@ public class HomeController {
         Object name = session.getAttribute("userName");
         model.addAttribute("username", name != null ? name.toString() : "Guest");
         Object uid = session.getAttribute("userId");
-        double amountDue = 0.0;
         if (uid != null) {
-            Map<String, Object> bill = reservationService.getDriverBillingSummary(uid.toString());
-            amountDue = ((Number) bill.get("amountDue")).doubleValue();
+            model.addAllAttributes(reservationService.getDriverDashboardStats(uid.toString()));
+        } else {
+            model.addAttribute("totalBookings", 0);
+            model.addAttribute("activeSessions", 0);
+            model.addAttribute("vehicleCount", 0);
+            model.addAttribute("amountDueDisplay", "LKR 0");
         }
-        model.addAttribute("amountDueDisplay", String.format("LKR %,.0f", amountDue));
         return "driver-dashboard.html";
     }
     @GetMapping("/admin/dashboard")

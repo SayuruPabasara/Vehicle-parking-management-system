@@ -80,7 +80,7 @@ function populateEditSlotSelect() {
 function fillEditSlotForm() {
   const select = document.getElementById('editSlotSelect');
   if (!select || !select.value) {
-    ['editSlotSection', 'editSlotFloor', 'editSlotVehicle', 'editSlotRate'].forEach((id) => {
+    ['editSlotSection', 'editSlotVehicle'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) el.value = '';
     });
@@ -93,16 +93,12 @@ function fillEditSlotForm() {
   if (!slot) return;
 
   const sectionEl = document.getElementById('editSlotSection');
-  const floorEl = document.getElementById('editSlotFloor');
   const vehicleEl = document.getElementById('editSlotVehicle');
   const statusEl = document.getElementById('editSlotStatus');
-  const rateEl = document.getElementById('editSlotRate');
 
   if (sectionEl) sectionEl.value = slot.section || '—';
-  if (floorEl) floorEl.value = slot.floor || 'Ground';
   if (vehicleEl) vehicleEl.value = slot.currentVehicle || '—';
   if (statusEl) statusEl.value = slot.status || 'AVAILABLE';
-  if (rateEl) rateEl.value = Math.round(Number(slot.hourlyRate) || 0);
 }
 
 function escapeHtml(s) {
@@ -280,22 +276,19 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const slotId = document.getElementById('editSlotSelect')?.value;
       const status = document.getElementById('editSlotStatus')?.value;
-      const rateRaw = document.getElementById('editSlotRate')?.value;
 
       if (!slotId) {
         showEditSlotMsg('Please select a slot to edit.', true);
         return;
       }
-      const hourlyRate = parseFloat(rateRaw);
-      if (Number.isNaN(hourlyRate) || hourlyRate < 0) {
-        showEditSlotMsg('Enter a valid hourly rate.', true);
+      if (!status) {
+        showEditSlotMsg('Please select a status.', true);
         return;
       }
 
       const params = new URLSearchParams();
       params.set('slotId', slotId);
       params.set('status', status);
-      params.set('hourlyRate', String(hourlyRate));
 
       const btn = document.getElementById('editSlotSubmitBtn');
       if (btn) btn.disabled = true;

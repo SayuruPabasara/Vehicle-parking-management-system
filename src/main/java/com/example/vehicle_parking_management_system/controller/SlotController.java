@@ -101,7 +101,6 @@ public class SlotController {
     @PostMapping("/slots/edit/{slotId}")
     public ResponseEntity<?> editSlot(@PathVariable String slotId,
                                       @RequestParam String status,
-                                      @RequestParam double hourlyRate,
                                       HttpSession session) {
         if (!"ADMIN".equals(session.getAttribute("userRole"))) {
             return ResponseEntity.status(403).body(Map.of(
@@ -113,10 +112,10 @@ public class SlotController {
 
         try {
             ParkingSlot.SlotStatus newStatus = ParkingSlot.SlotStatus.valueOf(status.toUpperCase());
-            boolean updated = slotService.updateSlot(slotId, newStatus, hourlyRate, adminId);
+            String message = slotService.updateSlot(slotId, newStatus, adminId);
             return ResponseEntity.ok(Map.of(
-                    "success", updated,
-                    "message", updated ? "Slot updated." : "Slot not found."
+                    "success", message != null,
+                    "message", message != null ? message : "Slot not found."
             ));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of(

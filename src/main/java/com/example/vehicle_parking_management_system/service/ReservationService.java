@@ -274,6 +274,20 @@ public class ReservationService {
         return updated;
     }
 
+    public Map<String, Object> getDriverDashboardStats(String driverId) {
+        expireOverdueActiveSessions();
+        Map<String, Object> billing = getDriverBillingSummary(driverId);
+        double amountDue = ((Number) billing.get("amountDue")).doubleValue();
+
+        Map<String, Object> stats = new LinkedHashMap<>();
+        stats.put("totalBookings", reservationRepository.findByDriverId(driverId).size());
+        stats.put("activeSessions", reservationRepository.findActiveByDriver(driverId).size());
+        stats.put("vehicleCount", vehicleRepository.findByDriverId(driverId).size());
+        stats.put("amountDue", amountDue);
+        stats.put("amountDueDisplay", String.format("LKR %,.0f", amountDue));
+        return stats;
+    }
+
     public Map<String, Object> getDriverBillingSummary(String driverId) {
         expireOverdueActiveSessions();
         List<Reservation> list = new ArrayList<>(reservationRepository.findByDriverId(driverId));

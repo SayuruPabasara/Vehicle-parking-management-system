@@ -153,21 +153,30 @@ public class SlotService {
     }
 
 
-    public boolean updateSlot(String slotId, ParkingSlot.SlotStatus newStatus,
-                               double newRate, String adminId) {
+    /**
+     * Updates slot status. Hourly rate is unchanged. When an admin changes an
+     * OCCUPIED slot to AVAILABLE, the active reservation is deleted (no charge).
+     *
+     * @return success message, or null if the slot was not found
+     */
+    public String updateSlot(String slotId, ParkingSlot.SlotStatus newStatus, String adminId) {
         Optional<ParkingSlot> opt = slotRepository.findById(slotId);
-        if (opt.isEmpty()) return false;
+        if (opt.isEmpty()) return null;
 
         ParkingSlot slot = opt.get();
         ParkingSlot.SlotStatus oldStatus = slot.getStatus();
+        boolean freedOccupiedSlot = oldStatus == ParkingSlot.SlotStatus.OCCUPIED
+                && newStatus == ParkingSlot.SlotStatus.AVAILABLE;
+
+        if (freedOccupiedSlot) {
+            cancelActiveReservationWithoutCharge(slotId, adminId);
+        }
 
         slot.setStatus(newStatus);
-        slot.setHourlyRate(newRate);
         if (newStatus != ParkingSlot.SlotStatus.OCCUPIED) {
             slot.setCurrentVehicleId(null);
         }
         slotRepository.update(slot);
-
 
         if (oldStatus != ParkingSlot.SlotStatus.AVAILABLE
                 && newStatus == ParkingSlot.SlotStatus.AVAILABLE) {
@@ -178,9 +187,24 @@ public class SlotService {
         }
 
         activityLogger.log(adminId, "ADMIN", "SLOT_UPDATED",
-                "Slot: " + slot.getSlotNumber()
-                        + " status→" + newStatus + " rate→" + newRate);
-        return true;
+                "Slot: " + slot.getSlotNumber() + " status→" + newStatus);
+
+        if (freedOccupiedSlot) {
+            return "Slot is now available. Active reservation removed — driver not charged.";
+        }
+        return "Slot updated.";
+    }
+
+    private void cancelActiveReservationWithoutCharge(String slotId, String adminId) {
+        reservationRepository.findBySlotId(slotId).stream()
+                .filter(r -> r.getStatus() == Reservation.ReservationStatus.ACTIVE)
+                .findFirst()
+                .ifPresent(r -> {
+                    reservationRepository.deleteById(r.getId());
+                    activityLogger.log(adminId, "ADMIN", "RESERVATION_CANCELLED_ADMIN",
+                            "Reservation: " + r.getId()
+                                    + " | Slot freed without charge");
+                });
     }
 
 

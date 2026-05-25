@@ -204,18 +204,16 @@ public class AdminController {
     @PostMapping("/admin/slots/update")
     public ResponseEntity<?> updateSlot(@RequestParam String slotId,
                                         @RequestParam String status,
-                                        @RequestParam double hourlyRate,
                                         HttpSession session) {
         if (!isAdmin(session)) return forbidden();
 
         try {
             ParkingSlot.SlotStatus newStatus =
                     ParkingSlot.SlotStatus.valueOf(status.trim().toUpperCase());
-            boolean updated = slotService.updateSlot(
-                    slotId, newStatus, hourlyRate, adminId(session));
+            String message = slotService.updateSlot(slotId, newStatus, adminId(session));
             return ResponseEntity.ok(Map.of(
-                    "success", updated,
-                    "message", updated ? "Slot updated." : "Slot not found."
+                    "success", message != null,
+                    "message", message != null ? message : "Slot not found."
             ));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of(
